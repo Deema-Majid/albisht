@@ -67,8 +67,9 @@
   ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 480ms; }
 
   /* ================= خلفية بعمق ================= */
-  .depth { position: fixed; inset: -40px; z-index: 0; pointer-events: none; overflow: hidden; }
-  .layer { position: absolute; inset: 0; will-change: transform; }
+  /* الحاوية بحجم الشاشة بالضبط (لو أكبر، الجوال يوسّع عرض الصفحة)، والطبقات داخلها أكبر للحركة */
+  .depth { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .layer { position: absolute; inset: -40px; will-change: transform; }
   .layer svg { position: absolute; color: var(--gold); }
   .l1 svg { width: 52vmin; height: 52vmin; top: 8vh; inset-inline-end: -8vmin; opacity: .07; }
   .l2 .orb { position: absolute; border: 1px solid var(--gold-line); border-radius: 50%; opacity: .28; }
@@ -108,6 +109,12 @@
   .theme-btn .coin { width: 20px; height: 20px; color: var(--gold); transition: transform 600ms var(--ease-out); }
   html[data-theme="gold"] .theme-btn .coin { transform: perspective(80px) rotateY(180deg); }
   .appbar .brand { white-space: nowrap; }
+  @media (max-width: 360px) {
+    .appbar, .appbar .start, .appbar .end { gap: .3rem; }
+    .appbar { padding-inline: .5rem; }
+    .appbar .brand { font-size: 1.15rem; }
+    .pill-btn { padding: 0 .65rem; }
+  }
   @media (max-width: 600px) { .theme-btn .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
 
   .disclaimer { text-align: center; font-size: .875rem; color: var(--text-muted); padding: .35rem 1rem; border-bottom: 1px dashed var(--gold-line); }
@@ -214,6 +221,37 @@
   .privacy svg { flex: none; width: 20px; height: 20px; margin-top: .3rem; color: var(--gold); }
 
   /* ================= لماذا يختارك أحد؟ ================= */
+  /* ================= الأفاتار ================= */
+  .avatar { display: inline-grid; place-items: center; flex: none; width: var(--av, 40px); height: var(--av, 40px); border-radius: 50%; overflow: hidden; background: var(--surface-2); color: var(--gold); border: 1px solid var(--gold); }
+  .avatar img, .avatar svg { display: block; width: 100%; height: 100%; }
+  .avatar img { object-fit: cover; }
+  #profileBtn.has-avatar { padding: 0; overflow: hidden; border-color: var(--gold); }
+  #profileBtn.has-avatar .avatar { --av: 100%; border: 0; width: 42px; height: 42px; }
+  .avatar-pick { text-align: start; margin: 0 0 1rem; padding: 0; border: 0; min-width: 0; }
+  .avatar-pick legend { font-weight: 600; padding: 0; margin-block-end: .5rem; }
+  .avatar-pick legend small { color: var(--text-muted); font-weight: 400; }
+  .av-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: .5rem; }
+  .av-grid input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .av-grid label { display: grid; place-items: center; aspect-ratio: 1; min-width: var(--tap); border-radius: 50%; overflow: hidden; border: 1px solid var(--gold-line); background: var(--surface); color: var(--gold); cursor: pointer; transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease; }
+  .av-grid label svg, .av-grid label img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .av-grid label:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .av-grid input:checked + label { border: 2px solid var(--gold); background: var(--surface-2); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--gold); animation: pop 320ms var(--ease-out); }
+  .av-grid input:focus-visible + label { outline: 3px solid var(--gold); outline-offset: 5px; }
+  .avatar-pick .form-error:empty { min-height: 0; margin: 0; }
+  .av-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+  .av-note { display: flex; gap: .4rem; align-items: flex-start; color: var(--text-muted); font-size: .875rem; margin: .5rem 0 0; }
+  .av-note svg { flex: none; width: 16px; height: 16px; margin-top: .25rem; color: var(--gold); }
+  .profile-head { display: flex; align-items: center; gap: .9rem; margin-top: .5rem; }
+  .result-head .avatar { --av: 64px; margin-block-end: .5rem; }
+  .cropper { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgb(0 0 0 / .72); }
+  .crop-box { width: min(100%, 360px); background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius); padding: 1rem; text-align: center; box-shadow: 0 20px 50px var(--shadow); }
+  .crop-box h3 { margin: 0; font-family: var(--font-head); color: var(--gold); }
+  .crop-view { width: min(66vw, 240px); aspect-ratio: 1; margin: .9rem auto; border-radius: 50%; overflow: hidden; border: 2px solid var(--gold); touch-action: none; cursor: grab; background: var(--bg); }
+  .crop-view:active { cursor: grabbing; }
+  .crop-view:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+  .crop-view canvas { display: block; width: 100%; height: 100%; }
+  .crop-zoom { display: flex; align-items: center; gap: .6rem; margin: 0 0 .9rem; }
+  .crop-zoom input { flex: 1; accent-color: var(--gold); min-height: var(--tap); }
   .why-cards { display: grid; gap: .75rem; margin: 1rem 0; }
   @media (min-width: 620px) { .why-cards { grid-template-columns: 1fr 1fr; } }
   .why-card {
@@ -232,7 +270,7 @@
   /* ================= تصفح القضايا ================= */
   .filter-group { margin-top: .75rem; }
   .filter-group legend { font-size: .875rem; color: var(--text-muted); font-weight: 500; margin-block-end: .35rem; padding: 0; }
-  .chips { display: flex; gap: .5rem; overflow-x: auto; padding-block-end: .35rem; scrollbar-width: thin; }
+  .chips { display: flex; gap: .5rem; overflow-x: auto; min-width: 0; max-width: 100%; padding-block-end: .35rem; scrollbar-width: thin; }
   .chip {
     flex: none; min-height: var(--tap); padding: 0 1rem; background: var(--surface); color: var(--text);
     border: 1px solid var(--gold-line); border-radius: 999px; font: inherit; font-size: .9375rem; cursor: pointer;
@@ -521,6 +559,208 @@
     <symbol id="arrow-back" viewBox="0 0 24 24">
       <path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="av-m1" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 64 C6 52 14 47 24 46 L27 64 Z M60 64 C58 52 50 47 40 46 L37 64 Z" style="fill:var(--wine)"/>
+        <path d="M24 46 H40 L37 64 H27 Z" style="fill:var(--surface)"/>
+        <path d="M24 46 L27 64 M40 46 L37 64" stroke-width="2.8"/>
+        <path d="M19 47 C16 30 20 13 32 13 C44 13 48 30 45 47 Z" style="fill:var(--surface)"/>
+        <path d="M20.5 30 C20 37 20.5 42 21.5 45 M43.5 30 C44 37 43.5 42 42.5 45" stroke-dasharray="1.5 3"/>
+        <ellipse cx="32" cy="32" rx="8.5" ry="10" style="fill:var(--surface-2)"/>
+        <path d="M21 17.5 Q32 13 43 17.5 M21 20.5 Q32 16 43 20.5" stroke-width="2.4"/>
+        <path d="M24 34 C24.5 41 28 44.5 32 44.5 C36 44.5 39.5 41 40 34"/>
+        <path d="M29 37 Q32 36 35 37"/>
+        <circle cx="28.5" cy="31" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="35.5" cy="31" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="32" cy="52" r="0.9" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+    <symbol id="av-m2" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 64 C6 52 14 47 24 46 L27 64 Z M60 64 C58 52 50 47 40 46 L37 64 Z" style="fill:var(--wine)"/>
+        <path d="M24 46 H40 L37 64 H27 Z" style="fill:var(--surface)"/>
+        <path d="M24 46 L27 64 M40 46 L37 64" stroke-width="2.8"/>
+        <path d="M19 47 C16 30 20 13 32 13 C44 13 48 30 46 40 C50 44 52 48 51 53 L44 50 Z" style="fill:var(--surface)"/>
+        <path d="M44 34 C46 40 47 45 46 49"/>
+        <ellipse cx="32" cy="32" rx="8.5" ry="10" style="fill:var(--surface-2)"/>
+        <path d="M21 17.5 Q32 13 43 17.5 M21 20.5 Q32 16 43 20.5" stroke-width="2.4"/>
+        <path d="M29 37 Q32 39 35 37"/>
+        <circle cx="28.5" cy="31" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="35.5" cy="31" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="32" cy="52" r="0.9" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+    <symbol id="av-f1" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 64 C6 53 14 48 22 47 C26 50 38 50 42 47 C50 48 58 53 60 64 Z" style="fill:var(--wine)"/>
+        <path d="M17 50 C14 36 17 14 32 14 C47 14 50 36 47 50 Z" style="fill:var(--surface)"/>
+        <ellipse cx="32" cy="31" rx="8" ry="9.5" style="fill:var(--surface-2)"/>
+        <path d="M24 37 C27 45 37 45 41 39 M41 39 C44 43 46 47 47 50"/>
+        <path d="M29 50 L32 57 L35 50" style="fill:var(--surface)"/>
+        <path d="M32 57 V64" stroke-width="2.6"/>
+        <path d="M29.5 35.5 Q32 37.5 34.5 35.5"/>
+        <circle cx="28.8" cy="30.5" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="35.2" cy="30.5" r="1.3" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+    <symbol id="av-f2" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 64 C6 53 14 48 22 47 C26 50 38 50 42 47 C50 48 58 53 60 64 Z" style="fill:var(--wine)"/>
+        <path d="M30 51 V64 M34 51 V64" stroke-width="2.6"/>
+        <path d="M18 52 C13 36 17 14 32 14 C46 14 50 32 46 46 C44 50 38 52 30 51 Z" style="fill:var(--surface)"/>
+        <path d="M22 26 C20 34 21 43 26 48"/>
+        <ellipse cx="32" cy="31" rx="8" ry="9.5" style="fill:var(--surface-2)"/>
+        <path d="M26 38 C29 44 38 44 42 36"/>
+        <circle cx="28.8" cy="30.5" r="3.2"/><circle cx="35.2" cy="30.5" r="3.2"/>
+        <path d="M31.8 30 H32.2"/>
+        <path d="M29.5 36 Q32 37.8 34.5 36"/>
+        <circle cx="28.8" cy="30.5" r="1.1" fill="currentColor" stroke="none"/>
+        <circle cx="35.2" cy="30.5" r="1.1" fill="currentColor" stroke="none"/>
+      </g>
+    </symbol>
+    <!-- الأوسمة: ميدالية ذهبية مستقلة بألوان ثابتة (تشتغل على الثيمين)، إطار خرز + حقل خمري + شعار بارز -->
+    <symbol id="av-med-scales" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-scales" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-scales" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-scales" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-scales">
+          <circle cx="32" cy="17.5" r="2.4"/>
+          <path d="M30.5 19.5h3V44h-3z"/>
+          <rect x="17" y="22.5" width="30" height="2.6" rx="1.3"/>
+          <path d="M19 25.5 13.5 36h1.8L19 28.5l3.7 7.5h1.8zM45 25.5 39.5 36h1.8L45 28.5l3.7 7.5h1.8z"/>
+          <path d="M12 36h14q-7 8-14 0zM38 36h14q-7 8-14 0z"/>
+          <path d="M26 44h12l2 3H24z"/>
+          <rect x="22" y="47" width="20" height="2.6" rx="1"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-scales)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-scales)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-scales)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-scales" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-scales" fill="url(#med-g3-scales)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="av-med-gavel" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-gavel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-gavel" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-gavel" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-gavel">
+          <g transform="translate(2 -2) rotate(-40 30 28)">
+            <rect x="28.3" y="31" width="3.4" height="19" rx="1.7"/>
+            <rect x="19" y="21" width="22" height="11" rx="2"/>
+            <rect x="16.5" y="19.5" width="4" height="14" rx="1.3"/>
+            <rect x="39.5" y="19.5" width="4" height="14" rx="1.3"/>
+          </g>
+          <rect x="20" y="42" width="16" height="4.5" rx="1.2"/>
+          <rect x="18" y="46.5" width="20" height="2.4" rx="1"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-gavel)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-gavel)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-gavel)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-gavel" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-gavel" fill="url(#med-g3-gavel)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="av-med-quill" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-quill" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-quill" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-quill" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-quill">
+          <path d="M23.6 38.6 17.6 49.4 27 41.2z"/>
+          <path d="M45 15C35 16 26 24 23 40c4-3 7-4 10-5-1.5-1-2-2-2-3 4-.5 7-2.5 9-5-1.5-.2-2.5-1-3-2 4-1.5 6.5-5 8-10z"/>
+          <path d="M45 15 24.5 39.6l.9.6z" fill="#5A3F14"/>
+          <rect x="34.5" y="38.2" width="11" height="2.2" rx="1"/>
+          <path d="M35.5 40.4h9v5.2a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2z"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-quill)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-quill)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-quill)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-quill" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-quill" fill="url(#med-g3-quill)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="av-med-book" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-book" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-book" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-book" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-book">
+          <path d="M14 23v22c7-2 13-2 18 2 5-4 11-4 18-2V23h-2v19c-5-2-11-2-16 2-5-4-11-4-16-2V23z"/>
+          <path d="M32 22c-5-4-11-4-16-2v22c5-2 11-2 16 2zM32 22c5-4 11-4 16-2v22c-5-2-11-2-16 2z"/>
+          <path d="M31.6 22h.8v22h-.8z" fill="#5A3F14"/>
+          <path fill="#8F6B2E" d="M19.5 25h9v1.4h-9zM19.5 29h9v1.4h-9zM19.5 33h7v1.4h-7zM35.5 25h9v1.4h-9zM35.5 29h9v1.4h-9zM35.5 33h7v1.4h-7z"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-book)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-book)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-book)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-book" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-book" fill="url(#med-g3-book)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="av-med-columns" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-columns" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-columns" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-columns" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-columns">
+          <path d="M14 23 32 13l18 10z"/>
+          <circle cx="32" cy="19.5" r="1.6" fill="#5A3F14"/>
+          <rect x="15" y="24" width="34" height="3" rx=".6"/>
+          <path d="M17.7 28h4.6v12h-4.6zM25.7 28h4.6v12h-4.6zM33.7 28h4.6v12h-4.6zM41.7 28h4.6v12h-4.6z"/>
+          <path fill="#8F6B2E" d="M19.6 29.5h.8v9h-.8zM27.6 29.5h.8v9h-.8zM35.6 29.5h.8v9h-.8zM43.6 29.5h.8v9h-.8z"/>
+          <rect x="16.5" y="40.5" width="31" height="2.6" rx=".6"/>
+          <rect x="15" y="43.6" width="34" height="2.6" rx=".6"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-columns)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-columns)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-columns)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-columns" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-columns" fill="url(#med-g3-columns)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="av-med-dallah" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="med-g1-dallah" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+        <radialGradient id="med-g2-dallah" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+        <linearGradient id="med-g3-dallah" x1="0" y1="13" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+        <g id="med-e-dallah">
+          <path d="M38 22c8 0 9 11 3 17l-1.4-1.4c4.4-4.6 3.9-12.6-2.1-13.2z"/>
+          <path d="M25 37c-5-3-7-9-11-15l-1.5-.5 3-.5c4.5 5 7.5 9 11.5 12z"/>
+          <circle cx="32" cy="12.6" r="1.7"/>
+          <path d="M31.4 14h1.2v2h-1.2zM27 19c0-4.5 10-4.5 10 0z"/>
+          <rect x="26" y="19" width="12" height="2.2" rx="1"/>
+          <path d="M27.5 21.2h9L35 29h-6z"/>
+          <rect x="27.5" y="29" width="9" height="2" rx="1"/>
+          <path d="M28.5 31c-6.5 4-7.5 11-4.5 15h16c3-4 2-11-4.5-15z"/>
+          <rect x="23" y="46" width="18" height="2.4" rx="1"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#med-g1-dallah)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#med-g1-dallah)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#med-g2-dallah)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#med-e-dallah" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+      <use href="#med-e-dallah" fill="url(#med-g3-dallah)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    </symbol>
     <symbol id="coin" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
       <path d="M12 3 a9 9 0 0 0 0 18 Z" fill="currentColor"/>
@@ -591,6 +831,7 @@
         <input id="nameInput" type="text" autocomplete="nickname" maxlength="40" aria-describedby="nameError">
       </div>
       <p class="form-error" id="nameError" aria-live="polite"></p>
+      <div id="welcomeAvatar"></div>
       <button class="btn btn-primary btn-block" type="submit" data-i18n="enterCourt"></button>
     </form>
     <p class="privacy">
@@ -666,6 +907,12 @@
 window.CONFIG = {
   STORAGE_KEY: 'albisht.v1',
   THEME_KEY: 'albisht-theme',
+  AVATAR_KEY: 'albisht-avatar',
+  /* الأفاتارات المرسومة (رسوماتها في <symbol> أعلى الصفحة)، والصورة الشخصية تتصغّر لمربع size بكسل */
+  AVATARS: ['av-m1', 'av-m2', 'av-f1', 'av-f2', 'av-med-scales', 'av-med-gavel', 'av-med-quill', 'av-med-book', 'av-med-columns', 'av-med-dallah'],
+  AVATAR_NAMES: { ar: ['محامٍ بالبشت والشماغ', 'محامٍ بالبشت والغترة', 'محامية بالطرحة', 'محامية بالنظارة', 'وسام الميزان', 'وسام المطرقة', 'وسام الريشة', 'وسام الكتاب', 'وسام المحكمة', 'وسام الدلّة'],
+                  en: ['Lawyer in bisht and shemagh', 'Lawyer in bisht and ghutra', 'Lawyer in headscarf', 'Lawyer with glasses', 'Scales medal', 'Gavel medal', 'Quill medal', 'Book medal', 'Courthouse medal', 'Dallah medal'] },
+  PHOTO: { size: 192, quality: 0.82, maxInputMB: 25, maxStoredChars: 200000, zoomMax: 3 },
   LIMITS: { name: 40, why: 300 },
 
   /* التقييم: النقاط من 0 إلى 3 لكل مرحلة، والمجموع يتحول لنسبة */
@@ -882,6 +1129,18 @@ window.CONFIG = {
     clearYes:       { ar: 'نعم، امسح بياناتي', en: 'Yes, erase' },
     cancel:         { ar: 'إلغاء', en: 'Cancel' },
     cleared:        { ar: 'انمسحت بياناتك.', en: 'Your data was erased.' },
+    avatarLegend:   { ar: 'صورتك في اللعبة', en: 'Your avatar' },
+    avatarUpload:   { ar: 'صورة من جهازك', en: 'Photo from your device' },
+    avatarPhoto:    { ar: 'صورتك', en: 'Your photo' },
+    avatarNone:     { ar: 'بدون صورة', en: 'No avatar' },
+    avatarPrivacy:  { ar: 'صورتك تبقى في جهازك وما تنرسل لأحد.', en: 'Your photo stays on your device and is never sent to anyone.' },
+    cropTitle:      { ar: 'ضبط الصورة', en: 'Adjust your photo' },
+    cropHint:       { ar: 'اسحب الصورة لتحريكها، واستخدم الشريط للتقريب.', en: 'Drag the photo to move it, and use the slider to zoom.' },
+    cropZoom:       { ar: 'التقريب', en: 'Zoom' },
+    cropSave:       { ar: 'اعتماد الصورة', en: 'Use this photo' },
+    photoBad:       { ar: 'ما قدرنا نفتح هذي الصورة. الصيغ المدعومة: JPG وPNG وWebP.', en: 'We could not open this image. Supported formats: JPG, PNG and WebP.' },
+    photoTooBig:    { ar: 'الصورة كبيرة مرة (أكثر من {mb} ميغابايت).', en: 'This image is too large (over {mb} MB).' },
+    photoNotSaved:  { ar: 'الصورة ظاهرة الحين، بس ما قدرنا نحفظها في المتصفح، فبتختفي عند إغلاق الصفحة.', en: 'Your photo is showing now, but it could not be saved in this browser, so it will disappear when you close the page.' },
     storageNote:    { ar: 'بياناتك محفوظة في هذا المتصفح فقط.', en: 'Your data is stored in this browser only.' },
     noticeNoStorage:{ ar: 'التخزين في هذا المتصفح غير متاح، فتقدّمك ما راح ينحفظ بعد إغلاق الصفحة.', en: 'Storage is unavailable in this browser, so your progress will not be kept after you close the page.' },
     noticeCorrupt:  { ar: 'البيانات المحفوظة كانت تالفة، فبدأنا من جديد.', en: 'The saved data was damaged, so we started fresh.' },
@@ -897,6 +1156,7 @@ window.CONFIG = {
 (function (root) {
   'use strict';
   var ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  var AVATAR_RE = /^(?:av-[a-z0-9]+(?:-[a-z0-9]+)*|photo)$/;
   var STAGE_ORDER = ['basis', 'opening', 'evidence', 'rebuttal', 'closing'];
 
   /* نص آمن: يشيل رموز التحكم ويقص لعدد الحروف (يحسب الإيموجي حرف واحد) */
@@ -907,7 +1167,7 @@ window.CONFIG = {
   }
 
   function defaultState() {
-    return { version: 1, name: '', why: '', whyKey: '', gender: '', lang: 'ar', completed: {} };
+    return { version: 1, name: '', why: '', whyKey: '', gender: '', avatar: '', lang: 'ar', completed: {} };
   }
 
   /* يرجع حالة نظيفة، أو null إذا البيانات ما تنفع */
@@ -918,6 +1178,8 @@ window.CONFIG = {
     s.why = clampText(o.why, limits.why);
     s.whyKey = (whyKeys || []).indexOf(o.whyKey) >= 0 ? o.whyKey : '';
     s.gender = (o.gender === 'm' || o.gender === 'f') ? o.gender : '';
+    /* الأفاتار: رمز رسمة (av-...) أو photo (الصورة نفسها محفوظة بمفتاح مستقل) */
+    s.avatar = (typeof o.avatar === 'string' && AVATAR_RE.test(o.avatar)) ? o.avatar : '';
     s.lang = o.lang === 'en' ? 'en' : 'ar';
     var c = o.completed;
     if (c && typeof c === 'object' && !Array.isArray(c)) {
@@ -960,6 +1222,14 @@ window.CONFIG = {
   }
 
   function serialize(state) { return JSON.stringify(state); }
+
+  /* الصورة الشخصية المحفوظة: نقبل فقط JPEG بصيغة data URL وبحجم محدود (أي شي ثاني نتجاهله) */
+  function isPhotoData(v, maxChars) {
+    if (typeof v !== 'string' || v.length > maxChars) return false;
+    var pre = 'data:image/jpeg;base64,';
+    /* "/9j/" هي بداية أي JPEG حقيقي بعد التحويل لـ base64 (البايتات FF D8 FF) */
+    return v.indexOf(pre + '/9j/') === 0 && v.length > pre.length + 100 && /^[A-Za-z0-9+/]+={0,2}$/.test(v.slice(pre.length));
+  }
 
   /* points: مصفوفة نقاط المراحل (0 إلى 3) */
   function computeResult(points, scoring) {
@@ -1131,7 +1401,7 @@ window.CONFIG = {
   root.Logic = {
     ID_RE: ID_RE, STAGE_ORDER: STAGE_ORDER,
     clampText: clampText, defaultState: defaultState, sanitizeState: sanitizeState,
-    storageAvailable: storageAvailable, loadState: loadState, serialize: serialize,
+    storageAvailable: storageAvailable, loadState: loadState, serialize: serialize, isPhotoData: isPhotoData,
     computeResult: computeResult, countWins: countWins, recordResult: recordResult, titleFor: titleFor,
     resolveTitles: resolveTitles, pluralCategory: pluralCategory, countPhrase: countPhrase, isCompleteTrial: isCompleteTrial,
     decadeOf: decadeOf, buildFacets: buildFacets, filterCases: filterCases, shuffle: shuffle,
@@ -1194,6 +1464,10 @@ window.CONFIG = {
   }
   if (!store) activeNotices.push('noticeNoStorage');
   else if (loaded.status === 'corrupt') { activeNotices.push('noticeCorrupt'); save(); }
+  /* الصورة الشخصية محفوظة بمفتاح مستقل عشان حجمها ما يأثر على حفظ التقدّم */
+  var photoData = null;
+  try { if (store) { var ph = store.getItem(C.AVATAR_KEY); if (Lg.isPhotoData(ph, C.PHOTO.maxStoredChars)) photoData = ph; } } catch (e) {}
+  if (state.avatar === 'photo' ? !photoData : (state.avatar && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
 
   /* ---------- اللغة والنصوص ---------- */
   function g() { return (state.gender === 'm' || state.gender === 'f') ? state.gender : 'n'; }
@@ -1308,6 +1582,7 @@ window.CONFIG = {
       if (!reduced() && !opts.noAnim) restart(scr, 'enter');
       $('profileBtn').hidden = !state.name || name === 'welcome';
       $('backBtn').hidden = name === 'welcome';
+      syncProfileBtn();
       if (name === 'welcome') startWelcomeMotion(); else stopWelcomeMotion();
       if (opts.focus !== false) {
         var f = scr.querySelector('[data-focus]');
@@ -1406,6 +1681,9 @@ window.CONFIG = {
     if (fresh) nameInput.value = state.name;
     $('nameError').textContent = '';
     syncNameLabel();
+    var slot = $('welcomeAvatar');
+    slot.textContent = '';
+    slot.appendChild(avatarPicker());
   };
   document.querySelectorAll('input[name="addr"]').forEach(function (r) {
     r.addEventListener('change', function () { state.gender = r.value; applyStatic(); syncNameLabel(); });
@@ -1418,6 +1696,191 @@ window.CONFIG = {
     save();
     show((state.whyKey || state.why) ? 'browse' : 'why', { doors: true });
   });
+
+  /* =================== الأفاتار =================== */
+  /* يرجع دائرة فيها صورة اللاعب أو رسمته، أو null إذا ما اختار شي */
+  function avatarEl(size) {
+    var kid = null;
+    if (state.avatar === 'photo' && photoData) kid = h('img', { src: photoData, alt: '', onerror: photoBroken });
+    else if (C.AVATARS.indexOf(state.avatar) >= 0) kid = icon(state.avatar);
+    if (!kid) return null;
+    return h('span', { class: 'avatar', 'aria-hidden': 'true', style: size ? '--av:' + size + 'px' : null }, [kid]);
+  }
+  /* لو الصورة المحفوظة تالفة وما تنفتح: نمسحها ونرجع بدون صورة بدل صورة مكسورة */
+  var brokenPending = false;
+  function photoBroken() {
+    if (brokenPending || !photoData) return;
+    brokenPending = true;
+    setTimeout(function () {
+      brokenPending = false;
+      photoData = null;
+      try { if (store) store.removeItem(C.AVATAR_KEY); } catch (e) {}
+      setAvatar(state.avatar === 'photo' ? '' : state.avatar);
+    }, 0);
+  }
+  function syncProfileBtn() {
+    var b = $('profileBtn'), a = avatarEl();
+    b.textContent = '';
+    b.classList.toggle('has-avatar', !!a);
+    if (a) b.appendChild(a);
+    else { var s = icon('person'); s.setAttribute('width', '22'); s.setAttribute('height', '22'); b.appendChild(s); }
+  }
+  function setAvatar(v) {
+    /* إعادة الرسم تحذف العنصر اللي عليه التركيز، فنرجّعه للخيار المختار (عشان مستخدم الكيبورد ما يضيع) */
+    var ae = document.activeElement;
+    var refocus = !ae || ae === document.body || !!(ae.closest && ae.closest('.avatar-pick'));
+    state.avatar = v;
+    save();
+    syncProfileBtn();
+    if (current && current !== 'trial') renderers[current](false);
+    if (!refocus || !current) return;
+    var pick = $('scr-' + current).querySelector('.avatar-pick');
+    if (!pick) return;
+    var f = pick.querySelector('input[type=radio]:checked') || pick.querySelector('.av-actions button');
+    if (f) f.focus({ preventScroll: true });
+  }
+
+  /* أداة اختيار الأفاتار: تنبني في شاشة البداية وفي الملف الشخصي */
+  var pickerSeq = 0;
+  function avatarPicker() {
+    var name = 'av-pick-' + (++pickerSeq);
+    var names = C.AVATAR_NAMES[state.lang] || C.AVATAR_NAMES.ar;
+    var grid = h('div', { class: 'av-grid' });
+    var opts = C.AVATARS.map(function (id, i) { return { value: id, label: names[i] || id, node: icon(id) }; });
+    if (photoData) opts.unshift({ value: 'photo', label: t('avatarPhoto'), node: h('img', { src: photoData, alt: '', onerror: photoBroken }) });
+    opts.forEach(function (o, i) {
+      var inp = h('input', { type: 'radio', name: name, id: name + '-' + i, value: o.value });
+      inp.checked = state.avatar === o.value;
+      inp.addEventListener('change', function () { if (inp.checked) setAvatar(o.value); });
+      grid.appendChild(inp);
+      grid.appendChild(h('label', { for: name + '-' + i, title: o.label, 'aria-label': o.label }, [o.node]));
+    });
+    var err = h('p', { class: 'form-error', 'aria-live': 'polite' });
+    var file = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
+    file.addEventListener('change', function () { var f = file.files && file.files[0]; file.value = ''; if (f) openPhoto(f, err); });
+    var actions = h('div', { class: 'av-actions' }, [
+      h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('avatarUpload'), onclick: function () { err.textContent = ''; file.click(); } }),
+      state.avatar ? h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('avatarNone'), onclick: function () { setAvatar(''); } }) : null,
+      file
+    ]);
+    return h('fieldset', { class: 'avatar-pick' }, [
+      h('legend', null, [h('span', { text: t('avatarLegend') }), ' ', h('small', { text: t('optional') })]),
+      grid, actions, err,
+      h('p', { class: 'av-note' }, [icon('lock'), h('span', { text: t('avatarPrivacy') })])
+    ]);
+  }
+
+  /* قراءة الصورة من الجهاز: تنفتح محليًا فقط (object URL) وما تنرفع لأي مكان */
+  function openPhoto(f, errEl) {
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)) { errEl.textContent = t('photoBad'); return; }
+    if (f.size > C.PHOTO.maxInputMB * 1024 * 1024) { errEl.textContent = t('photoTooBig', { mb: C.PHOTO.maxInputMB }); return; }
+    var url = URL.createObjectURL(f);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      if (!img.naturalWidth || !img.naturalHeight) { errEl.textContent = t('photoBad'); return; }
+      openCropper(img);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); errEl.textContent = t('photoBad'); };
+    img.src = url;
+  }
+
+  /* نافذة ضبط الصورة: سحب للتحريك وشريط للتقريب، والناتج مربع صغير JPEG */
+  function openCropper(img) {
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var zoom = 1, cx = iw / 2, cy = ih / 2;
+    var opener = document.activeElement;
+    var view = h('div', { class: 'crop-view', tabindex: '0', role: 'img', 'aria-label': t('cropHint') });
+    var cv = document.createElement('canvas');
+    var VIEW_PX = 480;                       /* دقة المعاينة (تنعرض أصغر) */
+    cv.width = cv.height = VIEW_PX;
+    view.appendChild(cv);
+    function side() { return Math.min(iw, ih) / zoom; }   /* ضلع المربع المقصوص بوحدات الصورة */
+    function clamp() {
+      var half = side() / 2;
+      cx = Math.min(Math.max(cx, half), iw - half);
+      cy = Math.min(Math.max(cy, half), ih - half);
+    }
+    function paint(canvas, px) {
+      var ctx = canvas.getContext('2d'), sd = side();
+      ctx.fillStyle = getComputedStyle(root).getPropertyValue('--surface').trim() || '#000';
+      ctx.fillRect(0, 0, px, px);
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, cx - sd / 2, cy - sd / 2, sd, sd, 0, 0, px, px);
+    }
+    function redraw() { clamp(); paint(cv, VIEW_PX); }
+    var drag = null;
+    view.addEventListener('pointerdown', function (e) { drag = { x: e.clientX, y: e.clientY }; try { view.setPointerCapture(e.pointerId); } catch (x) {} });
+    view.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      var k = side() / (view.clientWidth || 1);   /* بكسل الشاشة ← بكسل الصورة */
+      cx -= (e.clientX - drag.x) * k; cy -= (e.clientY - drag.y) * k;
+      drag = { x: e.clientX, y: e.clientY };
+      redraw();
+    });
+    function endDrag() { drag = null; }
+    view.addEventListener('pointerup', endDrag);
+    view.addEventListener('pointercancel', endDrag);
+    view.addEventListener('keydown', function (e) {
+      var m = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key];
+      if (!m) return;
+      var step = side() / 20;
+      e.preventDefault(); cx += m[0] * step; cy += m[1] * step; redraw();
+    });
+    var range = h('input', { type: 'range', min: '1', max: String(C.PHOTO.zoomMax), step: '0.01', value: '1' });
+    range.addEventListener('input', function () { zoom = Number(range.value) || 1; redraw(); });
+    view.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      zoom = Math.min(Math.max(zoom * (e.deltaY < 0 ? 1.08 : 1 / 1.08), 1), C.PHOTO.zoomMax);
+      range.value = String(zoom); redraw();
+    }, { passive: false });
+    function close() {
+      document.removeEventListener('keydown', onKey, true);
+      overlay.remove();
+      if (opener && opener.isConnected) opener.focus();
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') { e.preventDefault(); close(); return; }
+      if (e.key !== 'Tab') return;
+      /* حبس التركيز داخل النافذة (aria-modal) */
+      var f = Array.prototype.slice.call(overlay.querySelectorAll('button, input, [tabindex="0"]'));
+      var i = f.indexOf(document.activeElement);
+      e.preventDefault();
+      f[(i < 0 ? 0 : i + (e.shiftKey ? -1 + f.length : 1)) % f.length].focus();
+    }
+    function accept() {
+      var out = document.createElement('canvas');
+      out.width = out.height = C.PHOTO.size;
+      paint(out, C.PHOTO.size);
+      var data = '';
+      try { data = out.toDataURL('image/jpeg', C.PHOTO.quality); } catch (e) {}
+      close();
+      if (!Lg.isPhotoData(data, C.PHOTO.maxStoredChars)) { addNotice('photoBad'); return; }
+      photoData = data;
+      var stored = false;
+      try { if (store) { store.setItem(C.AVATAR_KEY, data); stored = true; } } catch (e) {}
+      if (!stored) addNotice('photoNotSaved');
+      setAvatar('photo');
+    }
+    var saveBtn = h('button', { class: 'btn btn-primary', type: 'button', text: t('cropSave'), onclick: accept });
+    var overlay = h('div', { class: 'cropper', role: 'dialog', 'aria-modal': 'true', 'aria-labelledby': 'cropTitle' }, [
+      h('div', { class: 'crop-box' }, [
+        h('h3', { id: 'cropTitle', text: t('cropTitle') }),
+        h('p', { class: 'muted', style: 'margin:.4rem 0 0;font-size:.9375rem', text: t('cropHint') }),
+        view,
+        h('label', { class: 'crop-zoom' }, [h('span', { text: t('cropZoom') }), range]),
+        h('div', { class: 'btn-row', style: 'justify-content:center' }, [
+          saveBtn,
+          h('button', { class: 'btn btn-ghost', type: 'button', text: t('cancel'), onclick: close })
+        ])
+      ])
+    ]);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+    document.addEventListener('keydown', onKey, true);
+    document.body.appendChild(overlay);
+    redraw();
+    saveBtn.focus();
+  }
 
   /* =================== [2] لماذا يختارك أحد؟ =================== */
   var whyText = $('whyText');
@@ -1845,6 +2308,7 @@ window.CONFIG = {
     if (!Lg.isCompleteTrial(r.picks, c.stages.length)) { lastResult = null; show('browse', { replace: true }); return; }
     var other = r.side === 'A' ? 'B' : 'A';
     var head = h('div', { class: 'result-head' + (animate && !reduced() ? ' anim' : '') }, [
+      avatarEl(),
       h('p', { class: 'muted', style: 'margin:0', text: t('resultTitle') }),
       h('h2', { class: 'big', id: 'result-title', tabindex: '-1', 'data-focus': true, text: L(C.BANDS[res.band]) + ' — ' + res.percent + '%' }),
       h('div', { class: 'gold-line', 'aria-hidden': 'true' })
@@ -1930,7 +2394,7 @@ window.CONFIG = {
 
     [
       h('h2', { class: 'h2', id: 'profile-title', tabindex: '-1', 'data-focus': true, text: t('profileTitle') }),
-      h('p', { class: 'player-name', style: 'font-size:1.25rem;font-weight:600;margin:.5rem 0 0', text: state.name }),
+      h('div', { class: 'profile-head' }, [avatarEl(64), h('p', { class: 'player-name', style: 'font-size:1.25rem;font-weight:600;margin:0', text: state.name })]),
       h('div', { class: 'title-frame' }, [h('span', { class: 'muted', text: t('yourTitle') }), h('strong', { text: L(ti.title) })]),
       h('p', { style: 'margin:0', text: t('winsCount', { wins: count(wins, 'casesWon') }) }),
       bar,
@@ -1942,6 +2406,7 @@ window.CONFIG = {
         !whyCard && !state.why ? h('p', { class: 'muted', text: t('noWhy') }) : null
       ]),
       h('div', { class: 'panel' }, [h('h3', { text: t('finishedCases') }), doneList]),
+      h('div', { class: 'panel' }, [avatarPicker()]),
       h('div', { class: 'btn-row' }, [
         h('button', { class: 'btn btn-primary', type: 'button', text: t('backToCasesBtn'), onclick: function () { show('browse'); } }),
         h('button', { class: 'btn btn-ghost', type: 'button', text: t('changeName'), onclick: function () { show('welcome'); } }),
@@ -1960,7 +2425,8 @@ window.CONFIG = {
   };
 
   function eraseAll() {
-    try { if (store) { store.removeItem(C.STORAGE_KEY); store.removeItem(C.THEME_KEY); } } catch (e) {}
+    try { if (store) { store.removeItem(C.STORAGE_KEY); store.removeItem(C.THEME_KEY); store.removeItem(C.AVATAR_KEY); } } catch (e) {}
+    photoData = null;
     var lang = state.lang;
     state = Lg.defaultState();
     state.lang = lang;

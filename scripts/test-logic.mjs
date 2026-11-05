@@ -157,6 +157,21 @@ const st2 = Lg.defaultState(); st2.name = 'سارة'; st2.lang = 'en';
 const round = Lg.loadState(fakeStore({ [KEY]: Lg.serialize(st2) }), KEY, LIM, WK);
 ok(round.status === 'ok' && round.state.name === 'سارة' && round.state.lang === 'en', 'حفظ ثم تحميل يرجع نفس البيانات (والاسم واللغة)');
 
+// الأفاتار
+const avOf = (v) => Lg.loadState(fakeStore({ [KEY]: JSON.stringify({ version: 1, avatar: v }) }), KEY, LIM, WK).state.avatar;
+ok(avOf('av-f1') === 'av-f1' && avOf('photo') === 'photo', 'الأفاتار: رمز رسمة أو photo ينقبل');
+ok(avOf('<img onerror=x>') === '' && avOf(42) === '' && avOf('javascript:alert(1)') === '', 'الأفاتار: أي قيمة غريبة ترجع فاضية');
+ok(C.AVATARS.length === 10 && C.AVATARS.every((id) => /^av-/.test(id)), 'فيه 10 أفاتارات');
+ok(C.AVATAR_NAMES.ar.length === C.AVATARS.length && C.AVATAR_NAMES.en.length === C.AVATARS.length, 'كل أفاتار له اسم بالعربي والإنجليزي');
+const goodJpeg = 'data:image/jpeg;base64,/9j/' + 'A'.repeat(400);
+const MAXP = C.PHOTO.maxStoredChars;
+ok(Lg.isPhotoData(goodJpeg, MAXP), 'الصورة: JPEG بصيغة data URL ينقبل');
+ok(!Lg.isPhotoData('data:image/jpeg;base64,' + 'A'.repeat(400), MAXP), 'الصورة: بيانات مو JPEG حقيقي (بدون /9j/) ما تنقبل');
+ok(!Lg.isPhotoData('data:image/svg+xml;base64,' + 'A'.repeat(400), MAXP), 'الصورة: SVG ما ينقبل');
+ok(!Lg.isPhotoData('https://example.com/a.jpg', MAXP) && !Lg.isPhotoData(null, MAXP), 'الصورة: رابط خارجي أو null ما ينقبل');
+ok(!Lg.isPhotoData('data:image/jpeg;base64,' + 'A'.repeat(MAXP), MAXP), 'الصورة: أكبر من الحد ما تنقبل');
+ok(!Lg.isPhotoData('data:image/jpeg;base64,AAAA"><script>' + 'A'.repeat(400), MAXP), 'الصورة: رموز غريبة داخل البيانات ما تنقبل');
+
 // ---------------------------------------------------------------
 console.log('\n[7] الفلاتر');
 const mk = (id, region, tags, year) => ({ id, region, tags, year });
