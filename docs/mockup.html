@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المرافعة — نموذج التصميم</title>
+<script>
+  /* يُطبَّق قبل رسم الصفحة لمنع وميض الثيم الخطأ */
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('js');
+    try { if (localStorage.getItem('almurafaa-theme') === 'gold') d.setAttribute('data-theme', 'gold'); } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ================= الثيم الخمري (الافتراضي) ================= */
+  :root {
+    --bg:         #1E0A0E;
+    --surface:    #2E1015;
+    --surface-2:  #3D161D;
+    --wine:       #6B1E2A;
+    --gold:       #C9A961;  /* لون الإبراز: عناوين، أزرار رئيسية، إطار التركيز */
+    --gold-hover: #D4B774;
+    --gold-line:  #8C7340;  /* خطوط وحدود فقط — ممنوع للنص */
+    --text:       #F3EBDD;
+    --text-muted: #C9B9A6;
+    --on-gold:    #1E0A0E;
+    --good:       #9CC9A3;
+    --weak:       #E8A0A0;
+    --frame:      rgba(201,169,97,.18);
+    --shadow:     rgba(0,0,0,.35);
+    --shine:      rgba(232,205,140,.22);
+    --dust:       #E9CF8E;
+    --dust-glow:  rgba(201,169,97,.6);
+
+    --font-head: "Amiri", "Traditional Arabic", "Sakkal Majalla", "Times New Roman", serif;
+    --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", sans-serif;
+    --radius: 10px;
+    --tap: 44px;
+    --ease-out: cubic-bezier(.2,.8,.2,1);
+  }
+
+  /* ================= الثيم الذهبي (زر «قلب الألوان») ================= */
+  html[data-theme="gold"] {
+    --bg:         #F3E3B8;  /* عاجي ذهبي */
+    --surface:    #FBF1D6;  /* البطاقات: عاجي فاتح */
+    --surface-2:  #EFD9A0;  /* بطاقة مرفوعة */
+    --wine:       #E2C084;  /* يأخذ دور «الشريط المميّز»: شارات، منصة القاضي، الأبواب */
+    --gold:       #7A1F2E;  /* الإبراز صار خمري: عناوين، أزرار رئيسية، إطار التركيز */
+    --gold-hover: #8E2536;
+    --gold-line:  #9C7438;
+    --text:       #4A0F1A;  /* نص خمري غامق */
+    --text-muted: #6E2A35;
+    --on-gold:    #FBF1D6;  /* نص فوق الزر الخمري */
+    --good:       #2E6B3A;
+    --weak:       #9E1B1B;
+    --frame:      rgba(122,31,46,.16);
+    --shadow:     rgba(74,15,26,.18);
+    --shine:      rgba(255,255,255,.55);
+    --dust:       #FFFBEF;
+    --dust-glow:  rgba(156,116,56,.55);
+  }
+
+  * { box-sizing: border-box; }
+  html { font-size: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, var(--surface) 0%, var(--bg) 60%) fixed, var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.4; margin: 0; }
+  a { color: var(--gold); }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  [tabindex="-1"]:focus { outline: none; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* انتقال ناعم عند قلب الألوان (للمتصفحات اللي ما تدعم View Transitions) */
+  html.theme-anim body, html.theme-anim body *, html.theme-anim body *::before, html.theme-anim body *::after {
+    transition: background-color 450ms ease, color 450ms ease, border-color 450ms ease, fill 450ms ease, stroke 450ms ease !important;
+  }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 480ms; }
+
+  /* ================= خلفية بعمق (parallax) ================= */
+  .depth { position: fixed; inset: -40px; z-index: 0; pointer-events: none; overflow: hidden; }
+  .layer { position: absolute; inset: 0; will-change: transform; }
+  .layer svg { position: absolute; color: var(--gold); }
+  .l1 svg { width: 52vmin; height: 52vmin; top: 8vh; inset-inline-end: -8vmin; opacity: .07; }
+  .l2 .orb { position: absolute; border: 1px solid var(--gold-line); border-radius: 50%; opacity: .28; }
+  .l2 .orb:nth-child(1) { width: 70vmin; height: 70vmin; bottom: -20vmin; inset-inline-start: -22vmin; }
+  .l2 .orb:nth-child(2) { width: 40vmin; height: 40vmin; bottom: -6vmin; inset-inline-start: -7vmin; }
+  .l3 {
+    inset: -60px;
+    background-image: radial-gradient(var(--gold-line) 1px, transparent 1.6px);
+    background-size: 46px 46px; opacity: .22;
+  }
+  .page-head, .screens, .page-foot { position: relative; z-index: 1; }
+
+  /* ================= رأس صفحة النموذج ================= */
+  .page-head { text-align: center; padding: 2rem 1rem 1rem; }
+  .page-head h1 { color: var(--gold); font-size: clamp(1.75rem, 4vw, 2.5rem); }
+  .page-head p { color: var(--text-muted); margin: .25rem auto 0; max-width: 40rem; }
+
+  .ornament { display: flex; align-items: center; gap: .75rem; margin: 1rem auto; max-width: 16rem; }
+  .ornament::before, .ornament::after { content: ""; flex: 1; height: 1px; background: var(--gold-line); }
+  .ornament span { width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid var(--gold); flex: none; }
+
+  /* ================= شبكة الشاشات + ظهورها بالـ 3D ================= */
+  .screens {
+    display: grid; grid-template-columns: 1fr; gap: 2rem;
+    padding: 1rem; max-width: 1320px; margin: 0 auto;
+  }
+  @media (min-width: 1100px) { .screens { grid-template-columns: repeat(3, 1fr); align-items: start; } }
+
+  .screen-wrap { max-width: 420px; width: 100%; margin: 0 auto; }
+  html.js .screen-wrap {
+    opacity: 0;
+    transform: perspective(1200px) rotateX(14deg) translateY(30px);
+    transform-origin: 50% 0;
+    transition: opacity 700ms ease, transform 900ms var(--ease-out);
+  }
+  html.js .screen-wrap.in { opacity: 1; transform: none; }
+
+  .screen-label { font-size: .9375rem; color: var(--text-muted); margin: 0 0 .5rem; text-align: center; }
+
+  .screen {
+    background: var(--bg);
+    border: 1px solid var(--gold-line);
+    border-radius: 18px;
+    padding: 1.25rem;
+    position: relative;
+    box-shadow: 0 18px 40px var(--shadow);
+  }
+  .screen::before {
+    content: ""; position: absolute; inset: 6px;
+    border: 1px solid var(--frame); border-radius: 13px; pointer-events: none;
+  }
+  .screen.shake { animation: shake 320ms ease-out; }
+
+  /* ================= الشريط العلوي والأزرار الصغيرة ================= */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap;
+    padding-block-end: .75rem; margin-block-end: 1rem;
+    border-bottom: 1px solid var(--gold-line);
+  }
+  .player { display: flex; flex-direction: column; line-height: 1.4; }
+  .player strong { font-weight: 600; }
+  .player small { color: var(--gold); font-size: .875rem; }
+
+  .icon-btn {
+    min-width: var(--tap); min-height: var(--tap);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--gold);
+    border: 1px solid var(--gold-line); border-radius: 50%;
+    cursor: pointer; font: inherit;
+  }
+  .pill-btn {
+    min-height: var(--tap); padding: 0 .9rem;
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: transparent; color: var(--text-muted);
+    border: 1px solid var(--gold-line); border-radius: 999px;
+    font: inherit; font-size: .9375rem; cursor: pointer;
+    transition: border-color 150ms ease, transform 150ms ease;
+  }
+  .pill-btn:hover { border-color: var(--gold); }
+  .pill-btn:active { transform: scale(.96); }
+  .theme-btn .coin { width: 20px; height: 20px; color: var(--gold); transition: transform 600ms var(--ease-out); }
+  html[data-theme="gold"] .theme-btn .coin { transform: perspective(80px) rotateY(180deg); }
+
+  /* ================= الأزرار ================= */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    min-height: 48px; padding: .5rem 1.25rem;
+    border-radius: var(--radius); font: inherit; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(1px) scale(.98); }
+  .btn-primary {
+    background: var(--gold); color: var(--on-gold); border: 1px solid var(--gold);
+    width: 100%; box-shadow: 0 6px 16px var(--shadow);
+  }
+  .btn-primary:hover { background: var(--gold-hover); }
+  .btn-ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold-line); }
+  .btn-ghost:hover { background: var(--surface-2); border-color: var(--gold); }
+  .btn-small { min-height: var(--tap); padding: .25rem .9rem; font-size: .9375rem; }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* ================= الشاشة 1: الترحيب ================= */
+  .welcome { text-align: center; padding-block: .5rem 0; overflow: hidden; }
+  .welcome > *:not(.dust) { position: relative; z-index: 1; }
+  .welcome .top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+
+  .scales { width: 92px; height: 92px; color: var(--gold); display: block; margin: .5rem auto 0; cursor: pointer; }
+  .scales .beam { transform-origin: 32px 16px; }
+  .welcome.swing .beam  { animation: beam 2.4s ease-in-out 2; }
+  .welcome.swing .pan-l { animation: panL 2.4s ease-in-out 2; }
+  .welcome.swing .pan-r { animation: panR 2.4s ease-in-out 2; }
+
+  .welcome h2 {
+    font-size: clamp(2.25rem, 6vw, 2.75rem); color: var(--gold);
+    transform-origin: 50% 100%;
+    animation: titleIn 900ms var(--ease-out) 150ms both;
+  }
+  .tagline { color: var(--text-muted); margin: .25rem 0 1.25rem; animation: fadeUp 600ms ease-out 550ms both; }
+  .welcome .ornament::before, .welcome .ornament::after { animation: draw 700ms var(--ease-out) 350ms both; }
+  .welcome .ornament span { animation: spinIn 700ms var(--ease-out) 300ms both; }
+
+  /* غبار ذهبي يطفو */
+  .dust {
+    position: absolute; inset: 0; border-radius: 18px; overflow: hidden;
+    pointer-events: none; opacity: 0; transition: opacity 900ms ease; z-index: 0;
+  }
+  .welcome.alive .dust { opacity: 1; }
+  .dust i {
+    position: absolute; bottom: -12px; left: var(--x);
+    width: var(--s); height: var(--s); border-radius: 50%;
+    background: var(--dust); box-shadow: 0 0 6px 1px var(--dust-glow);
+    opacity: 0; animation: float var(--d) linear var(--delay) infinite;
+  }
+  .welcome:not(.alive) .dust i { animation-play-state: paused; }
+
+  /* أستاذ / أستاذة */
+  .address { text-align: start; margin-block-end: 1rem; }
+  .address legend { font-weight: 600; padding: 0; margin-block-end: .4rem; }
+  .address legend small { color: var(--text-muted); font-weight: 400; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg label {
+    min-height: 48px; display: flex; align-items: center; justify-content: center;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font-weight: 600; cursor: pointer;
+    transition: background-color 150ms ease, transform 150ms ease, border-color 150ms ease;
+  }
+  .seg label:hover { border-color: var(--gold); }
+  .seg label:active { transform: scale(.97); }
+  .seg input:checked + label { background: var(--gold); color: var(--on-gold); border-color: var(--gold); animation: pop 320ms var(--ease-out); }
+  .seg input:focus-visible + label { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  .field { text-align: start; margin-block-end: 1rem; }
+  .field label { display: block; font-weight: 600; margin-block-end: .4rem; }
+  .field input {
+    width: 100%; min-height: 52px; padding: .5rem 1rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font: inherit;
+  }
+  .field input::placeholder { color: var(--text-muted); opacity: 1; }
+  .field input:focus-visible { border-color: var(--gold); }
+
+  .privacy {
+    display: flex; gap: .5rem; align-items: flex-start; text-align: start;
+    color: var(--text-muted); font-size: .9375rem; margin: 1rem 0 0;
+  }
+  .privacy svg { flex: none; width: 20px; height: 20px; margin-top: .3rem; color: var(--gold); }
+
+  .screen-foot {
+    margin-top: 1.5rem; padding-top: .75rem;
+    border-top: 1px solid var(--gold-line);
+    color: var(--text-muted); font-size: .8125rem; text-align: center; line-height: 1.6;
+  }
+
+  /* ================= الشاشة 2: تصفح القضايا ================= */
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+  .section-title h2 { font-size: 1.75rem; color: var(--gold); }
+  .count { color: var(--text-muted); font-size: .9375rem; }
+
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .filter-group { margin-top: .75rem; }
+  .filter-group legend { font-size: .875rem; color: var(--text-muted); font-weight: 500; margin-block-end: .35rem; padding: 0; }
+  .chips { display: flex; gap: .5rem; overflow-x: auto; padding-block-end: .35rem; scrollbar-width: thin; }
+  .chip {
+    flex: none; min-height: var(--tap); padding: 0 1rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: 999px;
+    font: inherit; font-size: .9375rem; cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  }
+  .chip:hover { border-color: var(--gold); }
+  .chip:active { transform: scale(.95); }
+  .chip[aria-pressed="true"] { background: var(--gold); color: var(--on-gold); border-color: var(--gold); font-weight: 600; }
+
+  /* بطاقة القضية = ملف يميل وينقلب */
+  .cards { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  .case {
+    position: relative; border-radius: var(--radius);
+    perspective: 1100px;
+    transition: transform 450ms var(--ease-out);
+    will-change: transform;
+  }
+  .case.is-tilting { transition: transform 90ms linear; }
+  .case-inner {
+    display: grid; transform-style: preserve-3d;
+    transition: transform 750ms cubic-bezier(.3,.7,.2,1);
+  }
+  .case.is-flipped .case-inner { transform: rotateY(180deg); }
+  .face {
+    grid-area: 1 / 1;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    background: var(--surface);
+    border: 1px solid var(--gold-line); border-radius: var(--radius);
+    padding: 1rem; position: relative; overflow: hidden;
+    box-shadow: 0 8px 22px var(--shadow);
+  }
+  .face.back { transform: rotateY(180deg); }
+  .face.front::before {
+    content: ""; position: absolute; inset-block: 1rem; inset-inline-start: 0;
+    width: 3px; background: var(--gold); border-radius: 2px;
+  }
+  /* لمعة ذهبية تمر على الملف */
+  .face::after {
+    content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 45%;
+    background: linear-gradient(105deg, transparent 0%, var(--shine) 50%, transparent 100%);
+    transform: translateX(-130%) skewX(-12deg); opacity: 0; pointer-events: none;
+  }
+  .case.shine .face::after { animation: sweep 950ms ease-out; }
+
+  .badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-block-end: .5rem; }
+  .badge { font-size: .8125rem; line-height: 1.6; padding: .1rem .6rem; background: var(--wine); color: var(--text); border-radius: 999px; }
+  .badge.year { background: transparent; border: 1px solid var(--gold-line); color: var(--gold); }
+  .case h3 { font-size: 1.375rem; color: var(--text); }
+  .orig { display: block; font-family: var(--font-body); font-size: .875rem; color: var(--text-muted); font-weight: 400; }
+  .case .lead { margin: .5rem 0 .6rem; color: var(--text-muted); font-size: 1rem; }
+  .flip-row { margin-block-end: .75rem; }
+
+  .client-title { font-size: .9375rem; font-weight: 600; color: var(--gold); margin: 0 0 .4rem; }
+  .clients { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .client {
+    min-height: 56px; padding: .4rem .6rem;
+    background: var(--surface-2); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font: inherit; font-size: .9375rem; line-height: 1.4; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+  }
+  .client small { color: var(--text-muted); font-size: .8125rem; }
+  .client:hover { border-color: var(--gold); background: var(--wine); transform: translateY(-2px); }
+  .client:active { transform: scale(.97); }
+
+  .back h4 { font-size: 1.25rem; color: var(--gold); margin-block-end: .5rem; }
+  .facts { margin: 0 0 .9rem; display: grid; gap: .55rem; }
+  .facts div { border-block-end: 1px dashed var(--gold-line); padding-block-end: .45rem; }
+  .facts dt { font-size: .8125rem; color: var(--text-muted); font-weight: 500; }
+  .facts dd { margin: 0; font-size: .9375rem; line-height: 1.7; }
+
+  /* ================= الشاشة 3: المحاكمة ================= */
+  .meta { display: flex; flex-direction: column; align-items: flex-end; gap: .15rem; }
+  .progress { display: flex; align-items: center; gap: .6rem; font-size: .875rem; color: var(--text-muted); }
+  .steps { display: flex; gap: 4px; }
+  .steps i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--gold-line); }
+  .steps i.done { background: var(--gold); border-color: var(--gold); }
+  .score { position: relative; font-size: .9375rem; color: var(--text-muted); }
+  .score b { display: inline-block; color: var(--gold); font-weight: 600; min-width: 2.2em; text-align: center; }
+  .score b.bump { animation: bump 450ms var(--ease-out); }
+  .plus {
+    position: absolute; inset-inline-start: 100%; top: -2px; margin-inline-start: .25rem;
+    color: var(--good); font-weight: 600; font-size: .875rem; opacity: 0; pointer-events: none;
+  }
+  .plus.go { animation: plusUp 1000ms ease-out; }
+
+  .bench {
+    position: relative;
+    display: flex; align-items: center; gap: .75rem;
+    background: var(--wine); border-radius: var(--radius);
+    padding: .6rem .9rem; margin-block-end: 1rem;
+  }
+  .bench > svg { width: 36px; height: 36px; color: var(--gold); flex: none; }
+  .bench strong { display: block; font-family: var(--font-head); font-size: 1.125rem; color: var(--gold); line-height: 1.3; }
+  .bench span.sub { font-size: .875rem; color: var(--text); }
+  .gavel-wrap { position: relative; margin-inline-start: auto; width: 48px; height: 48px; flex: none; }
+  .gavel { width: 48px; height: 48px; color: var(--gold); display: block; }
+  .gavel-arm { transform-origin: 42px 40px; }
+  .bench.strike .gavel-arm { animation: gavel 560ms cubic-bezier(.5,0,.6,1); }
+  .ring {
+    position: absolute; left: 36%; top: 70%; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+    border: 2px solid var(--gold); border-radius: 50%; opacity: 0; pointer-events: none;
+  }
+  .bench.hit .ring { animation: ring 650ms ease-out; }
+  .bench.hit .ring.r2 { animation-delay: 110ms; }
+
+  .stage { transform-origin: 100% 50%; }
+  html[dir="ltr"] .stage { transform-origin: 0 50%; }
+  .stage.turn-out { animation: turnOut 360ms ease-in both; }
+  .stage.turn-in  { animation: turnIn 480ms var(--ease-out) backwards; }
+
+  .stage-name { font-family: var(--font-head); font-size: 1.25rem; color: var(--gold); margin: 0; }
+  .question { background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius); padding: .9rem 1rem; margin: .5rem 0 1rem; }
+  .question q { quotes: "«" "»"; color: var(--text); }
+  .question p { margin: 0; }
+  .question .ask { margin-top: .5rem; font-weight: 600; }
+
+  .evidence-title { font-size: .875rem; color: var(--text-muted); font-weight: 500; margin: 0 0 .35rem; }
+  .evidence { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-end: 1rem; }
+  .ev {
+    min-height: var(--tap); padding: 0 .9rem;
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: transparent; color: var(--text);
+    border: 1px dashed var(--gold-line); border-radius: var(--radius);
+    font: inherit; font-size: .9375rem; cursor: pointer;
+  }
+  .ev svg { width: 18px; height: 18px; color: var(--gold); }
+
+  .options { display: grid; gap: .6rem; }
+  .options.enter .option { animation: optIn 520ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 120ms); }
+  .option {
+    display: flex; gap: .75rem; align-items: flex-start;
+    min-height: 56px; padding: .75rem .9rem;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font: inherit; font-size: 1rem; line-height: 1.7; text-align: start; width: 100%;
+    cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+  }
+  .option:hover:not([aria-disabled="true"]) { border-color: var(--gold); background: var(--surface-2); transform: translateY(-2px); }
+  .option:active:not([aria-disabled="true"]) { transform: scale(.98); }
+  .option .letter {
+    flex: none; width: 32px; height: 32px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--gold); color: var(--gold);
+    font-family: var(--font-head); font-weight: 700; margin-top: .1rem;
+  }
+  .option[aria-checked="true"] { background: var(--surface-2); border: 2px solid var(--gold); }
+  .option[aria-checked="true"] .letter { background: var(--gold); color: var(--on-gold); }
+  .option[aria-disabled="true"] { cursor: default; }
+  .option[aria-disabled="true"]:not([aria-checked="true"]) .opt-text { color: var(--text-muted); }
+
+  .verdict {
+    margin-top: 1rem; background: var(--surface);
+    border: 1px solid var(--gold); border-radius: var(--radius);
+    padding: .9rem 1rem;
+    transform-origin: 50% 0;
+    animation: verdictIn 480ms var(--ease-out) both;
+  }
+  .verdict-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+  .verdict-head strong { font-family: var(--font-head); font-size: 1.125rem; color: var(--gold); }
+  .rating { display: inline-flex; align-items: center; gap: .3rem; }
+  .rating svg { width: 24px; height: 24px; color: var(--gold); animation: pop 420ms cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(var(--i) * 130ms + 150ms); }
+  .rating svg.empty { color: var(--text-muted); }
+  .rating .word { font-weight: 600; font-size: .9375rem; margin-inline-start: .25rem; }
+  .r-strong { color: var(--good); }
+  .r-ok     { color: var(--gold); }
+  .r-weak   { color: var(--weak); }
+  .verdict p { margin: .4rem 0 0; }
+  .verdict .next { margin-top: .9rem; }
+  .verdict .next small { display: block; text-align: center; color: var(--text-muted); font-size: .8125rem; margin-top: .4rem; }
+
+  /* ================= أبواب المحكمة (انتقال الشاشات) ================= */
+  .doors { position: fixed; inset: 0; z-index: 50; display: flex; perspective: 1400px; pointer-events: auto; }
+  .doors[hidden] { display: none; }
+  .door {
+    flex: 1; position: relative;
+    background: var(--wine); border: 1px solid var(--gold-line);
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  }
+  .door::before {
+    content: ""; position: absolute; inset: 9% 14%;
+    border: 1px solid var(--gold-line);
+    box-shadow: inset 0 0 0 7px var(--wine), inset 0 0 0 8px var(--gold-line);
+  }
+  .door .knob { position: absolute; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--gold); }
+  .door-l { transform-origin: 0 50%; }
+  .door-r { transform-origin: 100% 50%; }
+  .door-l .knob { right: 16px; }
+  .door-r .knob { left: 16px; }
+  .door-emblem { position: absolute; top: 50%; left: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; color: var(--gold); }
+  .doors.closing .door-l { animation: closeL 480ms var(--ease-out) both; }
+  .doors.closing .door-r { animation: closeR 480ms var(--ease-out) both; }
+  .doors.closing .door-emblem { animation: fadeUp 400ms ease-out 200ms both; }
+  .doors.opening .door-l { animation: openL 950ms cubic-bezier(.6,.05,.3,1) both; }
+  .doors.opening .door-r { animation: openR 950ms cubic-bezier(.6,.05,.3,1) both; }
+  .doors.opening .door-emblem { animation: fadeOut 250ms ease-in both; }
+
+  /* ================= تذييل الصفحة ================= */
+  .page-foot { margin: 2rem auto 0; padding: 1.25rem 1rem 2rem; text-align: center; color: var(--text-muted); font-size: .9375rem; max-width: 1320px; }
+  .page-foot .ornament { margin-block-end: .75rem; }
+
+  /* ================= الحركات (transform و opacity فقط) ================= */
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeOut  { to { opacity: 0; } }
+  @keyframes titleIn  { from { opacity: 0; transform: perspective(500px) rotateX(75deg) translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes draw     { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes spinIn   { from { transform: rotate(-135deg) scale(0); } to { transform: rotate(45deg) scale(1); } }
+  @keyframes beam     { 0%,100% { transform: rotate(0); } 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
+  @keyframes panL     { 0%,100% { transform: translateY(0); } 25% { transform: translateY(-2.3px); } 75% { transform: translateY(2.3px); } }
+  @keyframes panR     { 0%,100% { transform: translateY(0); } 25% { transform: translateY(2.3px); } 75% { transform: translateY(-2.3px); } }
+  @keyframes float    { 0% { transform: translate3d(0,0,0); opacity: 0; } 15% { opacity: .9; } 80% { opacity: .55; } 100% { transform: translate3d(var(--dx), -520px, 0); opacity: 0; } }
+  @keyframes pop      { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+  @keyframes sweep    { 0% { transform: translateX(-130%) skewX(-12deg); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateX(330%) skewX(-12deg); opacity: 0; } }
+  @keyframes shake    { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-3px,1px); } 40% { transform: translate(3px,-1px); } 60% { transform: translate(-2px,0); } 80% { transform: translate(2px,0); } }
+  @keyframes gavel    { 0% { transform: rotate(0); } 45% { transform: rotate(32deg); } 75% { transform: rotate(-3deg); } 87% { transform: rotate(2deg); } 100% { transform: rotate(0); } }
+  @keyframes ring     { from { transform: scale(.2); opacity: .9; } to { transform: scale(3.4); opacity: 0; } }
+  @keyframes bump     { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes plusUp   { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 20% { opacity: 1; transform: translateY(0) scale(1.1); } 100% { opacity: 0; transform: translateY(-20px); } }
+  @keyframes optIn    { from { opacity: 0; transform: perspective(600px) rotateX(-35deg) translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes verdictIn{ from { opacity: 0; transform: perspective(700px) rotateX(-28deg) translateY(-8px); } to { opacity: 1; transform: none; } }
+  @keyframes turnOut  { to { opacity: 0; transform: perspective(900px) rotateY(-70deg); } }
+  @keyframes turnIn   { from { opacity: 0; transform: perspective(900px) rotateY(70deg); } to { opacity: 1; transform: none; } }
+  @keyframes closeL   { from { opacity: 0; transform: rotateY(100deg); } to { opacity: 1; transform: rotateY(0); } }
+  @keyframes closeR   { from { opacity: 0; transform: rotateY(-100deg); } to { opacity: 1; transform: rotateY(0); } }
+  @keyframes openL    { 0% { transform: rotateY(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotateY(100deg); opacity: 0; } }
+  @keyframes openR    { 0% { transform: rotateY(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotateY(-100deg); opacity: 0; } }
+
+  /* ================= تقليل الحركة ================= */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    html.js .screen-wrap { opacity: 1; transform: none; }
+    .depth .layer { transform: none !important; }
+    .dust { display: none; }
+    .case { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- رموز SVG مرسومة يدويًا (خطوط ودوائر فقط) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="scales" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="8" r="2.5"/>
+        <path d="M32 10.5 V52"/><path d="M22 56 H42"/><path d="M26 52 H38"/><path d="M10 16 H54"/>
+        <path d="M10 16 L4 34 M10 16 L16 34"/><path d="M54 16 L48 34 M54 16 L60 34"/>
+        <path d="M3 34 H17 Q10 43 3 34 Z"/><path d="M47 34 H61 Q54 43 47 34 Z"/>
+      </g>
+    </symbol>
+    <symbol id="mini-full" viewBox="0 0 24 24">
+      <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4 V20 M8 20 H16 M4 7 H20" fill="none"/>
+        <path d="M2 13 H8 Q5 17 2 13 Z M16 13 H22 Q19 17 16 13 Z" fill="currentColor"/>
+        <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13" fill="none"/>
+      </g>
+    </symbol>
+    <symbol id="mini-empty" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4 V20 M8 20 H16 M4 7 H20"/>
+        <path d="M2 13 H8 Q5 17 2 13 Z M16 13 H22 Q19 17 16 13 Z"/>
+        <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13"/>
+      </g>
+    </symbol>
+    <symbol id="lock" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/>
+      </g>
+    </symbol>
+    <symbol id="doc" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 3 H14 L19 8 V21 H6 Z"/><path d="M14 3 V8 H19 M9 13 H16 M9 17 H14"/>
+      </g>
+    </symbol>
+    <symbol id="person" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/><path d="M4 21 c0-4.5 3.6-7 8-7 s8 2.5 8 7"/>
+      </g>
+    </symbol>
+    <!-- عملة بوجهين: رمز قلب الألوان -->
+    <symbol id="coin" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 3 a9 9 0 0 0 0 18 Z" fill="currentColor"/>
+    </symbol>
+    <!-- قلب الملف -->
+    <symbol id="flip" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12 a8 8 0 0 1 14 -5.3 M18 3 V7 H14"/><path d="M20 12 a8 8 0 0 1 -14 5.3 M6 21 V17 H10"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- خلفية بعمق: زخرفية فقط -->
+<div class="depth" aria-hidden="true">
+  <div class="layer l3"></div>
+  <div class="layer l2"><span class="orb"></span><span class="orb"></span></div>
+  <div class="layer l1"><svg><use href="#scales"/></svg></div>
+</div>
+
+<header class="page-head">
+  <h1>المرافعة</h1>
+  <p>نموذج تصميم تفاعلي — ثلاث شاشات. جرّب: «قلب الألوان»، حرّك الماوس على ملفات القضايا أو المسها، اضغط «اقلب الملف»، واختر ردًا في المحاكمة.</p>
+  <div class="ornament" aria-hidden="true"><span></span></div>
+</header>
+
+<main class="screens">
+
+  <!-- ===================== الشاشة 1: الترحيب ===================== -->
+  <section class="screen-wrap" aria-labelledby="s1-label">
+    <p class="screen-label" id="s1-label">الشاشة 1 — الترحيب</p>
+    <div class="screen welcome" id="welcome">
+      <div class="dust" aria-hidden="true"></div>
+
+      <div class="top">
+        <button class="pill-btn theme-btn" id="themeBtn" type="button" aria-pressed="false"
+                aria-label="قلب الألوان: خلفية ذهبية ونص خمري">
+          <svg class="coin" aria-hidden="true"><use href="#coin"/></svg>
+          <span>قلب الألوان</span>
+        </button>
+        <button class="pill-btn" type="button" lang="en" dir="ltr">English</button>
+      </div>
+
+      <!-- الميزان مرسوم مباشرة (مو <use>) عشان تتحرك أجزاؤه -->
+      <svg class="scales" id="scalesArt" viewBox="0 0 64 64" role="img" aria-label="ميزان العدالة">
+        <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="32" cy="8" r="2.5"/>
+          <path d="M32 10.5 V52"/><path d="M22 56 H42"/><path d="M26 52 H38"/>
+          <g class="beam"><path d="M10 16 H54"/></g>
+          <g class="pan-l"><path d="M10 16 L4 34 M10 16 L16 34"/><path d="M3 34 H17 Q10 43 3 34 Z"/></g>
+          <g class="pan-r"><path d="M54 16 L48 34 M54 16 L60 34"/><path d="M47 34 H61 Q54 43 47 34 Z"/></g>
+        </g>
+      </svg>
+      <div class="ornament" aria-hidden="true"><span></span></div>
+      <h2>المرافعة</h2>
+      <p class="tagline">ترافع في قضايا حقيقية غيّرت القانون</p>
+
+      <form id="enterForm" onsubmit="return false">
+        <fieldset class="address">
+          <legend>كيف نناديك؟ <small>(اختياري)</small></legend>
+          <div class="seg">
+            <input type="radio" id="addr-m" name="addr" value="m"><label for="addr-m">أستاذ</label>
+            <input type="radio" id="addr-f" name="addr" value="f"><label for="addr-f">أستاذة</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="name" id="nameLabel">وش اسمك؟</label>
+          <input id="name" name="name" type="text" autocomplete="nickname" placeholder="مثال: سارة" maxlength="30">
+        </div>
+        <button class="btn btn-primary" type="submit">ادخل قاعة المحكمة</button>
+      </form>
+
+      <p class="privacy">
+        <svg aria-hidden="true"><use href="#lock"/></svg>
+        <span>اسمك واختيار الألوان يُحفظان في جهازك فقط، وما يُرسلان لأي مكان.</span>
+      </p>
+
+      <div class="screen-foot">© 2026 ديما بنت ماجد المعارك — مبرمجة سعودية. جميع الحقوق محفوظة.</div>
+    </div>
+  </section>
+
+  <!-- ===================== الشاشة 2: تصفح القضايا ===================== -->
+  <section class="screen-wrap" id="wrap2" aria-labelledby="s2-label">
+    <p class="screen-label" id="s2-label">الشاشة 2 — تصفح القضايا</p>
+    <div class="screen">
+      <div class="topbar">
+        <div class="player">
+          <strong id="p2name">سارة</strong>
+          <small><span id="p2title">متدرّبة</span> · 0 قضايا مكسوبة</small>
+        </div>
+        <button class="icon-btn" type="button" aria-label="الملف الشخصي">
+          <svg width="22" height="22" aria-hidden="true"><use href="#person"/></svg>
+        </button>
+      </div>
+
+      <div class="section-title">
+        <h2 id="s2-title" tabindex="-1">القضايا المتاحة</h2>
+        <span class="count">2 من 6</span>
+      </div>
+
+      <fieldset class="filter-group">
+        <legend>المنطقة</legend>
+        <div class="chips">
+          <button class="chip" type="button" aria-pressed="true">الكل</button>
+          <button class="chip" type="button" aria-pressed="false">الخليج والشرق الأوسط</button>
+          <button class="chip" type="button" aria-pressed="false">أوروبا</button>
+          <button class="chip" type="button" aria-pressed="false">أمريكا</button>
+          <button class="chip" type="button" aria-pressed="false">آسيا والمحيط الهادئ</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="filter-group">
+        <legend>التصنيف</legend>
+        <div class="chips">
+          <button class="chip" type="button" aria-pressed="false">الكل</button>
+          <button class="chip" type="button" aria-pressed="true">مدني</button>
+          <button class="chip" type="button" aria-pressed="true">دولي</button>
+          <button class="chip" type="button" aria-pressed="false">جنائي</button>
+          <button class="chip" type="button" aria-pressed="false">حقوق وحريات</button>
+          <button class="chip" type="button" aria-pressed="false">بيئي</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="filter-group">
+        <legend>العقد</legend>
+        <div class="chips">
+          <button class="chip" type="button" aria-pressed="true">الكل</button>
+          <button class="chip" type="button" aria-pressed="false">الثلاثينيات</button>
+          <button class="chip" type="button" aria-pressed="false">الستينيات</button>
+          <button class="chip" type="button" aria-pressed="false">الألفينات</button>
+          <button class="chip" type="button" aria-pressed="false">العقد الثاني من الألفية</button>
+        </div>
+      </fieldset>
+
+      <div class="cards">
+        <!-- ملف 1 -->
+        <article class="case" aria-labelledby="c1">
+          <div class="case-inner">
+            <div class="face front">
+              <div class="badges">
+                <span class="badge">أوروبا</span><span class="badge">مدني</span><span class="badge year">1932</span>
+              </div>
+              <h3 id="c1">قضية الحلزون في القارورة
+                <span class="orig" dir="ltr" lang="en">Donoghue v Stevenson</span>
+              </h3>
+              <p class="lead">امرأة شربت مشروبًا من قارورة معتمة اشترته لها صديقتها، وتقول إن فيه حلزونًا وإنها مرضت. ما بينها وبين الصانع أي عقد. هل يحق لها تطالبه؟</p>
+              <div class="flip-row">
+                <button class="btn btn-ghost btn-small" type="button" data-flip="back">
+                  <svg aria-hidden="true"><use href="#flip"/></svg>اقلب الملف
+                </button>
+              </div>
+              <p class="client-title">اختر موكّلك</p>
+              <div class="clients">
+                <button class="client" type="button">ماي دونهيو<small>المدّعية</small></button>
+                <button class="client" type="button">ديفيد ستيفنسون<small>صانع المشروب</small></button>
+              </div>
+            </div>
+            <div class="face back" inert aria-hidden="true">
+              <h4 tabindex="-1">ملف القضية</h4>
+              <dl class="facts">
+                <div><dt>المحكمة</dt><dd>مجلس اللوردات، بريطانيا</dd></div>
+                <div><dt>سؤال القضية</dt><dd>هل الصانع مسؤول تجاه من تضرر من منتجه، حتى لو ما بينهم عقد؟</dd></div>
+                <div><dt>الحكم</dt><dd>يُكشف بعد ما تترافع.</dd></div>
+              </dl>
+              <button class="btn btn-ghost btn-small" type="button" data-flip="front">
+                <svg aria-hidden="true"><use href="#flip"/></svg>ارجع لوجه الملف
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ملف 2 — صياغة محايدة للطرفين -->
+        <article class="case" aria-labelledby="c2">
+          <div class="case-inner">
+            <div class="face front">
+              <div class="badges">
+                <span class="badge">الخليج والشرق الأوسط</span><span class="badge">دولي</span><span class="badge year">2001</span>
+              </div>
+              <h3 id="c2">قطر ضد البحرين
+                <span class="orig">محكمة العدل الدولية</span>
+              </h3>
+              <p class="lead">نزاع بين دولتين جارتين على عدد من الجزر والمناطق، وعلى رسم الحدود البحرية بينهما.</p>
+              <div class="flip-row">
+                <button class="btn btn-ghost btn-small" type="button" data-flip="back">
+                  <svg aria-hidden="true"><use href="#flip"/></svg>اقلب الملف
+                </button>
+              </div>
+              <p class="client-title">اختر موكّلك</p>
+              <div class="clients">
+                <button class="client" type="button">دولة قطر<small>طرف في النزاع</small></button>
+                <button class="client" type="button">مملكة البحرين<small>طرف في النزاع</small></button>
+              </div>
+            </div>
+            <div class="face back" inert aria-hidden="true">
+              <h4 tabindex="-1">ملف القضية</h4>
+              <dl class="facts">
+                <div><dt>المحكمة</dt><dd>محكمة العدل الدولية</dd></div>
+                <div><dt>سؤال القضية</dt><dd>لمن السيادة على الجزر والمناطق المتنازع عليها؟ وأين يمر الحد البحري بين الدولتين؟</dd></div>
+                <div><dt>الحياد</dt><dd>تقدر تترافع عن أي طرف، والخيارات مكتوبة بنفس القوة للطرفين.</dd></div>
+                <div><dt>الحكم</dt><dd>يُكشف بعد ما تترافع.</dd></div>
+              </dl>
+              <button class="btn btn-ghost btn-small" type="button" data-flip="front">
+                <svg aria-hidden="true"><use href="#flip"/></svg>ارجع لوجه الملف
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== الشاشة 3: المحاكمة ===================== -->
+  <section class="screen-wrap" id="wrap3" aria-labelledby="s3-label">
+    <p class="screen-label" id="s3-label">الشاشة 3 — المحاكمة (اختر ردًا)</p>
+    <div class="screen" id="trialScreen">
+      <div class="topbar">
+        <div class="player">
+          <strong>قضية الحلزون في القارورة</strong>
+          <small>موكّلتك: ماي دونهيو</small>
+        </div>
+        <div class="meta">
+          <div class="progress">
+            <span>المرحلة 2 من 4</span>
+            <span class="steps" aria-hidden="true"><i class="done"></i><i class="done"></i><i></i><i></i></span>
+          </div>
+          <span class="score">النقاط: <b id="score">120</b><span class="plus" id="plus" aria-hidden="true"></span></span>
+        </div>
+      </div>
+
+      <div class="bench" id="bench">
+        <svg aria-hidden="true"><use href="#scales"/></svg>
+        <div>
+          <strong>هيئة المحكمة</strong>
+          <span class="sub">تستمع إلى الحجج القانونية</span>
+        </div>
+        <span class="gavel-wrap" aria-hidden="true">
+          <svg class="gavel" viewBox="0 0 48 48">
+            <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+              <rect x="8" y="30" width="18" height="4" rx="1"/>
+              <rect x="5" y="34" width="24" height="4" rx="1"/>
+            </g>
+            <g class="gavel-arm">
+              <path d="M42 40 L24 22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <polygon points="25.5,10.8 31.2,16.5 18.5,29.2 12.8,23.5" fill="currentColor"/>
+            </g>
+          </svg>
+          <span class="ring"></span><span class="ring r2"></span>
+        </span>
+      </div>
+
+      <div class="stage" id="stage">
+        <h2 class="stage-name" id="stageName" tabindex="-1">الحجة القانونية</h2>
+        <div class="question">
+          <p>محامي الصانع يقول: <q>ما فيه عقد بين موكّلتك وبين الصانع، فما عليه أي مسؤولية تجاهها.</q></p>
+          <p class="ask">بماذا ترد؟</p>
+        </div>
+
+        <p class="evidence-title">الأدلة المتاحة</p>
+        <div class="evidence">
+          <button class="ev" type="button"><svg aria-hidden="true"><use href="#doc"/></svg>القارورة معتمة</button>
+          <button class="ev" type="button"><svg aria-hidden="true"><use href="#doc"/></svg>الصديقة هي اللي اشترت</button>
+        </div>
+
+        <div class="options" id="options" role="radiogroup" aria-label="خيارات الرد">
+          <button class="option" type="button" role="radio" aria-checked="false" data-key="a" style="--i:0">
+            <span class="letter">أ</span>
+            <span class="opt-text">الصانع عليه واجب عناية تجاه كل من يشرب منتجه، لأن القارورة معتمة ومغلقة وما أحد يقدر يفحصها قبل الشرب.</span>
+          </button>
+          <button class="option" type="button" role="radio" aria-checked="false" data-key="b" style="--i:1">
+            <span class="letter">ب</span>
+            <span class="opt-text">صاحب المقهى هو اللي باع المشروب، فالمسؤولية عليه هو وليس على الصانع.</span>
+          </button>
+          <button class="option" type="button" role="radio" aria-checked="false" data-key="c" style="--i:2">
+            <span class="letter">ج</span>
+            <span class="opt-text">العقد ما يهم؛ المهم أن موكّلتي تضررت وتستحق تعويضًا.</span>
+          </button>
+        </div>
+
+        <div id="verdictSlot" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-foot">
+  <div class="ornament" aria-hidden="true"><span></span></div>
+  © 2026 ديما بنت ماجد المعارك — مبرمجة سعودية. جميع الحقوق محفوظة.
+</footer>
+
+<!-- أبواب المحكمة: انتقال بين الشاشات -->
+<div class="doors" id="doors" aria-hidden="true" hidden>
+  <div class="door door-l"><span class="knob"></span></div>
+  <div class="door door-r"><span class="knob"></span></div>
+  <svg class="door-emblem"><use href="#scales"/></svg>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var mqFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  function reduced() { return mqReduce.matches; }
+  function restart(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- 1) ظهور الشاشات بالـ 3D عند التمرير ---------- */
+  var wraps = document.querySelectorAll('.screen-wrap');
+  var revealed = new WeakSet();
+  function onReveal(w) {
+    if (revealed.has(w)) return;
+    revealed.add(w);
+    if (reduced()) return;
+    w.querySelectorAll('.case').forEach(function (c, i) { setTimeout(function () { restart(c, 'shine'); }, 500 + i * 280); });
+    if (w.id === 'wrap3') restart($('options'), 'enter');
+  }
+  if (reduced() || !('IntersectionObserver' in window)) {
+    wraps.forEach(function (w) { w.classList.add('in'); onReveal(w); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); onReveal(en.target); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12 });
+    wraps.forEach(function (w) { io.observe(w); });
+  }
+
+  /* ---------- 2) قلب الألوان ---------- */
+  var KEY = 'almurafaa-theme';
+  var themeBtn = $('themeBtn');
+  function isGold() { return root.getAttribute('data-theme') === 'gold'; }
+  function syncThemeBtn() { themeBtn.setAttribute('aria-pressed', isGold() ? 'true' : 'false'); }
+  syncThemeBtn();
+  themeBtn.addEventListener('click', function () {
+    var toGold = !isGold();
+    function apply() {
+      if (toGold) root.setAttribute('data-theme', 'gold'); else root.removeAttribute('data-theme');
+      syncThemeBtn();
+    }
+    if (reduced()) apply();
+    else if (document.startViewTransition) document.startViewTransition(apply);
+    else { root.classList.add('theme-anim'); apply(); setTimeout(function () { root.classList.remove('theme-anim'); }, 500); }
+    try { localStorage.setItem(KEY, toGold ? 'gold' : 'wine'); } catch (e) {}
+  });
+
+  /* ---------- 3) الترحيب: ميزان يتأرجح + غبار ذهبي ---------- */
+  var welcome = $('welcome');
+  var aliveTimer = 0;
+  function wake(ms) {
+    if (reduced()) return;
+    welcome.classList.add('alive');
+    clearTimeout(aliveTimer);
+    if (ms) aliveTimer = setTimeout(function () { welcome.classList.remove('alive'); }, ms);
+  }
+  function swing() { if (!reduced()) restart(welcome, 'swing'); }
+  if (!reduced()) {
+    var dust = welcome.querySelector('.dust');
+    for (var i = 0; i < 16; i++) {
+      var p = document.createElement('i');
+      p.style.setProperty('--x', (Math.random() * 100).toFixed(1) + '%');
+      p.style.setProperty('--s', (2 + Math.random() * 3).toFixed(1) + 'px');
+      p.style.setProperty('--d', (5 + Math.random() * 5).toFixed(2) + 's');
+      p.style.setProperty('--delay', (-Math.random() * 8).toFixed(2) + 's');
+      p.style.setProperty('--dx', ((Math.random() - 0.5) * 60).toFixed(0) + 'px');
+      dust.appendChild(p);
+    }
+    /* تلقائيًا 5 ثوانٍ فقط (WCAG 2.2.2)، بعدها تتحرك فقط بفعل اللاعب */
+    wake(5000); swing();
+  }
+  welcome.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') wake(0); });
+  welcome.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') wake(1200); });
+  var scalesArt = $('scalesArt');
+  scalesArt.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') swing(); });
+  scalesArt.addEventListener('click', function () { swing(); wake(4000); });
+
+  /* أستاذ / أستاذة: تتغير صيغة سؤال الاسم */
+  var nameLabel = $('nameLabel'), nameInput = $('name');
+  document.querySelectorAll('input[name="addr"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      var f = r.value === 'f';
+      nameLabel.textContent = f ? 'وش اسمك يا أستاذة؟' : 'وش اسمك يا أستاذ؟';
+      nameInput.placeholder = f ? 'مثال: سارة' : 'مثال: فهد';
+    });
+  });
+
+  /* ---------- 4) أبواب المحكمة ---------- */
+  var doors = $('doors');
+  $('enterForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = nameInput.value.trim();
+    var addr = document.querySelector('input[name="addr"]:checked');
+    if (n) $('p2name').textContent = n;
+    $('p2title').textContent = !addr ? 'متدرّب/ة' : (addr.value === 'f' ? 'متدرّبة' : 'متدرّب');
+    var target = $('s2-title'), wrap2 = $('wrap2');
+    if (reduced()) { wrap2.scrollIntoView({ block: 'start' }); target.focus({ preventScroll: true }); return; }
+    doors.hidden = false; doors.className = 'doors closing';
+    setTimeout(function () {
+      wrap2.scrollIntoView({ block: 'start' });
+      doors.className = 'doors opening';
+    }, 560);
+    setTimeout(function () {
+      doors.hidden = true; doors.className = 'doors';
+      target.focus({ preventScroll: true });
+    }, 560 + 1000);
+  });
+
+  /* ---------- 5) ملفات القضايا: ميلان 3D + لمعة + قلب ---------- */
+  document.querySelectorAll('.case').forEach(function (card) {
+    var raf = 0, last = null;
+    function apply() {
+      raf = 0;
+      if (!last) return;
+      var r = card.getBoundingClientRect();
+      var x = (last.x - r.left) / r.width - 0.5;
+      var y = (last.y - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(900px) rotateX(' + (-y * 12).toFixed(2) + 'deg) rotateY(' + (x * 14).toFixed(2) + 'deg)';
+    }
+    function reset() {
+      last = null;
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      card.classList.remove('is-tilting');
+      card.style.transform = '';
+    }
+    card.addEventListener('pointermove', function (e) {
+      if (reduced() || e.pointerType === 'touch') return;
+      last = { x: e.clientX, y: e.clientY };
+      card.classList.add('is-tilting');
+      if (!raf) raf = requestAnimationFrame(apply);
+    });
+    card.addEventListener('pointerenter', function (e) { if (!reduced() && e.pointerType !== 'touch') restart(card, 'shine'); });
+    card.addEventListener('pointerleave', reset);
+    /* اللمس: ميلان خفيف نحو الإصبع ولمعة، ويرجع عند الرفع */
+    card.addEventListener('pointerdown', function (e) {
+      if (reduced() || e.pointerType !== 'touch') return;
+      last = { x: e.clientX, y: e.clientY };
+      apply(); restart(card, 'shine');
+    });
+    card.addEventListener('pointerup', function (e) { if (e.pointerType === 'touch') reset(); });
+    card.addEventListener('pointercancel', reset);
+
+    var front = card.querySelector('.front'), back = card.querySelector('.back');
+    card.querySelectorAll('[data-flip]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var toBack = b.getAttribute('data-flip') === 'back';
+        card.classList.toggle('is-flipped', toBack);
+        front.inert = toBack; back.inert = !toBack;
+        front.setAttribute('aria-hidden', String(toBack));
+        back.setAttribute('aria-hidden', String(!toBack));
+        (toBack ? back.querySelector('h4') : front.querySelector('[data-flip="back"]')).focus({ preventScroll: true });
+      });
+    });
+  });
+
+  /* ---------- 6) المحاكمة: مطرقة + اهتزاز + موجة + عدّاد ---------- */
+  var RESULTS = {
+    a: { n: 3, word: 'قوية',   cls: 'r-strong', pts: 30, text: 'حجة قوية. ربطت المسؤولية بعلاقة الصانع بمن يستهلك منتجه، مو بالعقد. المحكمة تبي تسمع في المرحلة الجاية: ليش كان الصانع يقدر يتوقع الضرر؟' },
+    b: { n: 1, word: 'ضعيفة',  cls: 'r-weak',   pts: 5,  text: 'حجة ضعيفة. نقل اللوم لصاحب المقهى ما يرد على كلام الخصم، والسؤال المطروح عن الصانع نفسه.' },
+    c: { n: 2, word: 'مقبولة', cls: 'r-ok',     pts: 15, text: 'حجة مقبولة. الضرر مهم، بس ما رديت على النقطة الأساسية: ليش يكون الصانع مسؤولًا بدون عقد؟' }
+  };
+  var options = document.querySelectorAll('.option');
+  var optionsWrap = $('options'), slot = $('verdictSlot'), bench = $('bench');
+  var trialScreen = $('trialScreen'), scoreEl = $('score'), plusEl = $('plus');
+  var stage = $('stage'), stageName = $('stageName');
+  var locked = false, score = 120;
+
+  function countTo(target) {
+    var from = parseInt(scoreEl.textContent, 10) || 0;
+    if (reduced()) { scoreEl.textContent = target; return; }
+    restart(scoreEl, 'bump');
+    var t0 = performance.now(), dur = 700;
+    (function step(t) {
+      var p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      scoreEl.textContent = Math.round(from + (target - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function showVerdict(r) {
+    var icons = '';
+    for (var k = 0; k < 3; k++) {
+      icons += k < r.n
+        ? '<svg aria-hidden="true" style="--i:' + k + '"><use href="#mini-full"/></svg>'
+        : '<svg class="empty" aria-hidden="true" style="--i:' + k + '"><use href="#mini-empty"/></svg>';
+    }
+    slot.innerHTML =
+      '<div class="verdict">' +
+        '<div class="verdict-head"><strong>تعليق القاضي</strong>' +
+          '<span class="rating" role="img" aria-label="التقييم: ' + r.word + '، ' + r.n + ' من 3">' + icons +
+          '<span class="word ' + r.cls + '" aria-hidden="true">' + r.word + '</span></span></div>' +
+        '<p>' + r.text + ' (+' + r.pts + ' نقطة)</p>' +
+        '<div class="next"><button class="btn btn-primary" type="button" id="nextBtn">المرحلة التالية</button>' +
+        '<small>في النموذج: يعيد نفس المرحلة لتجربة الحركة مرة ثانية.</small></div>' +
+      '</div>';
+    $('nextBtn').addEventListener('click', nextStage);
+    score += r.pts;
+    countTo(score);
+    plusEl.textContent = '+' + r.pts;
+    if (!reduced()) restart(plusEl, 'go');
+  }
+
+  options.forEach(function (o) {
+    o.addEventListener('click', function () {
+      if (locked) return;
+      locked = true;
+      options.forEach(function (x) {
+        x.setAttribute('aria-checked', x === o ? 'true' : 'false');
+        x.setAttribute('aria-disabled', 'true');
+      });
+      var r = RESULTS[o.getAttribute('data-key')];
+      if (reduced()) { showVerdict(r); return; }
+      restart(bench, 'strike');
+      setTimeout(function () {           /* لحظة ضربة المطرقة */
+        restart(bench, 'hit');
+        restart(trialScreen, 'shake');
+        showVerdict(r);
+      }, 430);
+    });
+  });
+
+  function nextStage() {
+    function resetStage() {
+      slot.innerHTML = '';
+      options.forEach(function (x) { x.setAttribute('aria-checked', 'false'); x.removeAttribute('aria-disabled'); });
+      locked = false;
+    }
+    if (reduced()) { resetStage(); stageName.focus(); return; }
+    stage.classList.remove('turn-in');
+    stage.classList.add('turn-out');
+    setTimeout(function () {
+      resetStage();
+      stage.classList.remove('turn-out');
+      restart(stage, 'turn-in');
+      restart(optionsWrap, 'enter');
+      stageName.focus({ preventScroll: true });
+      stage.scrollIntoView({ block: 'nearest' });
+    }, 380);
+  }
+
+  /* ---------- 7) خلفية بعمق (parallax) ---------- */
+  if (!reduced()) {
+    var l1 = document.querySelector('.l1'), l2 = document.querySelector('.l2'), l3 = document.querySelector('.l3');
+    var px = 0, py = 0, pending = false;
+    function paint() {
+      pending = false;
+      var sy = window.scrollY || 0;
+      l1.style.transform = 'translate3d(' + (px * -18).toFixed(1) + 'px,' + (py * -14 - sy * 0.08).toFixed(1) + 'px,0)';
+      l2.style.transform = 'translate3d(' + (px * -10).toFixed(1) + 'px,' + (py * -8 - sy * 0.04).toFixed(1) + 'px,0)';
+      l3.style.transform = 'translate3d(' + (px * -5).toFixed(1) + 'px,' + (-((sy * 0.15) % 46)).toFixed(1) + 'px,0)';
+    }
+    function schedule() { if (!pending) { pending = true; requestAnimationFrame(paint); } }
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('pointermove', function (e) {
+      if (!mqFine.matches) return;
+      px = e.clientX / window.innerWidth * 2 - 1;
+      py = e.clientY / window.innerHeight * 2 - 1;
+      schedule();
+    }, { passive: true });
+  }
+})();
+</script>
+</body>
+</html>

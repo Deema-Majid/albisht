@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="author" content="ديما بنت ماجد المعارك — Deema Majid AlMaarik">
+<title>البشت</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231E0A0E'/%3E%3Cg fill='none' stroke='%23C9A961' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 10V52M22 54H42M10 18H54M10 18L5 34M10 18L15 34M54 18L49 34M54 18L59 34M4 34H16Q10 42 4 34ZM48 34H60Q54 42 48 34Z'/%3E%3C/g%3E%3C/svg%3E">
+<script>
+  /* يُطبَّق قبل رسم الصفحة لمنع وميض الثيم أو الاتجاه الخطأ */
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('js');
+    try { if (localStorage.getItem('albisht-theme') === 'gold') d.setAttribute('data-theme', 'gold'); } catch (e) {}
+    try {
+      var s = JSON.parse(localStorage.getItem('albisht.v1') || 'null');
+      if (s && s.lang === 'en') { d.lang = 'en'; d.dir = 'ltr'; }
+    } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ================= الثيم الخمري (الافتراضي) ================= */
+  :root {
+    --bg: #1E0A0E; --surface: #2E1015; --surface-2: #3D161D; --wine: #6B1E2A;
+    --gold: #C9A961; --gold-hover: #D4B774; --gold-line: #8C7340;
+    --text: #F3EBDD; --text-muted: #C9B9A6; --on-gold: #1E0A0E;
+    --good: #9CC9A3; --weak: #E8A0A0;
+    --frame: rgba(201,169,97,.18); --shadow: rgba(0,0,0,.35); --shine: rgba(232,205,140,.22);
+    --dust: #E9CF8E; --dust-glow: rgba(201,169,97,.6);
+    --font-head: "Amiri", "Traditional Arabic", "Sakkal Majalla", "Times New Roman", serif;
+    --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, "Geeza Pro", sans-serif;
+    --radius: 10px; --tap: 44px; --ease-out: cubic-bezier(.2,.8,.2,1);
+  }
+  /* ================= الثيم الذهبي (زر «قلب الألوان») ================= */
+  html[data-theme="gold"] {
+    --bg: #F3E3B8; --surface: #FBF1D6; --surface-2: #EFD9A0; --wine: #E2C084;
+    --gold: #7A1F2E; --gold-hover: #8E2536; --gold-line: #9C7438;
+    --text: #4A0F1A; --text-muted: #6E2A35; --on-gold: #FBF1D6;
+    --good: #2E6B3A; --weak: #9E1B1B;
+    --frame: rgba(122,31,46,.16); --shadow: rgba(74,15,26,.18); --shine: rgba(255,255,255,.55);
+    --dust: #FFFBEF; --dust-glow: rgba(156,116,56,.55);
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; min-height: 100vh;
+    background: radial-gradient(ellipse at top, var(--surface) 0%, var(--bg) 60%) fixed, var(--bg);
+    color: var(--text); font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.8;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; line-height: 1.4; margin: 0; }
+  a { color: var(--gold); }
+  p { margin: .5rem 0; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  [tabindex="-1"]:focus { outline: none; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .muted { color: var(--text-muted); }
+  .ltr { direction: ltr; unicode-bidi: isolate; }
+
+  html.theme-anim body, html.theme-anim body *, html.theme-anim body *::before, html.theme-anim body *::after {
+    transition: background-color 450ms ease, color 450ms ease, border-color 450ms ease, fill 450ms ease, stroke 450ms ease !important;
+  }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 480ms; }
+
+  /* ================= خلفية بعمق ================= */
+  .depth { position: fixed; inset: -40px; z-index: 0; pointer-events: none; overflow: hidden; }
+  .layer { position: absolute; inset: 0; will-change: transform; }
+  .layer svg { position: absolute; color: var(--gold); }
+  .l1 svg { width: 52vmin; height: 52vmin; top: 8vh; inset-inline-end: -8vmin; opacity: .07; }
+  .l2 .orb { position: absolute; border: 1px solid var(--gold-line); border-radius: 50%; opacity: .28; }
+  .l2 .orb:nth-child(1) { width: 70vmin; height: 70vmin; bottom: -20vmin; inset-inline-start: -22vmin; }
+  .l2 .orb:nth-child(2) { width: 40vmin; height: 40vmin; bottom: -6vmin; inset-inline-start: -7vmin; }
+  .l3 { inset: -60px; background-image: radial-gradient(var(--gold-line) 1px, transparent 1.6px); background-size: 46px 46px; opacity: .22; }
+  .appbar, .disclaimer, .notice, .app, .site-foot { position: relative; z-index: 1; }
+
+  /* ================= الشريط العلوي الثابت ================= */
+  .appbar {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: .5rem;
+    padding: .5rem max(.75rem, env(safe-area-inset-left));
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    border-bottom: 1px solid var(--gold-line);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  @supports not (background: color-mix(in srgb, red 50%, blue)) { .appbar { background: var(--bg); } }
+  .appbar .brand { font-family: var(--font-head); color: var(--gold); font-size: 1.35rem; font-weight: 700; }
+  .appbar .start, .appbar .end { display: flex; align-items: center; gap: .5rem; }
+  .icon-btn[hidden] { display: none; }
+  html[dir="rtl"] .back-btn svg { transform: scaleX(-1); }   /* السهم يؤشر لبداية السطر في اللغتين */
+  .icon-btn {
+    min-width: var(--tap); min-height: var(--tap);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--gold); border: 1px solid var(--gold-line); border-radius: 50%;
+    cursor: pointer; font: inherit;
+  }
+  .icon-btn:hover { border-color: var(--gold); }
+  .pill-btn {
+    min-height: var(--tap); padding: 0 .9rem; display: inline-flex; align-items: center; gap: .45rem;
+    background: transparent; color: var(--text-muted); border: 1px solid var(--gold-line); border-radius: 999px;
+    font: inherit; font-size: .9375rem; cursor: pointer; transition: border-color 150ms ease, transform 150ms ease;
+  }
+  .pill-btn:hover { border-color: var(--gold); }
+  .pill-btn:active { transform: scale(.96); }
+  .theme-btn .coin { width: 20px; height: 20px; color: var(--gold); transition: transform 600ms var(--ease-out); }
+  html[data-theme="gold"] .theme-btn .coin { transform: perspective(80px) rotateY(180deg); }
+  .appbar .brand { white-space: nowrap; }
+  @media (max-width: 600px) { .theme-btn .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
+
+  .disclaimer { text-align: center; font-size: .875rem; color: var(--text-muted); padding: .35rem 1rem; border-bottom: 1px dashed var(--gold-line); }
+  .notice {
+    max-width: 760px; margin: .75rem auto 0; padding: .6rem 1rem;
+    display: flex; gap: .75rem; align-items: center; justify-content: space-between;
+    background: var(--surface-2); border: 1px solid var(--gold); border-radius: var(--radius); font-size: .9375rem;
+  }
+
+  /* ================= الشاشات ================= */
+  .app { padding: 1rem; max-width: 1180px; margin: 0 auto; }
+  .screen {
+    background: var(--bg); border: 1px solid var(--gold-line); border-radius: 18px;
+    padding: 1.25rem; position: relative; box-shadow: 0 18px 40px var(--shadow);
+    max-width: 760px; margin: 0 auto;
+  }
+  .screen.wide { max-width: 1180px; }
+  .screen::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--frame); border-radius: 13px; pointer-events: none; }
+  .screen.enter { animation: screenIn 800ms var(--ease-out) both; transform-origin: 50% 0; }
+  .screen.shake { animation: shake 320ms ease-out; }
+  @media (min-width: 720px) { .screen { padding: 1.75rem 2rem; } }
+
+  .ornament { display: flex; align-items: center; gap: .75rem; margin: 1rem auto; max-width: 16rem; }
+  .ornament::before, .ornament::after { content: ""; flex: 1; height: 1px; background: var(--gold-line); }
+  .ornament span { width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid var(--gold); flex: none; }
+
+  .section-title { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+  .section-title h2, .h2 { font-size: clamp(1.6rem, 4vw, 2rem); color: var(--gold); }
+  .count { color: var(--text-muted); font-size: .9375rem; }
+  .greet { color: var(--text-muted); margin: 0 0 .5rem; }
+  /* نصوص يكتبها اللاعب (اسم طويل بدون مسافات) ما تطلع برا إطارها */
+  .greet, .player-name, .player-text, .title-frame, .done-list, .notice > span, .trial-top .who, .form-error { overflow-wrap: anywhere; min-width: 0; }
+  .notice .btn { flex: none; }
+
+  /* ================= الأزرار ================= */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+    min-height: 48px; padding: .5rem 1.25rem; border-radius: var(--radius);
+    font: inherit; font-weight: 600; cursor: pointer; text-decoration: none;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(1px) scale(.98); }
+  .btn-primary { background: var(--gold); color: var(--on-gold); border: 1px solid var(--gold); box-shadow: 0 6px 16px var(--shadow); }
+  .btn-primary:hover { background: var(--gold-hover); }
+  .btn-block { width: 100%; }
+  .btn-ghost { background: transparent; color: var(--gold); border: 1px solid var(--gold-line); }
+  .btn-ghost:hover { background: var(--surface-2); border-color: var(--gold); }
+  .btn-danger { background: transparent; color: var(--weak); border: 1px solid var(--weak); }
+  .btn-small { min-height: var(--tap); padding: .25rem .9rem; font-size: .9375rem; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+  .back-link { margin-block-end: .75rem; }
+
+  /* ================= الترحيب ================= */
+  .welcome { text-align: center; overflow: hidden; }
+  .welcome > *:not(.dust) { position: relative; z-index: 1; }
+  .scales { width: 92px; height: 92px; color: var(--gold); display: block; margin: .25rem auto 0; cursor: pointer; }
+  .scales .beam { transform-origin: 32px 16px; }
+  .welcome.swing .beam  { animation: beam 2.4s ease-in-out 2; }
+  .welcome.swing .pan-l { animation: panL 2.4s ease-in-out 2; }
+  .welcome.swing .pan-r { animation: panR 2.4s ease-in-out 2; }
+  .welcome h1 { font-size: clamp(2.25rem, 7vw, 3rem); color: var(--gold); transform-origin: 50% 100%; animation: titleIn 900ms var(--ease-out) 150ms both; }
+  .tagline { color: var(--text-muted); margin: .25rem 0 1.25rem; animation: fadeUp 600ms ease-out 550ms both; }
+  .welcome .ornament::before, .welcome .ornament::after { animation: draw 700ms var(--ease-out) 350ms both; }
+  .welcome .ornament span { animation: spinIn 700ms var(--ease-out) 300ms both; }
+  .welcome form { max-width: 460px; margin: 0 auto; }
+  .dust { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; pointer-events: none; opacity: 0; transition: opacity 900ms ease; z-index: 0; }
+  .welcome.alive .dust { opacity: 1; }
+  .dust i {
+    position: absolute; bottom: -12px; left: var(--x); width: var(--s); height: var(--s); border-radius: 50%;
+    background: var(--dust); box-shadow: 0 0 6px 1px var(--dust-glow); opacity: 0;
+    animation: float var(--d) linear var(--delay) infinite;
+  }
+  .welcome:not(.alive) .dust i { animation-play-state: paused; }
+
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .address { text-align: start; margin-block-end: 1rem; }
+  .address legend { font-weight: 600; padding: 0; margin-block-end: .4rem; }
+  .address legend small { color: var(--text-muted); font-weight: 400; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .seg input, .why-cards input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .seg label {
+    min-height: 48px; display: flex; align-items: center; justify-content: center;
+    background: var(--surface); color: var(--text); border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font-weight: 600; cursor: pointer; transition: background-color 150ms ease, transform 150ms ease, border-color 150ms ease;
+  }
+  .seg label:hover { border-color: var(--gold); }
+  .seg label:active { transform: scale(.97); }
+  .seg input:checked + label { background: var(--gold); color: var(--on-gold); border-color: var(--gold); animation: pop 320ms var(--ease-out); }
+  .seg input:focus-visible + label { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .field { text-align: start; margin-block-end: 1rem; }
+  .field label { display: block; font-weight: 600; margin-block-end: .4rem; }
+  .field input, .field textarea {
+    width: 100%; min-height: 52px; padding: .5rem 1rem; background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius); font: inherit;
+  }
+  .field textarea { min-height: 96px; resize: vertical; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--text-muted); opacity: 1; }
+  .field input:focus-visible, .field textarea:focus-visible { border-color: var(--gold); }
+  .field .hint { font-size: .8125rem; color: var(--text-muted); }
+  .form-error { color: var(--weak); font-weight: 600; min-height: 1.5em; margin: .25rem 0; text-align: start; }
+  .privacy { display: flex; gap: .5rem; align-items: flex-start; text-align: start; color: var(--text-muted); font-size: .9375rem; margin: 1rem auto 0; max-width: 460px; }
+  .privacy svg { flex: none; width: 20px; height: 20px; margin-top: .3rem; color: var(--gold); }
+
+  /* ================= لماذا يختارك أحد؟ ================= */
+  .why-cards { display: grid; gap: .75rem; margin: 1rem 0; }
+  @media (min-width: 620px) { .why-cards { grid-template-columns: 1fr 1fr; } }
+  .why-card {
+    display: block; padding: 1rem; min-height: 96px; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius);
+    transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease;
+    animation: optIn 520ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 110ms);
+  }
+  .why-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .why-card strong { display: block; font-family: var(--font-head); font-size: 1.2rem; color: var(--gold); }
+  .why-card span { color: var(--text-muted); font-size: .9375rem; }
+  .why-cards input:checked + .why-card { background: var(--surface-2); border: 2px solid var(--gold); }
+  .why-cards input:checked + .why-card strong::after { content: " ✓"; }
+  .why-cards input:focus-visible + .why-card { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+  /* ================= تصفح القضايا ================= */
+  .filter-group { margin-top: .75rem; }
+  .filter-group legend { font-size: .875rem; color: var(--text-muted); font-weight: 500; margin-block-end: .35rem; padding: 0; }
+  .chips { display: flex; gap: .5rem; overflow-x: auto; padding-block-end: .35rem; scrollbar-width: thin; }
+  .chip {
+    flex: none; min-height: var(--tap); padding: 0 1rem; background: var(--surface); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: 999px; font: inherit; font-size: .9375rem; cursor: pointer;
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  }
+  .chip:hover { border-color: var(--gold); }
+  .chip:active { transform: scale(.95); }
+  .chip[aria-pressed="true"] { background: var(--gold); color: var(--on-gold); border-color: var(--gold); font-weight: 600; }
+  .filter-actions { margin-top: .5rem; min-height: var(--tap); }
+  .empty { text-align: center; padding: 2rem 1rem; color: var(--text-muted); border: 1px dashed var(--gold-line); border-radius: var(--radius); margin-top: 1.25rem; }
+
+  .cards { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  @media (min-width: 720px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1100px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+  .case { position: relative; border-radius: var(--radius); perspective: 1100px; transition: transform 450ms var(--ease-out); will-change: transform; animation: optIn 600ms var(--ease-out) backwards; animation-delay: calc(var(--i, 0) * 90ms); }
+  .case.is-tilting { transition: transform 90ms linear; }
+  /* ارتفاع الملف = محتوى الوجه الأمامي فقط؛ الظهر فوقه بنفس المقاس ويتمرر لحاله */
+  .case-inner { display: grid; position: relative; height: 100%; min-height: 15rem; transform-style: preserve-3d; transition: transform 750ms cubic-bezier(.3,.7,.2,1); }
+  .case.is-flipped .case-inner { transform: rotateY(180deg); }
+  .face {
+    grid-area: 1 / 1; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius);
+    padding: 1rem; position: relative; overflow: hidden; box-shadow: 0 8px 22px var(--shadow);
+    display: flex; flex-direction: column;
+  }
+  .face.front { min-height: 15rem; }
+  .face.back { transform: rotateY(180deg); position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .face.front::before { content: ""; position: absolute; inset-block: 1rem; inset-inline-start: 0; width: 3px; background: var(--gold); border-radius: 2px; }
+  .face::after {
+    content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 45%;
+    background: linear-gradient(105deg, transparent 0%, var(--shine) 50%, transparent 100%);
+    transform: translateX(-130%) skewX(-12deg); opacity: 0; pointer-events: none;
+  }
+  .case.shine .face::after { animation: sweep 950ms ease-out; }
+  .badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-block-end: .5rem; }
+  .badge { font-size: .8125rem; line-height: 1.6; padding: .1rem .6rem; background: var(--wine); color: var(--text); border-radius: 999px; }
+  .badge.year { background: transparent; border: 1px solid var(--gold-line); color: var(--gold); }
+  .badge.done { background: var(--gold); color: var(--on-gold); font-weight: 600; }
+  .case h3 { font-size: 1.375rem; color: var(--text); }
+  .orig { display: block; font-family: var(--font-body); font-size: .875rem; color: var(--text-muted); font-weight: 400; }
+  .case .lead { margin: .5rem 0 .75rem; color: var(--text-muted); font-size: 1rem; flex: 1; }
+  .card-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .card-actions .btn { flex: 1 1 auto; }
+  .back h4 { font-size: 1.25rem; color: var(--gold); margin-block-end: .5rem; }
+  /* ظهر الملف مضغوط عشان يدخل في ارتفاع الوجه، والباقي يتمرر */
+  .face.back .facts-dl { gap: .3rem; margin-block-end: .5rem; }
+  .face.back .facts-dl div { padding-block-end: .25rem; }
+  .face.back .facts-dl dd { line-height: 1.5; }
+  .face.back > p { margin: 0 0 .5rem; font-size: .9375rem; }
+  .facts-dl { margin: 0 0 .9rem; display: grid; gap: .55rem; }
+  .facts-dl div { border-block-end: 1px dashed var(--gold-line); padding-block-end: .45rem; }
+  .facts-dl dt { font-size: .8125rem; color: var(--text-muted); font-weight: 500; }
+  .facts-dl dd { margin: 0; font-size: .9375rem; line-height: 1.7; }
+
+  /* ================= ملف القضية ================= */
+  .panel { background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius); padding: 1rem; margin-top: 1rem; }
+  .panel h3 { font-size: 1.25rem; color: var(--gold); margin-block-end: .35rem; }
+  .ev-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
+  .ev-list li { border-inline-start: 3px solid var(--gold-line); padding-inline-start: .75rem; }
+  .ev-list strong { display: block; }
+  .ev-list span { color: var(--text-muted); font-size: .9375rem; }
+  .sources { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .sources a { word-break: break-word; }
+  .src-status { display: inline-block; font-size: .75rem; padding: 0 .5rem; border-radius: 999px; border: 1px solid var(--gold-line); color: var(--text-muted); margin-inline-start: .35rem; }
+  .src-status.confirmed { color: var(--good); border-color: var(--good); }
+  .src-status.unread { color: var(--weak); border-color: var(--weak); }
+  .src-host { display: block; font-size: .8125rem; color: var(--text-muted); }
+  .client-title { font-family: var(--font-head); font-size: 1.35rem; color: var(--gold); margin: 1.25rem 0 .5rem; }
+  .clients { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .client {
+    min-height: 64px; padding: .5rem .6rem; background: var(--surface-2); color: var(--text);
+    border: 1px solid var(--gold-line); border-radius: var(--radius); font: inherit; font-size: 1rem; line-height: 1.4; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+  }
+  .client small { color: var(--text-muted); font-size: .8125rem; }
+  .client:hover { border-color: var(--gold); background: var(--wine); transform: translateY(-2px); }
+  .client:active { transform: scale(.97); }
+  .neutral-note { font-size: .875rem; color: var(--text-muted); margin-top: .5rem; }
+
+  /* ================= المحاكمة ================= */
+  .trial-top { display: flex; justify-content: space-between; gap: .75rem; flex-wrap: wrap; padding-block-end: .75rem; margin-block-end: 1rem; border-bottom: 1px solid var(--gold-line); }
+  .trial-top .who { display: flex; flex-direction: column; line-height: 1.4; }
+  .trial-top .who strong { font-weight: 600; }
+  .trial-top .who small { color: var(--gold); font-size: .875rem; }
+  .meta { display: flex; flex-direction: column; align-items: flex-end; gap: .15rem; }
+  .progress { display: flex; align-items: center; gap: .6rem; font-size: .875rem; color: var(--text-muted); }
+  .steps { display: flex; gap: 4px; }
+  .steps i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-2); border: 1px solid var(--gold-line); }
+  .steps i.done { background: var(--gold); border-color: var(--gold); }
+  .score { position: relative; font-size: .9375rem; color: var(--text-muted); }
+  .score b { display: inline-block; color: var(--gold); font-weight: 600; min-width: 1.6em; text-align: center; }
+  .score b.bump { animation: bump 450ms var(--ease-out); }
+  .plus { position: absolute; inset-inline-start: 100%; top: -2px; margin-inline-start: .25rem; color: var(--good); font-weight: 600; font-size: .875rem; opacity: 0; pointer-events: none; }
+  .plus.go { animation: plusUp 1000ms ease-out; }
+  .bench { position: relative; display: flex; align-items: center; gap: .75rem; background: var(--wine); border-radius: var(--radius); padding: .6rem .9rem; margin-block-end: 1rem; }
+  .bench > svg { width: 36px; height: 36px; color: var(--gold); flex: none; }
+  .bench strong { display: block; font-family: var(--font-head); font-size: 1.125rem; color: var(--gold); line-height: 1.3; }
+  .bench span.sub { font-size: .875rem; color: var(--text); }
+  .gavel-wrap { position: relative; margin-inline-start: auto; width: 48px; height: 48px; flex: none; }
+  .gavel { width: 48px; height: 48px; color: var(--gold); display: block; }
+  .gavel-arm { transform-origin: 42px 40px; }
+  .strike .gavel-arm { animation: gavel 560ms cubic-bezier(.5,0,.6,1); }
+  .ring { position: absolute; left: 36%; top: 70%; width: 22px; height: 22px; margin: -11px 0 0 -11px; border: 2px solid var(--gold); border-radius: 50%; opacity: 0; pointer-events: none; }
+  .hit .ring { animation: ring 650ms ease-out; }
+  .hit .ring.r2 { animation-delay: 110ms; }
+  .stage { transform-origin: 100% 50%; }
+  html[dir="ltr"] .stage { transform-origin: 0 50%; }
+  .stage.turn-out { animation: turnOut 360ms ease-in both; }
+  .stage.turn-in { animation: turnIn 480ms var(--ease-out) backwards; }
+  .stage-name { font-family: var(--font-head); font-size: 1.35rem; color: var(--gold); margin: 0; }
+  .question { background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius); padding: .9rem 1rem; margin: .5rem 0 1rem; }
+  .question .opp { margin: 0 0 .5rem; }
+  .question .opp q { quotes: "«" "»"; }
+  html[lang="en"] .question .opp q { quotes: "“" "”"; }
+  .question .ask { margin: 0; font-weight: 600; }
+  .evidence-title { font-size: .875rem; color: var(--text-muted); font-weight: 500; margin: 0 0 .35rem; }
+  .evidence { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-end: .5rem; }
+  .ev {
+    min-height: var(--tap); padding: 0 .9rem; display: inline-flex; align-items: center; gap: .4rem;
+    background: transparent; color: var(--text); border: 1px dashed var(--gold-line); border-radius: var(--radius);
+    font: inherit; font-size: .9375rem; cursor: pointer;
+  }
+  .ev[aria-expanded="true"] { border-style: solid; border-color: var(--gold); background: var(--surface); }
+  .ev svg { width: 18px; height: 18px; color: var(--gold); }
+  .ev-detail { font-size: .9375rem; color: var(--text-muted); background: var(--surface); border-radius: var(--radius); padding: .5rem .8rem; margin: 0 0 1rem; }
+  .options { display: grid; gap: .6rem; margin-top: .75rem; }
+  .options.enter .option { animation: optIn 520ms var(--ease-out) backwards; animation-delay: calc(var(--i) * 120ms); }
+  .option {
+    display: flex; gap: .75rem; align-items: flex-start; min-height: 56px; padding: .75rem .9rem;
+    background: var(--surface); color: var(--text); border: 1px solid var(--gold-line); border-radius: var(--radius);
+    font: inherit; font-size: 1rem; line-height: 1.7; text-align: start; width: 100%; cursor: pointer;
+    transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+  }
+  .option:hover:not([aria-disabled="true"]) { border-color: var(--gold); background: var(--surface-2); transform: translateY(-2px); }
+  .option:active:not([aria-disabled="true"]) { transform: scale(.98); }
+  .option .letter {
+    flex: none; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--gold); color: var(--gold); font-family: var(--font-head); font-weight: 700; margin-top: .1rem;
+  }
+  .option[aria-checked="true"] { background: var(--surface-2); border: 2px solid var(--gold); }
+  .option[aria-checked="true"] .letter { background: var(--gold); color: var(--on-gold); }
+  .option[aria-disabled="true"] { cursor: default; }
+  .option[aria-disabled="true"]:not([aria-checked="true"]) .opt-text { color: var(--text-muted); }
+  .verdict { margin-top: 1rem; background: var(--surface); border: 1px solid var(--gold); border-radius: var(--radius); padding: .9rem 1rem; transform-origin: 50% 0; }
+  .verdict.anim { animation: verdictIn 480ms var(--ease-out) both; }
+  .verdict-head { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+  .verdict-head strong { font-family: var(--font-head); font-size: 1.125rem; color: var(--gold); }
+  .rating { display: inline-flex; align-items: center; gap: .3rem; }
+  .rating svg { width: 24px; height: 24px; color: var(--gold); }
+  .verdict.anim .rating svg { animation: pop 420ms cubic-bezier(.3,1.6,.5,1) both; animation-delay: calc(var(--i) * 130ms + 150ms); }
+  .rating svg.empty { color: var(--text-muted); }
+  .rating .word { font-weight: 600; font-size: .9375rem; margin-inline-start: .25rem; }
+  .r-3 { color: var(--good); } .r-2 { color: var(--gold); } .r-1, .r-0 { color: var(--weak); }
+  .verdict .used-ev { font-size: .875rem; color: var(--text-muted); }
+  .verdict .next { margin-top: .9rem; }
+
+  /* ================= النتيجة ================= */
+  .result-head { text-align: center; }
+  .result-head .big { font-family: var(--font-head); font-size: clamp(2.2rem, 7vw, 3rem); color: var(--gold); line-height: 1.3; }
+  .gold-line { height: 2px; background: var(--gold); width: 10rem; margin: .5rem auto 0; transform-origin: 50% 50%; }
+  .result-head.anim .gold-line { animation: draw 800ms var(--ease-out) 300ms both; }
+  .result-head.anim .big { animation: titleIn 800ms var(--ease-out) both; }
+  .result-cards { display: grid; gap: 1rem; margin-top: 1.25rem; }
+  @media (min-width: 820px) { .result-cards { grid-template-columns: 1fr 1fr; align-items: start; } }
+  .rcard { background: var(--surface); border: 1px solid var(--gold-line); border-radius: var(--radius); padding: 1rem; }
+  .rcard h3 { font-size: 1.35rem; color: var(--gold); margin-block-end: .5rem; }
+  .rcard .pct { font-family: var(--font-head); font-size: 2.25rem; color: var(--text); }
+  .stage-list { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: .35rem; }
+  .stage-list li { display: flex; justify-content: space-between; gap: .5rem; border-block-end: 1px dashed var(--gold-line); padding-block-end: .3rem; font-size: .9375rem; }
+  .won-line { font-weight: 600; }
+  .bridge { margin-top: 1rem; padding: .8rem 1rem; border: 1px solid var(--gold); border-radius: var(--radius); background: var(--surface-2); }
+  .new-title { margin-top: 1rem; text-align: center; padding: 1rem; border: 2px solid var(--gold); border-radius: var(--radius); position: relative; overflow: hidden; }
+  .new-title strong { display: block; font-family: var(--font-head); font-size: 1.6rem; color: var(--gold); }
+  .new-title::after { content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 45%; background: linear-gradient(105deg, transparent 0%, var(--shine) 50%, transparent 100%); transform: translateX(-130%) skewX(-12deg); opacity: 0; pointer-events: none; animation: sweep 1200ms ease-out 400ms; }
+
+  /* ================= الملف الشخصي ================= */
+  .title-frame { text-align: center; padding: 1rem; border: 2px solid var(--gold); border-radius: var(--radius); margin: 1rem 0; box-shadow: inset 0 0 0 4px var(--bg), inset 0 0 0 5px var(--gold-line); }
+  .title-frame strong { display: block; font-family: var(--font-head); font-size: 2rem; color: var(--gold); }
+  .bar { height: 10px; background: var(--surface-2); border: 1px solid var(--gold-line); border-radius: 999px; overflow: hidden; margin: .4rem 0; }
+  .bar i { display: block; height: 100%; background: var(--gold); width: 0; transition: width 900ms var(--ease-out); }
+  .done-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .done-list li { display: flex; justify-content: space-between; gap: .5rem; flex-wrap: wrap; border-block-end: 1px dashed var(--gold-line); padding-block-end: .4rem; }
+  .confirm-box { margin-top: .75rem; padding: .8rem 1rem; border: 1px solid var(--weak); border-radius: var(--radius); }
+
+  /* ================= أبواب المحكمة ================= */
+  .doors { position: fixed; inset: 0; z-index: 50; display: flex; direction: ltr; perspective: 1400px; }
+  .door { flex: 1; position: relative; background: var(--wine); border: 1px solid var(--gold-line); -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+  .door::before { content: ""; position: absolute; inset: 9% 14%; border: 1px solid var(--gold-line); box-shadow: inset 0 0 0 7px var(--wine), inset 0 0 0 8px var(--gold-line); }
+  .door .knob { position: absolute; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--gold); }
+  .door-l { transform-origin: 0 50%; } .door-r { transform-origin: 100% 50%; }
+  .door-l .knob { right: 16px; } .door-r .knob { left: 16px; }
+  .door-emblem { position: absolute; top: 50%; left: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; color: var(--gold); }
+  .doors.closing .door-l { animation: closeL 480ms var(--ease-out) both; }
+  .doors.closing .door-r { animation: closeR 480ms var(--ease-out) both; }
+  .doors.closing .door-emblem { animation: fadeUp 400ms ease-out 200ms both; }
+  .doors.opening .door-l { animation: openL 950ms cubic-bezier(.6,.05,.3,1) both; }
+  .doors.opening .door-r { animation: openR 950ms cubic-bezier(.6,.05,.3,1) both; }
+  .doors.opening .door-emblem { animation: fadeOut 250ms ease-in both; }
+
+  /* ================= التذييل ================= */
+  .site-foot { margin: 2rem auto 0; padding: 1rem 1rem 2rem; text-align: center; color: var(--text-muted); font-size: .9375rem; max-width: 1180px; }
+  .site-foot .ornament { margin-block-end: .75rem; }
+
+  /* ================= الحركات ================= */
+  @keyframes screenIn { from { opacity: 0; transform: perspective(1200px) rotateX(10deg) translateY(24px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeOut  { to { opacity: 0; } }
+  @keyframes titleIn  { from { opacity: 0; transform: perspective(500px) rotateX(75deg) translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes draw     { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes spinIn   { from { transform: rotate(-135deg) scale(0); } to { transform: rotate(45deg) scale(1); } }
+  @keyframes beam     { 0%,100% { transform: rotate(0); } 25% { transform: rotate(6deg); } 75% { transform: rotate(-6deg); } }
+  @keyframes panL     { 0%,100% { transform: translateY(0); } 25% { transform: translateY(-2.3px); } 75% { transform: translateY(2.3px); } }
+  @keyframes panR     { 0%,100% { transform: translateY(0); } 25% { transform: translateY(2.3px); } 75% { transform: translateY(-2.3px); } }
+  @keyframes float    { 0% { transform: translate3d(0,0,0); opacity: 0; } 15% { opacity: .9; } 80% { opacity: .55; } 100% { transform: translate3d(var(--dx), -520px, 0); opacity: 0; } }
+  @keyframes pop      { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+  @keyframes sweep    { 0% { transform: translateX(-130%) skewX(-12deg); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateX(330%) skewX(-12deg); opacity: 0; } }
+  @keyframes shake    { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-3px,1px); } 40% { transform: translate(3px,-1px); } 60% { transform: translate(-2px,0); } 80% { transform: translate(2px,0); } }
+  @keyframes gavel    { 0% { transform: rotate(0); } 45% { transform: rotate(32deg); } 75% { transform: rotate(-3deg); } 87% { transform: rotate(2deg); } 100% { transform: rotate(0); } }
+  @keyframes ring     { from { transform: scale(.2); opacity: .9; } to { transform: scale(3.4); opacity: 0; } }
+  @keyframes bump     { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes plusUp   { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 20% { opacity: 1; transform: translateY(0) scale(1.1); } 100% { opacity: 0; transform: translateY(-20px); } }
+  @keyframes optIn    { from { opacity: 0; transform: perspective(600px) rotateX(-35deg) translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes verdictIn{ from { opacity: 0; transform: perspective(700px) rotateX(-28deg) translateY(-8px); } to { opacity: 1; transform: none; } }
+  @keyframes turnOut  { to { opacity: 0; transform: perspective(900px) rotateY(-70deg); } }
+  @keyframes turnIn   { from { opacity: 0; transform: perspective(900px) rotateY(70deg); } to { opacity: 1; transform: none; } }
+  @keyframes closeL   { from { opacity: 0; transform: rotateY(100deg); } to { opacity: 1; transform: rotateY(0); } }
+  @keyframes closeR   { from { opacity: 0; transform: rotateY(-100deg); } to { opacity: 1; transform: rotateY(0); } }
+  @keyframes openL    { 0% { transform: rotateY(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotateY(100deg); opacity: 0; } }
+  @keyframes openR    { 0% { transform: rotateY(0); opacity: 1; } 70% { opacity: 1; } 100% { transform: rotateY(-100deg); opacity: 0; } }
+
+  /* ================= تقليل الحركة ================= */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important; animation-delay: 0ms !important;
+      animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important;
+    }
+    .depth .layer { transform: none !important; }
+    .dust { display: none; }
+    .case { transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- رموز SVG مرسومة يدويًا -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="scales" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="8" r="2.5"/>
+        <path d="M32 10.5 V52"/><path d="M22 56 H42"/><path d="M26 52 H38"/><path d="M10 16 H54"/>
+        <path d="M10 16 L4 34 M10 16 L16 34"/><path d="M54 16 L48 34 M54 16 L60 34"/>
+        <path d="M3 34 H17 Q10 43 3 34 Z"/><path d="M47 34 H61 Q54 43 47 34 Z"/>
+      </g>
+    </symbol>
+    <symbol id="mini-full" viewBox="0 0 24 24">
+      <g stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4 V20 M8 20 H16 M4 7 H20" fill="none"/>
+        <path d="M2 13 H8 Q5 17 2 13 Z M16 13 H22 Q19 17 16 13 Z" fill="currentColor"/>
+        <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13" fill="none"/>
+      </g>
+    </symbol>
+    <symbol id="mini-empty" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 4 V20 M8 20 H16 M4 7 H20"/>
+        <path d="M2 13 H8 Q5 17 2 13 Z M16 13 H22 Q19 17 16 13 Z"/>
+        <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13"/>
+      </g>
+    </symbol>
+    <symbol id="lock" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/>
+      </g>
+    </symbol>
+    <symbol id="doc" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 3 H14 L19 8 V21 H6 Z"/><path d="M14 3 V8 H19 M9 13 H16 M9 17 H14"/>
+      </g>
+    </symbol>
+    <symbol id="person" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/><path d="M4 21 c0-4.5 3.6-7 8-7 s8 2.5 8 7"/>
+      </g>
+    </symbol>
+    <symbol id="arrow-back" viewBox="0 0 24 24">
+      <path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="coin" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M12 3 a9 9 0 0 0 0 18 Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="flip" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 12 a8 8 0 0 1 14 -5.3 M18 3 V7 H14"/><path d="M20 12 a8 8 0 0 1 -14 5.3 M6 21 V17 H10"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="depth" aria-hidden="true">
+  <div class="layer l3"></div>
+  <div class="layer l2"><span class="orb"></span><span class="orb"></span></div>
+  <div class="layer l1"><svg><use href="#scales"/></svg></div>
+</div>
+
+<!-- الشريط العلوي: قلب الألوان في زاوية البداية، واللغة في الزاوية المقابلة -->
+<header class="appbar">
+  <div class="start">
+    <button class="icon-btn back-btn" id="backBtn" type="button" data-i18n-aria="backBtn" hidden>
+      <svg width="22" height="22" aria-hidden="true"><use href="#arrow-back"/></svg>
+    </button>
+    <button class="pill-btn theme-btn" id="themeBtn" type="button" aria-pressed="false">
+      <svg class="coin" aria-hidden="true"><use href="#coin"/></svg>
+      <span class="label" data-i18n="themeBtn"></span>
+    </button>
+  </div>
+  <span class="brand" data-i18n="appName"></span>
+  <div class="end">
+    <button class="icon-btn" id="profileBtn" type="button" data-i18n-aria="profileBtn" hidden>
+      <svg width="22" height="22" aria-hidden="true"><use href="#person"/></svg>
+    </button>
+    <button class="pill-btn" id="langBtn" type="button"></button>
+  </div>
+</header>
+<p class="disclaimer" role="note" data-i18n="disclaimer"></p>
+<div id="notices" aria-live="polite"></div>
+
+<main class="app" id="app">
+
+  <!-- ===== [1] الترحيب ===== -->
+  <section class="screen welcome" id="scr-welcome" aria-labelledby="w-title" hidden>
+    <div class="dust" aria-hidden="true"></div>
+    <svg class="scales" id="scalesArt" viewBox="0 0 64 64" role="img" data-i18n-aria="scalesAria">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="32" cy="8" r="2.5"/>
+        <path d="M32 10.5 V52"/><path d="M22 56 H42"/><path d="M26 52 H38"/>
+        <g class="beam"><path d="M10 16 H54"/></g>
+        <g class="pan-l"><path d="M10 16 L4 34 M10 16 L16 34"/><path d="M3 34 H17 Q10 43 3 34 Z"/></g>
+        <g class="pan-r"><path d="M54 16 L48 34 M54 16 L60 34"/><path d="M47 34 H61 Q54 43 47 34 Z"/></g>
+      </g>
+    </svg>
+    <div class="ornament" aria-hidden="true"><span></span></div>
+    <h1 id="w-title" tabindex="-1" data-focus data-i18n="appName"></h1>
+    <p class="tagline" data-i18n="tagline"></p>
+    <form id="enterForm" novalidate>
+      <fieldset class="address">
+        <legend><span data-i18n="addressLegend"></span> <small data-i18n="optional"></small></legend>
+        <div class="seg">
+          <input type="radio" id="addr-m" name="addr" value="m"><label for="addr-m" data-i18n="addrM"></label>
+          <input type="radio" id="addr-f" name="addr" value="f"><label for="addr-f" data-i18n="addrF"></label>
+        </div>
+      </fieldset>
+      <div class="field">
+        <label for="nameInput" id="nameLabel"></label>
+        <input id="nameInput" type="text" autocomplete="nickname" maxlength="40" aria-describedby="nameError">
+      </div>
+      <p class="form-error" id="nameError" aria-live="polite"></p>
+      <button class="btn btn-primary btn-block" type="submit" data-i18n="enterCourt"></button>
+    </form>
+    <p class="privacy">
+      <svg aria-hidden="true"><use href="#lock"/></svg>
+      <span data-i18n="privacy"></span>
+    </p>
+  </section>
+
+  <!-- ===== [2] لماذا يختارك أحد محاميًا؟ ===== -->
+  <section class="screen" id="scr-why" aria-labelledby="why-title" hidden>
+    <h2 class="h2" id="why-title" tabindex="-1" data-focus data-i18n="whyTitle"></h2>
+    <p class="muted" data-i18n="whyIntro"></p>
+    <form id="whyForm" novalidate>
+      <fieldset>
+        <legend class="sr-only" data-i18n="whyTitle"></legend>
+        <div class="why-cards" id="whyCards"></div>
+      </fieldset>
+      <div class="field">
+        <label for="whyText" data-i18n="whyTextLabel"></label>
+        <textarea id="whyText" maxlength="300"></textarea>
+        <span class="hint" id="whyCount"></span>
+      </div>
+      <p class="form-error" id="whyError" aria-live="polite"></p>
+      <button class="btn btn-primary btn-block" type="submit" data-i18n="continue"></button>
+    </form>
+  </section>
+
+  <!-- ===== [3] تصفح القضايا ===== -->
+  <section class="screen wide" id="scr-browse" aria-labelledby="browse-title" hidden>
+    <p class="greet" id="greet"></p>
+    <div class="section-title">
+      <h2 id="browse-title" tabindex="-1" data-focus data-i18n="casesTitle"></h2>
+      <span class="count" id="caseCount" aria-live="polite"></span>
+    </div>
+    <div id="filters"></div>
+    <div class="filter-actions"><button class="btn btn-ghost btn-small" id="clearFilters" type="button" data-i18n="clearFilters" hidden></button></div>
+    <div class="cards" id="cards"></div>
+    <div class="empty" id="emptyState" hidden>
+      <p id="emptyText"></p>
+      <button class="btn btn-ghost btn-small" id="clearFilters2" type="button" data-i18n="clearFilters"></button>
+    </div>
+  </section>
+
+  <!-- ===== [4] ملف القضية واختيار الموكّل ===== -->
+  <section class="screen" id="scr-case" aria-labelledby="case-title" hidden></section>
+
+  <!-- ===== [5] المحاكمة ===== -->
+  <section class="screen" id="scr-trial" aria-labelledby="stageName" hidden></section>
+
+  <!-- ===== [6] النتيجة ===== -->
+  <section class="screen wide" id="scr-result" aria-labelledby="result-title" hidden></section>
+
+  <!-- ===== [7] الملف الشخصي ===== -->
+  <section class="screen" id="scr-profile" aria-labelledby="profile-title" hidden></section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="ornament" aria-hidden="true"><span></span></div>
+  <span data-i18n="footer"></span>
+</footer>
+
+<div class="doors" id="doors" aria-hidden="true" hidden>
+  <div class="door door-l"><span class="knob"></span></div>
+  <div class="door door-r"><span class="knob"></span></div>
+  <svg class="door-emblem"><use href="#scales"/></svg>
+</div>
+
+<!-- =====================================================================
+     CONFIG: كل الإعدادات والنصوص في مكان واحد. عدّل هنا فقط.
+     ===================================================================== -->
+<script id="config">
+window.CONFIG = {
+  STORAGE_KEY: 'albisht.v1',
+  THEME_KEY: 'albisht-theme',
+  LIMITS: { name: 40, why: 300 },
+
+  /* التقييم: النقاط من 0 إلى 3 لكل مرحلة، والمجموع يتحول لنسبة */
+  SCORING: {
+    maxPerStage: 3,
+    winPercent: 70,                       /* القضية تنحسب مكسوبة من 70% وفوق */
+    bands: [                              /* من الأعلى للأقل */
+      { min: 80, key: 'excellent' },
+      { min: 50, key: 'good' },
+      { min: 0,  key: 'training' }
+    ]
+  },
+
+  /* الألقاب حسب عدد القضايا المكسوبة. m = أستاذ، f = أستاذة، n = بدون اختيار
+     wins: 'all' = عدد القضايا المعروضة حاليًا (يتغير تلقائيًا كل ما زادت القضايا).
+     أي درجة رقمها يساوي عدد القضايا أو أكثر تنشال، عشان أعلى لقب يبقى ممكن. */
+  TITLES: [
+    { wins: 0,  m: { ar: 'متدرّب', en: 'Trainee' },            f: { ar: 'متدرّبة', en: 'Trainee' },            n: { ar: 'متدرّب/ة', en: 'Trainee' } },
+    { wins: 2,  m: { ar: 'محامٍ', en: 'Lawyer' },              f: { ar: 'محامية', en: 'Lawyer' },              n: { ar: 'محامٍ/محامية', en: 'Lawyer' } },
+    { wins: 4,  m: { ar: 'محامٍ أول', en: 'Senior Lawyer' },   f: { ar: 'محامية أولى', en: 'Senior Lawyer' },   n: { ar: 'محامٍ أول/محامية أولى', en: 'Senior Lawyer' } },
+    { wins: 7,  m: { ar: 'مستشار', en: 'Counsel' },            f: { ar: 'مستشارة', en: 'Counsel' },            n: { ar: 'مستشار/ة', en: 'Counsel' } },
+    { wins: 10, m: { ar: 'كبير المستشارين', en: 'Chief Counsel' }, f: { ar: 'كبيرة المستشارين', en: 'Chief Counsel' }, n: { ar: 'كبير/ة المستشارين', en: 'Chief Counsel' } },
+    { wins: 'all', m: { ar: 'أسطورة المرافعة', en: 'Legend of Advocacy' }, f: { ar: 'أسطورة المرافعة', en: 'Legend of Advocacy' }, n: { ar: 'أسطورة المرافعة', en: 'Legend of Advocacy' } }
+  ],
+
+  /* الحركة (بالمللي ثانية والدرجات) */
+  MOTION: { tiltX: 12, tiltY: 14, doorsClose: 560, doorsOpen: 1000, gavelHit: 430, pageTurn: 380, dust: 16, autoCalm: 5000, countUp: 700 },
+
+  /* ترتيب وأسماء الفلاتر */
+  REGIONS: {
+    gulf:          { ar: 'الخليج', en: 'Gulf' },
+    mena:          { ar: 'الشرق الأوسط وشمال أفريقيا', en: 'Middle East & North Africa' },
+    europe:        { ar: 'أوروبا', en: 'Europe' },
+    americas:      { ar: 'الأمريكتان', en: 'Americas' },
+    africa:        { ar: 'أفريقيا', en: 'Africa' },
+    asia:          { ar: 'آسيا', en: 'Asia' },
+    international: { ar: 'محاكم دولية', en: 'International courts' }
+  },
+  TAGS: {
+    constitutional: { ar: 'دستوري', en: 'Constitutional' },
+    civil:          { ar: 'مدني', en: 'Civil' },
+    commercial:     { ar: 'تجاري', en: 'Commercial' },
+    international:  { ar: 'دولي', en: 'International' },
+    'ip-tech':      { ar: 'ملكية فكرية وتقنية', en: 'IP & technology' },
+    rights:         { ar: 'حقوق وحريات', en: 'Rights & freedoms' },
+    environment:    { ar: 'بيئي', en: 'Environmental' },
+    health:         { ar: 'صحي', en: 'Health' },
+    criminal:       { ar: 'جنائي', en: 'Criminal' }
+  },
+  STAGES: {
+    basis:    { ar: 'الأساس القانوني', en: 'Legal basis' },
+    opening:  { ar: 'المرافعة الافتتاحية', en: 'Opening statement' },
+    evidence: { ar: 'تقديم الأدلة', en: 'Presenting evidence' },
+    rebuttal: { ar: 'الرد على الخصم', en: 'Rebuttal' },
+    closing:  { ar: 'المرافعة الختامية', en: 'Closing argument' }
+  },
+  RATINGS: {
+    3: { ar: 'قوية', en: 'Strong' },
+    2: { ar: 'مقبولة', en: 'Acceptable' },
+    1: { ar: 'ضعيفة', en: 'Weak' },
+    0: { ar: 'خاطئة', en: 'Wrong' }
+  },
+  BANDS: {
+    excellent: { ar: 'مرافعة متميزة', en: 'Outstanding advocacy' },
+    good:      { ar: 'مرافعة جيدة', en: 'Good advocacy' },
+    training:  { ar: 'تحتاج تدريب', en: 'Needs practice' }
+  },
+  SOURCE_STATUS: {
+    confirmed: { ar: 'مؤكد', en: 'Confirmed' },
+    likely:    { ar: 'مرجّح', en: 'Likely' },
+    unread:    { ar: 'لم يُقرأ', en: 'Not read' }
+  },
+  WHY: [
+    { key: 'argument', label: { ar: 'الحجة القوية', en: 'A strong argument' }, desc: { ar: 'أعرف كيف أبني حجة يصعب الرد عليها.', en: 'I build arguments that are hard to answer.' } },
+    { key: 'evidence', label: { ar: 'الدليل الدقيق', en: 'Precise evidence' }, desc: { ar: 'ما أقول شيء إلا ومعه دليل.', en: 'I never claim anything without proof.' } },
+    { key: 'fairness', label: { ar: 'الإنصاف', en: 'Fairness' }, desc: { ar: 'أسمع الطرفين وأحترم الحقيقة.', en: 'I listen to both sides and respect the truth.' } },
+    { key: 'calm',     label: { ar: 'الهدوء تحت الضغط', en: 'Calm under pressure' }, desc: { ar: 'ما أرتبك مهما اشتد النقاش.', en: 'I stay steady however heated it gets.' } }
+  ],
+
+  /* صيغ العدد. العربي حسب قواعد CLDR: zero (0) / one (1) / two (2) / few (3-10) / many (11-99) / other (100، 101...) */
+  COUNTS: {
+    casesWon: {
+      ar: { zero: 'ولا قضية مكسوبة', one: 'قضية واحدة مكسوبة', two: 'قضيتان مكسوبتان', few: '{n} قضايا مكسوبة', many: '{n} قضية مكسوبة', other: '{n} قضية مكسوبة' },
+      en: { one: '{n} case won', other: '{n} cases won' }
+    },
+    cases: {
+      ar: { zero: 'ولا قضية', one: 'قضية واحدة', two: 'قضيتان', few: '{n} قضايا', many: '{n} قضية', other: '{n} قضية' },
+      en: { one: '{n} case', other: '{n} cases' }
+    },
+    points: {
+      ar: { zero: 'ولا نقطة', one: 'نقطة واحدة', two: 'نقطتان', few: '{n} نقاط', many: '{n} نقطة', other: '{n} نقطة' },
+      en: { one: '+{n} point', other: '+{n} points' }
+    }
+  },
+
+  /* نصوص الواجهة. المفتاح_m / المفتاح_f صيغة أستاذ / أستاذة (اختيارية) */
+  UI: {
+    appName:        { ar: 'البشت', en: 'Al-Bisht' },
+    docTitle:       { ar: 'البشت — لعبة المحاكم التعليمية', en: 'Al-Bisht — The Courtroom Learning Game' },
+    tagline:        { ar: 'قضايا حقيقية غيّرت القانون، والمرافعة عليك', en: 'Argue real cases that changed the law' },
+    disclaimer:     { ar: 'لعبة تعليمية، وليست استشارة قانونية.', en: 'An educational game, not legal advice.' },
+    footer:         { ar: '© 2026 ديما بنت ماجد المعارك — مبرمجة سعودية. جميع الحقوق محفوظة.', en: '© 2026 Deema Majid AlMaarik — Saudi programmer. All rights reserved.' },
+    themeBtn:       { ar: 'قلب الألوان', en: 'Flip colors' },
+    themeBtnAria:   { ar: 'قلب الألوان: خلفية ذهبية ونص خمري', en: 'Flip colors: gold background with wine text' },
+    langSwitch:     { ar: 'English', en: 'العربية' },
+    langSwitchAria: { ar: 'English — switch the interface to English', en: 'العربية — حوّل الواجهة إلى العربية' },
+    profileBtn:     { ar: 'الملف الشخصي', en: 'Profile' },
+    backBtn:        { ar: 'رجوع', en: 'Back' },
+    scalesAria:     { ar: 'ميزان العدالة', en: 'Scales of justice' },
+    addressLegend:  { ar: 'كيف نناديك؟', en: 'How should we address you?' },
+    optional:       { ar: '(اختياري)', en: '(optional)' },
+    addrM:          { ar: 'أستاذ', en: 'Mr.' },
+    addrF:          { ar: 'أستاذة', en: 'Ms.' },
+    nameLabel:      { ar: 'وش اسمك؟', en: 'What is your name?' },
+    nameLabel_m:    { ar: 'وش اسمك يا أستاذ؟', en: 'What is your name, sir?' },
+    nameLabel_f:    { ar: 'وش اسمك يا أستاذة؟', en: 'What is your name, madam?' },
+    namePh:         { ar: 'مثال: سارة أو فهد', en: 'e.g. Sara or Fahad' },
+    namePh_m:       { ar: 'مثال: فهد', en: 'e.g. Fahad' },
+    namePh_f:       { ar: 'مثال: سارة', en: 'e.g. Sara' },
+    nameRequired:   { ar: 'الاسم مطلوب عشان نبدأ.', en: 'Please write your name to begin.' },
+    enterCourt:     { ar: 'إلى قاعة المحكمة', en: 'Enter the courtroom' },
+    enterCourt_m:   { ar: 'ادخل قاعة المحكمة', en: 'Enter the courtroom' },
+    enterCourt_f:   { ar: 'ادخلي قاعة المحكمة', en: 'Enter the courtroom' },
+    privacy:        { ar: 'اسمك وتقدّمك يُحفظان في هذا المتصفح فقط، وما يُرسلان لأي مكان. وإذا انمسحت بيانات المتصفح تضيع.', en: 'Your name and progress stay in this browser only and are never sent anywhere. Clearing browser data erases them.' },
+    whyTitle:       { ar: 'لماذا يختارك أحد محاميًا؟', en: 'Why would anyone choose you as their lawyer?' },
+    whyIntro:       { ar: 'وش الصفة اللي تميّزك؟ بطاقة وحدة تكفي، أو سببك بكلماتك.', en: 'Pick the quality that sets you apart, or write your own reason.' },
+    whyTextLabel:   { ar: 'أو سببك بكلماتك (اختياري)', en: 'Or write your reason in your own words (optional)' },
+    whyCount:       { ar: '{n} من {max} حرف', en: '{n} of {max} characters' },
+    whyRequired:    { ar: 'لازم صفة وحدة على الأقل، أو سبب مكتوب.', en: 'Pick a quality or write your reason.' },
+    continue:       { ar: 'تابع', en: 'Continue' },
+    greeting:       { ar: 'حيّاك يا {name}', en: 'Welcome back, {name}' },
+    greeting_m:     { ar: 'حيّاك يا أستاذ {name}', en: 'Welcome back, {name}' },
+    greeting_f:     { ar: 'حيّاك يا أستاذة {name}', en: 'Welcome back, {name}' },
+    playerLine:     { ar: '{title} · {wins}', en: '{title} · {wins}' },
+    casesTitle:     { ar: 'القضايا المتاحة', en: 'Available cases' },
+    countOf:        { ar: '{n} من {total}', en: '{n} of {total}' },
+    filterRegion:   { ar: 'المنطقة', en: 'Region' },
+    filterTag:      { ar: 'التصنيف', en: 'Category' },
+    filterDecade:   { ar: 'العقد', en: 'Decade' },
+    all:            { ar: 'الكل', en: 'All' },
+    decadeLabel:    { ar: 'عقد {d}', en: '{d}s' },
+    clearFilters:   { ar: 'مسح الفلاتر', en: 'Clear filters' },
+    noResults:      { ar: 'ما فيه قضايا تطابق هذي الفلاتر.', en: 'No cases match these filters.' },
+    noCases:        { ar: 'ما فيه قضايا جاهزة حاليًا، والجديدة جاية قريب.', en: 'No cases are ready yet. Check back soon!' },
+    doneBadge:      { ar: '✓ منتهية {best}%', en: '✓ Done {best}%' },
+    flipCard:       { ar: 'قلب الملف', en: 'Flip the file' },
+    flipBack:       { ar: 'العودة لوجه الملف', en: 'Back to the front' },
+    openCase:       { ar: 'فتح القضية', en: 'Open the case' },
+    caseFile:       { ar: 'ملف القضية', en: 'Case file' },
+    court:          { ar: 'المحكمة', en: 'Court' },
+    country:        { ar: 'البلد', en: 'Country' },
+    year:           { ar: 'السنة', en: 'Year' },
+    parties:        { ar: 'الأطراف', en: 'Parties' },
+    versus:         { ar: 'ضد', en: 'v.' },
+    verdictHidden:  { ar: 'الحكم: يُكشف بعد المرافعة.', en: 'Verdict: revealed after you argue.' },
+    backToCases:    { ar: '→ كل القضايا', en: '← All cases' },
+    facts:          { ar: 'الوقائع', en: 'The facts' },
+    evidence:       { ar: 'الأدلة', en: 'Evidence' },
+    sources:        { ar: 'المصادر', en: 'Sources' },
+    sourceStatus:   { ar: 'حالة التحقق', en: 'Verification' },
+    chooseClient:   { ar: 'مَن موكّلك؟', en: 'Choose your client' },
+    neutralNote:    { ar: 'المرافعة ممكنة عن أي طرف، والخيارات مكتوبة بنفس القوة للطرفين.', en: 'You can argue for either side; both get equally strong options.' },
+    prevBest:       { ar: 'أفضل أداء لك سابقًا: {best}%', en: 'Your best so far: {best}%' },
+    yourClient:     { ar: 'موكّلك: {name}', en: 'Your client: {name}' },
+    stageOf:        { ar: 'المرحلة {n} من {total}', en: 'Stage {n} of {total}' },
+    points:         { ar: 'النقاط:', en: 'Points:' },
+    bench:          { ar: 'هيئة المحكمة', en: 'The Court' },
+    benchSub:       { ar: 'تستمع إلى الحجج القانونية', en: 'is listening to legal arguments' },
+    opponentSays:   { ar: 'الخصم يقول:', en: 'Opposing counsel says:' },
+    evidenceAvail:  { ar: 'الأدلة المتاحة (التفاصيل بلمسة)', en: 'Available evidence (tap for details)' },
+    optionsAria:    { ar: 'خيارات الرد', en: 'Answer options' },
+    judgeComment:   { ar: 'تعليق القاضي', en: "The judge's comment" },
+    ratingAria:     { ar: 'التقييم: {word}، {n} من 3', en: 'Rating: {word}, {n} of 3' },
+    plusPoints:     { ar: '{pts} لهذه المرحلة', en: '{pts} for this stage' },
+    usedEvidence:   { ar: 'الدليل المستخدم: {label}', en: 'Evidence used: {label}' },
+    nextStage:      { ar: 'المرحلة التالية', en: 'Next stage' },
+    showResult:     { ar: 'عرض النتيجة', en: 'See the result' },
+    leaveTrial:     { ar: 'الخروج من القضية', en: 'Leave the case' },
+    resultTitle:    { ar: 'حكم اللعبة', en: 'Game verdict' },
+    perfTitle:      { ar: 'أداؤك أمام القاضي', en: 'Your performance before the judge' },
+    scoreLine:      { ar: '{total} من {max} نقطة', en: '{total} of {max} points' },
+    wonLine:        { ar: '✓ قضية مكسوبة (70% وفوق)', en: '✓ Case won (70% or more)' },
+    notWonLine:     { ar: 'القضية تنحسب مكسوبة من 70% وفوق.', en: 'You need 70% or more for the case to count as won.' },
+    newBest:        { ar: 'أفضل أداء جديد لك في هذي القضية!', en: 'A new personal best for this case!' },
+    keptBest:       { ar: 'أفضل أداء محفوظ لك: {best}%', en: 'Your saved best: {best}%' },
+    realTitle:      { ar: 'وش صار فعلًا', en: 'What really happened' },
+    realWinner:     { ar: 'حكمت المحكمة لصالح: {name}', en: 'The court ruled for: {name}' },
+    realMixed:      { ar: 'الحكم مختلط: كل طرف أخذ جزءًا مما طلب.', en: 'Mixed ruling: each side won part of what it asked for.' },
+    whyRuled:       { ar: 'ليش حكمت المحكمة كذا', en: 'Why the court ruled this way' },
+    vote:           { ar: 'التصويت: {vote}', en: 'Vote: {vote}' },
+    voteLikely:     { ar: '(رقم مرجّح)', en: '(likely figure)' },
+    aftermath:      { ar: 'وش صار بعدها', en: 'What happened next' },
+    bridgeStrong:   { ar: 'مرافعتك عن {name} كانت قوية، لكن المحكمة الحقيقية وصلت لحكم مختلف. أسبابها مكتوبة تحت «ليش حكمت المحكمة كذا».', en: 'You argued strongly for {name}, but the real court reached a different verdict. Read its reasons below.' },
+    bridgeWeak:     { ar: 'المحكمة الحقيقية حكمت ضد {name}. ومع ذلك كان لهذا الطرف حجج قوية بـ 3 نقاط في كل مرحلة، وإعادة القضية تكشفها. أسباب المحكمة مكتوبة تحت.', en: "The real court ruled against {name}. Even so, every stage had strong 3-point arguments for this side; replay to find them. The court's reasons are below." },
+    bridgeMixed:    { ar: 'الحكم الحقيقي مختلط، فموكّلك {name} كسب جزءًا وخسر جزءًا. الملخص تحت يوضّح وش أخذ كل طرف.', en: 'The real ruling was mixed, so your client {name} won some and lost some. The summary below shows what each side got.' },
+    newTitle:       { ar: 'لقبك الجديد', en: 'Your new title' },
+    anotherCase:    { ar: 'قضية ثانية', en: 'Another case' },
+    replay:         { ar: 'إعادة القضية', en: 'Replay this case' },
+    otherSide:      { ar: 'اللعب عن الطرف الثاني', en: 'Try the other side' },
+    profileTitle:   { ar: 'ملفك الشخصي', en: 'Your profile' },
+    yourTitle:      { ar: 'لقبك', en: 'Your title' },
+    winsCount:      { ar: 'المكسوب: {wins}', en: 'Won: {wins}' },
+    toNextTitle:    { ar: 'باقي {count} للقب «{title}»', en: '{count} more to reach "{title}"' },
+    topTitle:       { ar: 'وصلت لأعلى لقب!', en: 'You reached the top title!' },
+    yourWhy:        { ar: 'لماذا يختارك أحد محاميًا؟', en: 'Why would anyone choose you?' },
+    noWhy:          { ar: 'ما جاوبت بعد.', en: 'Not answered yet.' },
+    finishedCases:  { ar: 'القضايا المنتهية', en: 'Finished cases' },
+    noFinished:     { ar: 'ما أنهيت أي قضية بعد.', en: "You haven't finished any case yet." },
+    bestFor:        { ar: 'أفضل أداء {best}% · مع {side}', en: 'Best {best}% · for {side}' },
+    changeName:     { ar: 'تغيير الاسم', en: 'Change name' },
+    backToCasesBtn: { ar: 'العودة للقضايا', en: 'Back to cases' },
+    clearData:      { ar: 'امسح بياناتي', en: 'Erase my data' },
+    clearConfirm:   { ar: 'تأكيد المسح: راح ينمسح اسمك وإجابتك وكل تقدّمك من هذا المتصفح، وما نقدر نرجعه.', en: 'Are you sure? Your name, answer and all progress will be erased from this browser and cannot be recovered.' },
+    clearYes:       { ar: 'نعم، امسح بياناتي', en: 'Yes, erase' },
+    cancel:         { ar: 'إلغاء', en: 'Cancel' },
+    cleared:        { ar: 'انمسحت بياناتك.', en: 'Your data was erased.' },
+    storageNote:    { ar: 'بياناتك محفوظة في هذا المتصفح فقط.', en: 'Your data is stored in this browser only.' },
+    noticeNoStorage:{ ar: 'التخزين في هذا المتصفح غير متاح، فتقدّمك ما راح ينحفظ بعد إغلاق الصفحة.', en: 'Storage is unavailable in this browser, so your progress will not be kept after you close the page.' },
+    noticeCorrupt:  { ar: 'البيانات المحفوظة كانت تالفة، فبدأنا من جديد.', en: 'The saved data was damaged, so we started fresh.' },
+    dismiss:        { ar: 'إغلاق', en: 'Dismiss' }
+  }
+};
+</script>
+
+<!-- =====================================================================
+     Logic: دوال صافية بدون DOM (تُختبر بـ node scripts/test-logic.mjs)
+     ===================================================================== -->
+<script id="logic">
+(function (root) {
+  'use strict';
+  var ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+  var STAGE_ORDER = ['basis', 'opening', 'evidence', 'rebuttal', 'closing'];
+
+  /* نص آمن: يشيل رموز التحكم ويقص لعدد الحروف (يحسب الإيموجي حرف واحد) */
+  function clampText(v, max) {
+    if (typeof v !== 'string') return '';
+    v = v.replace(/[\u0000-\u001F\u007F]/g, ' ').trim();
+    return Array.from(v).slice(0, max).join('');
+  }
+
+  function defaultState() {
+    return { version: 1, name: '', why: '', whyKey: '', gender: '', lang: 'ar', completed: {} };
+  }
+
+  /* يرجع حالة نظيفة، أو null إذا البيانات ما تنفع */
+  function sanitizeState(o, limits, whyKeys) {
+    if (!o || typeof o !== 'object' || Array.isArray(o) || o.version !== 1) return null;
+    var s = defaultState();
+    s.name = clampText(o.name, limits.name);
+    s.why = clampText(o.why, limits.why);
+    s.whyKey = (whyKeys || []).indexOf(o.whyKey) >= 0 ? o.whyKey : '';
+    s.gender = (o.gender === 'm' || o.gender === 'f') ? o.gender : '';
+    s.lang = o.lang === 'en' ? 'en' : 'ar';
+    var c = o.completed;
+    if (c && typeof c === 'object' && !Array.isArray(c)) {
+      Object.keys(c).forEach(function (id) {
+        var e = c[id];
+        if (!ID_RE.test(id) || !e || typeof e !== 'object') return;
+        var best = Number(e.best);
+        if (!isFinite(best) || best < 0 || best > 100) return;
+        if (e.side !== 'A' && e.side !== 'B') return;
+        s.completed[id] = {
+          best: Math.round(best), side: e.side,
+          date: (typeof e.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) ? e.date : ''
+        };
+      });
+    }
+    return s;
+  }
+
+  /* يجرّب الكتابة والمسح فعليًا (بعض المتصفحات تسمح بالقراءة وترمي خطأ عند الكتابة) */
+  function storageAvailable(storage) {
+    try {
+      var k = '__albisht_test__';
+      storage.setItem(k, '1');
+      storage.removeItem(k);
+      return true;
+    } catch (e) { return false; }
+  }
+
+  /* status: ok | new | corrupt | unavailable */
+  function loadState(storage, key, limits, whyKeys) {
+    if (!storage) return { state: defaultState(), status: 'unavailable' };
+    var raw;
+    try { raw = storage.getItem(key); } catch (e) { return { state: defaultState(), status: 'unavailable' }; }
+    if (raw === null || raw === undefined) return { state: defaultState(), status: 'new' };
+    var obj;
+    try { obj = JSON.parse(raw); } catch (e) { return { state: defaultState(), status: 'corrupt' }; }
+    var s = sanitizeState(obj, limits, whyKeys);
+    if (!s) return { state: defaultState(), status: 'corrupt' };
+    return { state: s, status: 'ok' };
+  }
+
+  function serialize(state) { return JSON.stringify(state); }
+
+  /* points: مصفوفة نقاط المراحل (0 إلى 3) */
+  function computeResult(points, scoring) {
+    var total = 0;
+    points.forEach(function (p) { total += Number(p) || 0; });
+    var max = points.length * scoring.maxPerStage;
+    var percent = max ? Math.round(total / max * 100) : 0;
+    var band = scoring.bands[scoring.bands.length - 1].key;
+    for (var i = 0; i < scoring.bands.length; i++) {
+      if (percent >= scoring.bands[i].min) { band = scoring.bands[i].key; break; }
+    }
+    return { total: total, max: max, percent: percent, band: band, won: percent >= scoring.winPercent };
+  }
+
+  /* validIds (اختياري): تنحسب فقط القضايا الموجودة في البيانات الحالية */
+  function countWins(completed, winPercent, validIds) {
+    return Object.keys(completed || {}).filter(function (id) {
+      return completed[id].best >= winPercent && (!validIds || validIds.indexOf(id) >= 0);
+    }).length;
+  }
+
+  /* يحوّل 'all' إلى عدد القضايا، ويشيل الدرجات اللي ما توصل */
+  function resolveTitles(titles, total) {
+    var last = null, steps = [];
+    titles.forEach(function (t) { if (t.wins === 'all') last = t; else steps.push(t); });
+    steps.sort(function (a, b) { return a.wins - b.wins; });
+    if (!last) return steps;
+    var top = Math.max(total || 0, 1);
+    var out = steps.filter(function (t, i) { return i === 0 || t.wins < top; });
+    var copy = {};
+    Object.keys(last).forEach(function (k) { copy[k] = last[k]; });
+    copy.wins = top;
+    out.push(copy);
+    return out;
+  }
+
+  /* فئة العدد: العربي zero/one/two/few/many/other، والإنجليزي one/other */
+  function pluralCategory(n, lang) {
+    n = Math.abs(Math.floor(n));
+    if (lang !== 'ar') return n === 1 ? 'one' : 'other';
+    if (n === 0) return 'zero';
+    if (n === 1) return 'one';
+    if (n === 2) return 'two';
+    var r = n % 100;
+    if (r >= 3 && r <= 10) return 'few';
+    if (r >= 11 && r <= 99) return 'many';
+    return 'other';
+  }
+  function countPhrase(n, forms, lang) {
+    var set = forms[lang] || forms.ar;
+    var f = set[pluralCategory(n, lang)] || set.other;
+    return format(f, { n: n });
+  }
+
+  /* المحاكمة مكتملة إذا فيه اختيار صالح لكل مرحلة (يحمي النتيجة من مرحلة ناقصة) */
+  function isCompleteTrial(picks, stageCount) {
+    if (!Array.isArray(picks) || picks.length !== stageCount) return false;
+    for (var i = 0; i < stageCount; i++) {
+      if (!picks[i] || typeof picks[i].points !== 'number') return false;
+    }
+    return true;
+  }
+
+  /* يحفظ الأفضل فقط */
+  function recordResult(completed, id, side, percent, date) {
+    var prev = completed[id];
+    if (!prev || percent > prev.best) {
+      completed[id] = { best: percent, side: side, date: date };
+      return { isBest: true, prevBest: prev ? prev.best : null };
+    }
+    return { isBest: false, prevBest: prev.best };
+  }
+
+  /* gender: m | f | anything else = n */
+  /* total = عدد القضايا المعروضة (يحدد درجة 'all') */
+  function titleFor(wins, gender, titles, total) {
+    var g = (gender === 'm' || gender === 'f') ? gender : 'n';
+    var list = resolveTitles(titles, total);
+    var idx = 0;
+    for (var i = 0; i < list.length; i++) if (wins >= list[i].wins) idx = i;
+    var next = list[idx + 1] || null;
+    return {
+      index: idx, title: list[idx][g],
+      next: next ? next[g] : null, nextAt: next ? next.wins : null,
+      toNext: next ? next.wins - wins : 0,
+      from: list[idx].wins
+    };
+  }
+
+  function decadeOf(year) { return Math.floor(year / 10) * 10; }
+
+  /* القيم الموجودة فعلًا في القضايا، بترتيب الإعدادات */
+  function buildFacets(cases, regionOrder, tagOrder) {
+    var regions = {}, tags = {}, decades = {};
+    cases.forEach(function (c) {
+      regions[c.region] = true;
+      (c.tags || []).forEach(function (t) { tags[t] = true; });
+      decades[decadeOf(c.year)] = true;
+    });
+    function ordered(set, order) {
+      var known = order.filter(function (k) { return set[k]; });
+      var extra = Object.keys(set).filter(function (k) { return order.indexOf(k) < 0; }).sort();
+      return known.concat(extra);
+    }
+    return {
+      region: ordered(regions, regionOrder),
+      tag: ordered(tags, tagOrder),
+      decade: Object.keys(decades).map(Number).sort(function (a, b) { return a - b; })
+    };
+  }
+
+  /* داخل المجموعة الواحدة: أي قيمة (OR). بين المجموعات: كلها (AND). مجموعة فاضية = الكل */
+  function filterCases(cases, f) {
+    return cases.filter(function (c) {
+      return (!f.region.length || f.region.indexOf(c.region) >= 0) &&
+             (!f.tag.length || (c.tags || []).some(function (t) { return f.tag.indexOf(t) >= 0; })) &&
+             (!f.decade.length || f.decade.indexOf(decadeOf(c.year)) >= 0);
+    });
+  }
+
+  function shuffle(arr, rng) {
+    var a = arr.slice();
+    rng = rng || Math.random;
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /* فحص خفيف وقت التشغيل: قضية معطوبة من ملف خارجي ما توقف اللعبة */
+  function isPlayable(c) {
+    try {
+      if (!c || typeof c !== 'object' || !ID_RE.test(c.id)) return false;
+      if (!c.title || !c.title.ar || !c.parties || !c.parties.A || !c.parties.B) return false;
+      if (typeof c.year !== 'number' || !Array.isArray(c.tags) || !c.verdict) return false;
+      if (!Array.isArray(c.stages) || c.stages.length !== 5) return false;
+      return c.stages.every(function (st, i) {
+        return st && st.type === STAGE_ORDER[i] && st.options && ['A', 'B'].every(function (s) {
+          var o = st.options[s];
+          return Array.isArray(o) && o.length >= 2 && o.every(function (x) {
+            return x && x.text && x.text.ar && typeof x.points === 'number' && x.points >= 0 && x.points <= 3;
+          });
+        });
+      });
+    } catch (e) { return false; }
+  }
+
+  function visibleCases(list) {
+    var seen = {};
+    return (Array.isArray(list) ? list : []).filter(function (c) {
+      if (!c || c.review !== 'reviewed' || !isPlayable(c) || seen[c.id]) return false;
+      seen[c.id] = true;
+      return true;
+    }).sort(function (a, b) { return a.year - b.year || (a.id < b.id ? -1 : 1); });
+  }
+
+  /* won | lost | mixed : موقف موكّل اللاعب في الحكم الحقيقي */
+  function realOutcome(winner, side) {
+    if (winner === 'mixed') return 'mixed';
+    return winner === side ? 'won' : 'lost';
+  }
+
+  function format(s, vars) {
+    if (!vars) return s;
+    return String(s).replace(/\{(\w+)\}/g, function (m, k) { return vars[k] != null ? String(vars[k]) : m; });
+  }
+
+  root.Logic = {
+    ID_RE: ID_RE, STAGE_ORDER: STAGE_ORDER,
+    clampText: clampText, defaultState: defaultState, sanitizeState: sanitizeState,
+    storageAvailable: storageAvailable, loadState: loadState, serialize: serialize,
+    computeResult: computeResult, countWins: countWins, recordResult: recordResult, titleFor: titleFor,
+    resolveTitles: resolveTitles, pluralCategory: pluralCategory, countPhrase: countPhrase, isCompleteTrial: isCompleteTrial,
+    decadeOf: decadeOf, buildFacets: buildFacets, filterCases: filterCases, shuffle: shuffle,
+    isPlayable: isPlayable, visibleCases: visibleCases, realOutcome: realOutcome, format: format
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+
+<!-- =====================================================================
+     القضايا: ملف لكل قضية. أي ملف غير موجود يُتجاهل بهدوء (onerror).
+     لإضافة قضية: أضف ملفها في data/cases ثم سطرها هنا.
+     ===================================================================== -->
+<script>window.CASES = window.CASES || []; window.CASE_LOAD_ERRORS = [];</script>
+<script src="data/cases/donoghue-1932.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/tinker-1969.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/sony-betamax-1984.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/qatar-bahrain-2001.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/whaling-2014.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/cameroon-nigeria-2002.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/tac-2002.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/aramco-1958.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/mona-lisa-1914.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/van-meegeren-1947.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/dreyfus-1894.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/tichborne-1874.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/adolf-beck-1896.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+<script src="data/cases/corrupt-arms-1953.js" onerror="CASE_LOAD_ERRORS.push(this.getAttribute('src'))"></script>
+
+<!-- =====================================================================
+     التطبيق: الشاشات والحركة
+     ===================================================================== -->
+<script id="app-main">
+(function () {
+  'use strict';
+  var C = window.CONFIG, Lg = window.Logic;
+  var root = document.documentElement;
+  var NS = 'http://www.w3.org/2000/svg';
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var mqFine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  function reduced() { return mqReduce.matches; }
+  function restart(el, cls) { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+  function $(id) { return document.getElementById(id); }
+  var WHY_KEYS = C.WHY.map(function (w) { return w.key; });
+
+  /* ---------- القضايا ---------- */
+  var CASES = Lg.visibleCases(window.CASES);
+  if (window.CASE_LOAD_ERRORS.length && window.console) console.info('[البشت] ملفات قضايا غير موجودة (تم تجاهلها):', window.CASE_LOAD_ERRORS.length);
+  function caseById(id) { for (var i = 0; i < CASES.length; i++) if (CASES[i].id === id) return CASES[i]; return null; }
+
+  /* ---------- التخزين ---------- */
+  var store = null;
+  try { if (Lg.storageAvailable(window.localStorage)) store = window.localStorage; } catch (e) { store = null; }
+  var loaded = Lg.loadState(store, C.STORAGE_KEY, C.LIMITS, WHY_KEYS);
+  var state = loaded.state;
+  var activeNotices = [];
+  function save() {
+    if (!store) return;
+    try { store.setItem(C.STORAGE_KEY, Lg.serialize(state)); }
+    catch (e) { store = null; addNotice('noticeNoStorage'); }
+  }
+  if (!store) activeNotices.push('noticeNoStorage');
+  else if (loaded.status === 'corrupt') { activeNotices.push('noticeCorrupt'); save(); }
+
+  /* ---------- اللغة والنصوص ---------- */
+  function g() { return (state.gender === 'm' || state.gender === 'f') ? state.gender : 'n'; }
+  function t(key, vars) {
+    var e = C.UI[key + '_' + g()] || C.UI[key];
+    if (!e) return key;
+    return Lg.format(e[state.lang] || e.ar, vars);
+  }
+  /* محتوى القضايا: الإنجليزي إذا معبأ، وإلا العربي */
+  function L(obj) {
+    if (!obj) return '';
+    if (state.lang === 'en' && obj.en) return obj.en;
+    return obj.ar || obj.en || '';
+  }
+  /* يضع النص بـ textContent، ويعلّم النص العربي داخل الواجهة الإنجليزية باتجاهه الصحيح */
+  function put(node, obj) {
+    node.textContent = L(obj);
+    if (state.lang === 'en' && obj && !obj.en && obj.ar) { node.lang = 'ar'; node.dir = 'rtl'; }
+    return node;
+  }
+  function h(tag, props, kids) {
+    var n = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      var v = props[k];
+      if (v === null || v === undefined || v === false) return;
+      if (k === 'class') n.className = v;
+      else if (k === 'text') n.textContent = v;
+      else if (k === 'loc') put(n, v);
+      else if (k.indexOf('on') === 0) n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? '' : v);
+    });
+    (kids || []).forEach(function (c) {
+      if (c === null || c === undefined || c === false) return;
+      n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    });
+    return n;
+  }
+  function icon(id, cls) {
+    var s = document.createElementNS(NS, 'svg');
+    s.setAttribute('aria-hidden', 'true');
+    if (cls) s.setAttribute('class', cls);
+    var u = document.createElementNS(NS, 'use');
+    u.setAttribute('href', '#' + id);
+    s.appendChild(u);
+    return s;
+  }
+  function latinOrig(c) {
+    /* الاسم الأصلي (الإنجليزي) تحت العنوان في الواجهة العربية فقط؛ الواجهة الإنجليزية تبقى إنجليزية بالكامل */
+    if (state.lang === 'ar' && c.title.en) return h('span', { class: 'orig', dir: 'ltr', lang: 'en', text: c.title.en });
+    return null;
+  }
+
+  function applyStatic() {
+    root.lang = state.lang;
+    root.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+    document.title = t('docTitle');
+    document.querySelectorAll('[data-i18n]').forEach(function (n) { n.textContent = t(n.getAttribute('data-i18n')); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function (n) { n.setAttribute('aria-label', t(n.getAttribute('data-i18n-aria'))); });
+    var lb = $('langBtn');
+    lb.textContent = t('langSwitch');
+    lb.lang = state.lang === 'ar' ? 'en' : 'ar';
+    lb.dir = state.lang === 'ar' ? 'ltr' : 'rtl';
+    lb.setAttribute('aria-label', t('langSwitchAria'));
+    $('themeBtn').setAttribute('aria-label', t('themeBtnAria'));
+    renderNotices();
+  }
+
+  /* ---------- التنبيهات ---------- */
+  function addNotice(key) { if (activeNotices.indexOf(key) < 0) activeNotices.push(key); renderNotices(); }
+  function renderNotices() {
+    var box = $('notices');
+    box.textContent = '';
+    activeNotices.forEach(function (key) {
+      box.appendChild(h('div', { class: 'notice', role: 'status' }, [
+        h('span', { text: t(key) }),
+        h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('dismiss'), onclick: function () {
+          activeNotices = activeNotices.filter(function (k) { return k !== key; }); renderNotices();
+        } })
+      ]));
+    });
+  }
+
+  /* ---------- التنقل بين الشاشات ---------- */
+  var SCREENS = ['welcome', 'why', 'browse', 'case', 'trial', 'result', 'profile'];
+  var current = null;
+  var renderers = {};
+  /* يتأكد إن الشاشة المطلوبة (من زر الرجوع مثلًا) لها بيانات، وإلا يختار أقرب شاشة صالحة */
+  function resolveScreen(name) {
+    if (SCREENS.indexOf(name) < 0) name = 'welcome';
+    if (name !== 'welcome' && !state.name) return 'welcome';
+    if (name === 'trial' && !trial) name = 'case';
+    if (name === 'case' && !selectedCase) name = 'browse';
+    if (name === 'result' && !lastResult) name = 'browse';
+    return name;
+  }
+  function show(name, opts) {
+    opts = opts || {};
+    name = resolveScreen(name);
+    if (name !== 'trial' && trial) exitTrial();          /* ترك المحاكمة يلغي مؤقّتاتها */
+    /* سجل المتصفح: كل شاشة خطوة، فزر الرجوع يرجع داخل اللعبة */
+    try {
+      if (opts.fromHistory) { if (opts.fixHistory) history.replaceState({ screen: name }, ''); }
+      else if (opts.replace || !current) history.replaceState({ screen: name }, '');
+      else if (current !== name) history.pushState({ screen: name }, '');
+    } catch (e) {}
+    function go() {
+      current = name;
+      SCREENS.forEach(function (s) { $('scr-' + s).hidden = s !== name; });
+      renderers[name](true);
+      var scr = $('scr-' + name);
+      window.scrollTo(0, 0);
+      if (!reduced() && !opts.noAnim) restart(scr, 'enter');
+      $('profileBtn').hidden = !state.name || name === 'welcome';
+      $('backBtn').hidden = name === 'welcome';
+      if (name === 'welcome') startWelcomeMotion(); else stopWelcomeMotion();
+      if (opts.focus !== false) {
+        var f = scr.querySelector('[data-focus]');
+        if (f) f.focus({ preventScroll: true });
+      }
+    }
+    if (opts.doors && !reduced()) doorsThen(go); else go();
+  }
+
+  window.addEventListener('popstate', function (e) {
+    var want = e.state && e.state.screen;
+    if (!want) return;
+    var got = resolveScreen(want);
+    show(got, { fromHistory: true, fixHistory: got !== want });
+  });
+
+  var doors = $('doors');
+  function doorsThen(fn) {
+    doors.hidden = false; doors.className = 'doors closing';
+    setTimeout(function () { fn(); doors.className = 'doors opening'; }, C.MOTION.doorsClose);
+    setTimeout(function () { doors.hidden = true; doors.className = 'doors'; }, C.MOTION.doorsClose + C.MOTION.doorsOpen);
+  }
+
+  /* ---------- زر قلب الألوان ---------- */
+  var themeBtn = $('themeBtn');
+  function isGold() { return root.getAttribute('data-theme') === 'gold'; }
+  function syncThemeBtn() { themeBtn.setAttribute('aria-pressed', isGold() ? 'true' : 'false'); }
+  themeBtn.addEventListener('click', function () {
+    var toGold = !isGold();
+    function apply() { if (toGold) root.setAttribute('data-theme', 'gold'); else root.removeAttribute('data-theme'); syncThemeBtn(); }
+    if (reduced()) apply();
+    else if (document.startViewTransition) document.startViewTransition(apply);
+    else { root.classList.add('theme-anim'); apply(); setTimeout(function () { root.classList.remove('theme-anim'); }, 500); }
+    try { localStorage.setItem(C.THEME_KEY, toGold ? 'gold' : 'wine'); } catch (e) {}
+  });
+
+  /* ---------- زر اللغة ---------- */
+  $('langBtn').addEventListener('click', function () {
+    state.lang = state.lang === 'ar' ? 'en' : 'ar';
+    save();
+    applyStatic();
+    if (current) renderers[current](false);
+    $('langBtn').focus();
+  });
+
+  /* زر الرجوع: يرجع خطوة لفوق في مسار اللعبة (مو سجل المتصفح)، والملف الشخصي يرجع للشاشة اللي انفتح منها */
+  var BACK_TO = { why: 'welcome', browse: 'why', 'case': 'browse', trial: 'case', result: 'case' };
+  var beforeProfile = 'browse';
+  $('backBtn').addEventListener('click', function () {
+    show(current === 'profile' ? beforeProfile : (BACK_TO[current] || 'welcome'));
+  });
+  $('profileBtn').addEventListener('click', function () {
+    if (current !== 'profile') beforeProfile = current;
+    show('profile');
+  });
+
+  /* =================== [1] الترحيب =================== */
+  var welcome = $('scr-welcome'), aliveTimer = 0, dustReady = false;
+  function wake(ms) {
+    if (reduced()) return;
+    welcome.classList.add('alive');
+    clearTimeout(aliveTimer);
+    if (ms) aliveTimer = setTimeout(function () { welcome.classList.remove('alive'); }, ms);
+  }
+  function swing() { if (!reduced()) restart(welcome, 'swing'); }
+  function startWelcomeMotion() {
+    if (reduced()) return;
+    if (!dustReady) {
+      var dust = welcome.querySelector('.dust');
+      for (var i = 0; i < C.MOTION.dust; i++) {
+        var p = document.createElement('i');
+        p.style.setProperty('--x', (Math.random() * 100).toFixed(1) + '%');
+        p.style.setProperty('--s', (2 + Math.random() * 3).toFixed(1) + 'px');
+        p.style.setProperty('--d', (5 + Math.random() * 5).toFixed(2) + 's');
+        p.style.setProperty('--delay', (-Math.random() * 8).toFixed(2) + 's');
+        p.style.setProperty('--dx', ((Math.random() - 0.5) * 60).toFixed(0) + 'px');
+        dust.appendChild(p);
+      }
+      dustReady = true;
+    }
+    wake(C.MOTION.autoCalm); swing();   /* حركة تلقائية 5 ثوانٍ فقط (WCAG 2.2.2) */
+  }
+  function stopWelcomeMotion() { clearTimeout(aliveTimer); welcome.classList.remove('alive', 'swing'); }
+  welcome.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') wake(0); });
+  welcome.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') wake(1200); });
+  $('scalesArt').addEventListener('click', function () { swing(); wake(4000); });
+
+  var nameInput = $('nameInput');
+  function syncNameLabel() {
+    $('nameLabel').textContent = t('nameLabel');
+    nameInput.placeholder = t('namePh');
+  }
+  renderers.welcome = function (fresh) {
+    $('addr-m').checked = state.gender === 'm';
+    $('addr-f').checked = state.gender === 'f';
+    if (fresh) nameInput.value = state.name;
+    $('nameError').textContent = '';
+    syncNameLabel();
+  };
+  document.querySelectorAll('input[name="addr"]').forEach(function (r) {
+    r.addEventListener('change', function () { state.gender = r.value; applyStatic(); syncNameLabel(); });
+  });
+  $('enterForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var n = Lg.clampText(nameInput.value, C.LIMITS.name);
+    if (!n) { $('nameError').textContent = t('nameRequired'); nameInput.focus(); return; }
+    state.name = n;
+    save();
+    show((state.whyKey || state.why) ? 'browse' : 'why', { doors: true });
+  });
+
+  /* =================== [2] لماذا يختارك أحد؟ =================== */
+  var whyText = $('whyText');
+  function updateWhyCount() {
+    $('whyCount').textContent = t('whyCount', { n: Array.from(whyText.value).length, max: C.LIMITS.why });
+  }
+  renderers.why = function (fresh) {
+    var box = $('whyCards');
+    var picked = (box.querySelector('input:checked') || {}).value || state.whyKey;
+    box.textContent = '';
+    C.WHY.forEach(function (w, i) {
+      var id = 'why-' + w.key;
+      var input = h('input', { type: 'radio', name: 'why', id: id, value: w.key });
+      input.checked = picked === w.key;
+      box.appendChild(input);
+      box.appendChild(h('label', { class: 'why-card', for: id, style: '--i:' + i }, [
+        h('strong', { text: L(w.label) }), h('span', { text: L(w.desc) })
+      ]));
+    });
+    if (fresh) whyText.value = state.why;
+    $('whyError').textContent = '';
+    updateWhyCount();
+  };
+  whyText.addEventListener('input', updateWhyCount);
+  $('whyForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var picked = document.querySelector('input[name="why"]:checked');
+    var txt = Lg.clampText(whyText.value, C.LIMITS.why);
+    if (!picked && !txt) { $('whyError').textContent = t('whyRequired'); return; }
+    state.whyKey = picked ? picked.value : '';
+    state.why = txt;
+    save();
+    show('browse');
+  });
+
+  /* =================== [3] تصفح القضايا =================== */
+  var filters = { region: [], tag: [], decade: [] };
+  var facets = Lg.buildFacets(CASES, Object.keys(C.REGIONS), Object.keys(C.TAGS));
+  function facetLabel(group, v) {
+    if (group === 'region') return C.REGIONS[v] ? L(C.REGIONS[v]) : v;
+    if (group === 'tag') return C.TAGS[v] ? L(C.TAGS[v]) : v;
+    return t('decadeLabel', { d: v });
+  }
+  function anyFilter() { return filters.region.length + filters.tag.length + filters.decade.length > 0; }
+  function clearFilters() { filters = { region: [], tag: [], decade: [] }; renderers.browse(false); }
+  $('clearFilters').addEventListener('click', clearFilters);
+  $('clearFilters2').addEventListener('click', function () { clearFilters(); $('browse-title').focus(); });
+
+  /* إرجاع التركيز لنفس الزر بعد إعادة رسم الفلاتر */
+  function chipIndex(btn) { return [].indexOf.call($('filters').querySelectorAll('.chip'), btn); }
+  function refocusChip(k) { var b = $('filters').querySelectorAll('.chip')[k]; if (b) b.focus(); }
+
+  function caseIds() { return CASES.map(function (c) { return c.id; }); }
+  function winsNow() { return Lg.countWins(state.completed, C.SCORING.winPercent, caseIds()); }
+  function currentTitle() { return Lg.titleFor(winsNow(), state.gender, C.TITLES, CASES.length); }
+  function count(n, kind) { return Lg.countPhrase(n, C.COUNTS[kind], state.lang); }
+
+  renderers.browse = function () {
+    var wins = winsNow();
+    $('greet').textContent = state.name
+      ? t('greeting', { name: state.name }) + ' — ' + t('playerLine', { title: L(currentTitle().title), wins: count(wins, 'casesWon') })
+      : '';
+    /* الفلاتر تتولد من البيانات */
+    var fbox = $('filters');
+    fbox.textContent = '';
+    [['region', 'filterRegion'], ['tag', 'filterTag'], ['decade', 'filterDecade']].forEach(function (pair) {
+      var group = pair[0];
+      if (!facets[group].length) return;
+      var chips = h('div', { class: 'chips' });
+      chips.appendChild(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(!filters[group].length), text: t('all'),
+        onclick: function () { var k = chipIndex(this); filters[group] = []; renderers.browse(false); refocusChip(k); } }));
+      facets[group].forEach(function (v) {
+        var on = filters[group].indexOf(v) >= 0;
+        chips.appendChild(h('button', { class: 'chip', type: 'button', 'aria-pressed': String(on), text: facetLabel(group, v),
+          onclick: function () {
+            var k = chipIndex(this);
+            var i = filters[group].indexOf(v);
+            if (i >= 0) filters[group].splice(i, 1); else filters[group].push(v);
+            renderers.browse(false);
+            refocusChip(k);
+          } }));
+      });
+      fbox.appendChild(h('fieldset', { class: 'filter-group' }, [h('legend', { text: t(pair[1]) }), chips]));
+    });
+    var list = Lg.filterCases(CASES, filters);
+    $('caseCount').textContent = t('countOf', { n: list.length, total: CASES.length });
+    $('clearFilters').hidden = !anyFilter();
+    var cards = $('cards');
+    cards.textContent = '';
+    list.forEach(function (c, i) { cards.appendChild(buildCard(c, i)); });
+    $('emptyState').hidden = list.length > 0;
+    $('emptyText').textContent = CASES.length ? t('noResults') : t('noCases');
+    $('clearFilters2').hidden = !CASES.length;
+  };
+
+  function buildCard(c, i) {
+    var done = state.completed[c.id];
+    var badges = [h('span', { class: 'badge', text: facetLabel('region', c.region) })];
+    c.tags.forEach(function (tg) { badges.push(h('span', { class: 'badge', text: facetLabel('tag', tg) })); });
+    badges.push(h('span', { class: 'badge year', text: String(c.year) }));
+    if (done) badges.push(h('span', { class: 'badge done', text: t('doneBadge', { best: done.best }) }));
+    var titleId = 'ct-' + c.id;
+    var flipBtn = h('button', { class: 'btn btn-ghost btn-small', type: 'button' }, [icon('flip'), t('flipCard')]);
+    var backBtn = h('button', { class: 'btn btn-ghost btn-small', type: 'button' }, [icon('flip'), t('flipBack')]);
+    var openBtn = h('button', { class: 'btn btn-primary btn-small', type: 'button', text: t('openCase'),
+      onclick: function () { selectedCase = c; show('case'); } });
+    var front = h('div', { class: 'face front' }, [
+      h('div', { class: 'badges' }, badges),
+      h('h3', { id: titleId }, [put(h('span'), c.title), latinOrig(c)]),
+      h('p', { class: 'lead', loc: c.hook && c.hook.ar ? c.hook : c.facts }),
+      h('div', { class: 'card-actions' }, [flipBtn, openBtn])
+    ]);
+    if (!(c.hook && c.hook.ar)) { var lead = front.querySelector('.lead'); lead.textContent = Array.from(lead.textContent).slice(0, 140).join('') + '…'; }
+    var back = h('div', { class: 'face back', inert: true, 'aria-hidden': 'true' }, [
+      h('h4', { tabindex: '-1', text: t('caseFile') }),
+      h('dl', { class: 'facts-dl' }, [
+        h('div', null, [h('dt', { text: t('court') }), h('dd', { loc: c.court })]),
+        h('div', null, [h('dt', { text: t('country') }), h('dd', { loc: c.country })]),
+        h('div', null, [h('dt', { text: t('parties') }), h('dd', null, [put(h('span'), c.parties.A.name), ' ' + t('versus') + ' ', put(h('span'), c.parties.B.name)])]),
+        h('div', null, [h('dt', { text: t('year') }), h('dd', { text: String(c.year) })])
+      ]),
+      h('p', { class: 'muted', text: t('verdictHidden') }),
+      backBtn
+    ]);
+    var card = h('article', { class: 'case', 'aria-labelledby': titleId, style: '--i:' + Math.min(i, 8) }, [h('div', { class: 'case-inner' }, [front, back])]);
+    function flip(toBack) {
+      card.classList.toggle('is-flipped', toBack);
+      front.inert = toBack; back.inert = !toBack;
+      front.setAttribute('aria-hidden', String(toBack));
+      back.setAttribute('aria-hidden', String(!toBack));
+      (toBack ? back.querySelector('h4') : flipBtn).focus({ preventScroll: true });
+    }
+    flipBtn.addEventListener('click', function () { flip(true); });
+    backBtn.addEventListener('click', function () { flip(false); });
+    attachTilt(card);
+    if (!reduced()) setTimeout(function () { restart(card, 'shine'); }, 400 + Math.min(i, 8) * 200);
+    return card;
+  }
+
+  /* ميلان 3D + لمعة (من النموذج المعتمد) */
+  function attachTilt(card) {
+    var raf = 0, last = null;
+    function apply() {
+      raf = 0;
+      if (!last) return;
+      var r = card.getBoundingClientRect();
+      var x = (last.x - r.left) / r.width - 0.5, y = (last.y - r.top) / r.height - 0.5;
+      card.style.transform = 'perspective(900px) rotateX(' + (-y * C.MOTION.tiltX).toFixed(2) + 'deg) rotateY(' + (x * C.MOTION.tiltY).toFixed(2) + 'deg)';
+    }
+    function reset() {
+      last = null;
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      card.classList.remove('is-tilting');
+      card.style.transform = '';
+    }
+    card.addEventListener('pointermove', function (e) {
+      if (reduced() || e.pointerType === 'touch') return;
+      last = { x: e.clientX, y: e.clientY };
+      card.classList.add('is-tilting');
+      if (!raf) raf = requestAnimationFrame(apply);
+    }, { passive: true });
+    card.addEventListener('pointerenter', function (e) { if (!reduced() && e.pointerType !== 'touch') restart(card, 'shine'); });
+    card.addEventListener('pointerleave', reset);
+    card.addEventListener('pointerdown', function (e) {
+      if (reduced() || e.pointerType !== 'touch') return;
+      last = { x: e.clientX, y: e.clientY }; apply(); restart(card, 'shine');
+    }, { passive: true });
+    card.addEventListener('pointerup', function (e) { if (e.pointerType === 'touch') reset(); });
+    card.addEventListener('pointercancel', reset);
+  }
+
+  /* =================== [4] ملف القضية =================== */
+  var selectedCase = null;
+  function hostOf(url) { try { return new URL(url).hostname.replace(/^www\./, ''); } catch (e) { return ''; } }
+  function sourceList(c) {
+    return h('ul', { class: 'sources' }, c.sources.map(function (s) {
+      var st = C.SOURCE_STATUS[s.status] ? s.status : 'unread';
+      var safe = /^https:\/\//.test(s.url);
+      return h('li', null, [
+        safe ? h('a', { href: s.url, target: '_blank', rel: 'noopener noreferrer', dir: 'auto', text: s.title }) : h('span', { text: s.title }),
+        h('span', { class: 'src-status ' + st, title: t('sourceStatus'), text: L(C.SOURCE_STATUS[st]) }),
+        h('span', { class: 'src-host', dir: 'ltr', text: hostOf(s.url) })
+      ]);
+    }));
+  }
+  renderers['case'] = function () {
+    var c = selectedCase, scr = $('scr-case');
+    scr.textContent = '';
+    if (!c) return;
+    var done = state.completed[c.id];
+    var badges = [h('span', { class: 'badge', text: facetLabel('region', c.region) })];
+    c.tags.forEach(function (tg) { badges.push(h('span', { class: 'badge', text: facetLabel('tag', tg) })); });
+    badges.push(h('span', { class: 'badge year', text: String(c.year) }));
+    function clientBtn(side) {
+      var p = c.parties[side];
+      return h('button', { class: 'client', type: 'button', onclick: function () { startTrial(c, side); } }, [
+        put(h('span'), p.name), put(h('small'), p.role)
+      ]);
+    }
+    [
+      h('button', { class: 'btn btn-ghost btn-small back-link', type: 'button', text: t('backToCases'), onclick: function () { show('browse'); } }),
+      h('div', { class: 'badges' }, badges),
+      h('h2', { class: 'h2', id: 'case-title', tabindex: '-1', 'data-focus': true }, [put(h('span'), c.title), latinOrig(c)]),
+      h('dl', { class: 'facts-dl', style: 'margin-top:.75rem' }, [
+        h('div', null, [h('dt', { text: t('court') }), h('dd', { loc: c.court })]),
+        h('div', null, [h('dt', { text: t('country') }), h('dd', { loc: c.country })]),
+        h('div', null, [h('dt', { text: t('parties') }), h('dd', null, [put(h('span'), c.parties.A.name), ' ' + t('versus') + ' ', put(h('span'), c.parties.B.name)])])
+      ]),
+      h('div', { class: 'panel' }, [h('h3', { text: t('facts') }), h('p', { loc: c.facts })]),
+      h('div', { class: 'panel' }, [h('h3', { text: t('evidence') }), h('ul', { class: 'ev-list' }, (c.evidence || []).map(function (ev) {
+        return h('li', null, [h('strong', { loc: ev.label }), h('span', { loc: ev.detail })]);
+      }))]),
+      h('div', { class: 'panel' }, [h('h3', { text: t('sources') }), sourceList(c)]),
+      h('h3', { class: 'client-title', text: t('chooseClient') }),
+      h('div', { class: 'clients' }, [clientBtn('A'), clientBtn('B')]),
+      c.tags.indexOf('international') >= 0 ? h('p', { class: 'neutral-note', text: t('neutralNote') }) : null,
+      done ? h('p', { class: 'neutral-note', text: t('prevBest', { best: done.best }) }) : null
+    ].forEach(function (n) { if (n) scr.appendChild(n); });
+  };
+
+  /* =================== [5] المحاكمة =================== */
+  var trial = null;
+  var trialSession = 0;
+  /* true إذا المحاكمة اللي بدأ فيها المؤقّت ما زالت هي الحالية */
+  function alive(tr) { return !!tr && trial === tr; }
+  function exitTrial() { trial = null; }
+  var LETTERS = { ar: ['أ', 'ب', 'ج', 'د', 'هـ'], en: ['A', 'B', 'C', 'D', 'E'] };
+  function startTrial(c, side) {
+    trialSession++;
+    trial = {
+      id: trialSession, busy: false,
+      c: c, side: side, idx: 0, answered: false, picks: [], openEv: null,
+      order: c.stages.map(function (st) { return Lg.shuffle(st.options[side], Math.random); })
+    };
+    show('trial');
+  }
+  function trialScore() { return trial.picks.reduce(function (s, p) { return s + (p ? p.points : 0); }, 0); }
+
+  renderers.trial = function (animate) {
+    var scr = $('scr-trial');
+    scr.textContent = '';
+    if (!trial) return;
+    var c = trial.c, st = c.stages[trial.idx], side = trial.side, total = c.stages.length;
+    var steps = h('span', { class: 'steps', 'aria-hidden': 'true' });
+    for (var i = 0; i < total; i++) steps.appendChild(h('i', { class: i < trial.idx + (trial.answered ? 1 : 0) ? 'done' : '' }));
+    var scoreB = h('b', { id: 'scoreNum', text: String(trialScore()) });
+    var plus = h('span', { class: 'plus', id: 'plus', 'aria-hidden': 'true' });
+    scr.appendChild(h('div', { class: 'trial-top' }, [
+      h('div', { class: 'who' }, [put(h('strong'), c.title), h('small', null, [t('yourClient', { name: '' }), put(h('span'), c.parties[side].name)])]),
+      h('div', { class: 'meta' }, [
+        h('div', { class: 'progress' }, [h('span', { text: t('stageOf', { n: trial.idx + 1, total: total }) }), steps]),
+        h('span', { class: 'score' }, [t('points') + ' ', scoreB, ' / ' + (total * C.SCORING.maxPerStage), plus])
+      ])
+    ]));
+    /* منصة القاضي والمطرقة */
+    var gavel = document.createElementNS(NS, 'svg');
+    gavel.setAttribute('class', 'gavel'); gavel.setAttribute('viewBox', '0 0 48 48');
+    gavel.innerHTML = '<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="30" width="18" height="4" rx="1"/><rect x="5" y="34" width="24" height="4" rx="1"/></g>' +
+      '<g class="gavel-arm"><path d="M42 40 L24 22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><polygon points="25.5,10.8 31.2,16.5 18.5,29.2 12.8,23.5" fill="currentColor"/></g>';
+    var bench = h('div', { class: 'bench', id: 'bench' }, [
+      icon('scales'),
+      h('div', null, [h('strong', { text: t('bench') }), h('span', { class: 'sub', text: t('benchSub') })]),
+      h('span', { class: 'gavel-wrap', 'aria-hidden': 'true' }, [gavel, h('span', { class: 'ring' }), h('span', { class: 'ring r2' })])
+    ]);
+    scr.appendChild(bench);
+
+    var stage = h('div', { class: 'stage', id: 'stage' });
+    stage.appendChild(h('h2', { class: 'stage-name', id: 'stageName', tabindex: '-1', 'data-focus': true, text: L(C.STAGES[st.type]) }));
+    var q = h('div', { class: 'question' });
+    var opp = st.opponentLine && st.opponentLine[side];
+    if (st.type === 'rebuttal' && opp && opp.ar) {
+      q.appendChild(h('p', { class: 'opp' }, [t('opponentSays') + ' ', h('q', { loc: opp })]));
+    }
+    q.appendChild(h('p', { class: 'ask', loc: st.prompt[side] }));
+    stage.appendChild(q);
+
+    /* الأدلة: زر لكل دليل يفتح تفاصيله */
+    if (c.evidence && c.evidence.length) {
+      stage.appendChild(h('p', { class: 'evidence-title', text: t('evidenceAvail') }));
+      var evRow = h('div', { class: 'evidence' });
+      var evDetail = h('p', { class: 'ev-detail', id: 'evDetail', hidden: true });
+      c.evidence.forEach(function (ev) {
+        var open = trial.openEv === ev.id;
+        evRow.appendChild(h('button', { class: 'ev', type: 'button', 'aria-expanded': String(open), 'aria-controls': 'evDetail',
+          onclick: function () { trial.openEv = open ? null : ev.id; renderers.trial(false); var b = $('scr-trial').querySelectorAll('.ev')[c.evidence.indexOf(ev)]; if (b) b.focus(); }
+        }, [icon('doc'), put(h('span'), ev.label)]));
+        if (open) { put(evDetail, ev.detail); evDetail.hidden = false; }
+      });
+      stage.appendChild(evRow);
+      stage.appendChild(evDetail);
+    }
+
+    var opts = h('div', { class: 'options', role: 'radiogroup', 'aria-label': t('optionsAria') });
+    var picked = trial.picks[trial.idx];
+    trial.order[trial.idx].forEach(function (o, k) {
+      var b = h('button', { class: 'option', type: 'button', role: 'radio', style: '--i:' + k,
+        'aria-checked': String(picked === o), 'aria-disabled': trial.answered ? 'true' : null,
+        onclick: function () { choose(o, b); } }, [
+        h('span', { class: 'letter', 'aria-hidden': 'true', text: LETTERS[state.lang][k] }),
+        h('span', { class: 'opt-text', loc: o.text })
+      ]);
+      opts.appendChild(b);
+    });
+    stage.appendChild(opts);
+    var slot = h('div', { id: 'verdictSlot', 'aria-live': 'polite' });
+    stage.appendChild(slot);
+    stage.appendChild(h('div', { class: 'btn-row' }, [h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('leaveTrial'),
+      onclick: function () { exitTrial(); show('browse'); } })]));
+    scr.appendChild(stage);
+    if (trial.answered) showJudge(picked, false);
+    if (animate && !reduced()) restart(opts, 'enter');
+  };
+
+  function choose(o, btn) {
+    if (!trial || trial.answered) return;
+    trial.answered = true;
+    trial.picks[trial.idx] = o;
+    var scr = $('scr-trial');
+    scr.querySelectorAll('.option').forEach(function (x) {
+      x.setAttribute('aria-checked', x === btn ? 'true' : 'false');
+      x.setAttribute('aria-disabled', 'true');
+    });
+    var stepsDone = scr.querySelectorAll('.steps i')[trial.idx];
+    if (stepsDone) stepsDone.classList.add('done');
+    if (reduced()) { showJudge(o, true); return; }
+    var bench = $('bench'), tr = trial;
+    restart(bench, 'strike');
+    setTimeout(function () {             /* لحظة ضربة المطرقة */
+      if (!alive(tr) || tr.picks[tr.idx] !== o) return;   /* خرج اللاعب أو تغيّرت المرحلة */
+      var b = $('bench'), sc = $('scr-trial');
+      if (b) restart(b, 'hit');
+      if (sc) restart(sc, 'shake');
+      showJudge(o, true);
+    }, C.MOTION.gavelHit);
+  }
+
+  function countTo(el, from, to) {
+    if (reduced()) { el.textContent = to; return; }
+    restart(el, 'bump');
+    var t0 = performance.now(), dur = C.MOTION.countUp;
+    (function step(now) {
+      var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(from + (to - from) * e);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function showJudge(o, fresh) {
+    var slot = $('verdictSlot');
+    if (!slot || !trial || current !== 'trial') return;
+    var n = o.points, word = L(C.RATINGS[n]);
+    var rating = h('span', { class: 'rating', role: 'img', 'aria-label': t('ratingAria', { word: word, n: n }) });
+    for (var k = 0; k < 3; k++) {
+      var s = icon(k < n ? 'mini-full' : 'mini-empty', k < n ? '' : 'empty');
+      s.style.setProperty('--i', k);
+      rating.appendChild(s);
+    }
+    rating.appendChild(h('span', { class: 'word r-' + n, 'aria-hidden': 'true', text: word }));
+    var last = trial.idx === trial.c.stages.length - 1;
+    var ev = null;
+    if (o.evidenceId) (trial.c.evidence || []).forEach(function (e) { if (e.id === o.evidenceId) ev = e; });
+    var nextBtn = h('button', { class: 'btn btn-primary btn-block', type: 'button', text: last ? t('showResult') : t('nextStage'), onclick: nextStage });
+    slot.textContent = '';
+    slot.appendChild(h('div', { class: 'verdict' + (fresh && !reduced() ? ' anim' : '') }, [
+      h('div', { class: 'verdict-head' }, [h('strong', { text: t('judgeComment') }), rating]),
+      h('p', null, [put(h('span'), o.judge), ' (' + t('plusPoints', { pts: count(n, 'points') }) + ')']),
+      ev ? h('p', { class: 'used-ev' }, [t('usedEvidence', { label: '' }), put(h('span'), ev.label)]) : null,
+      h('div', { class: 'next' }, [nextBtn])
+    ]));
+    if (fresh) {
+      var scoreEl = $('scoreNum'), now = trialScore();
+      if (scoreEl) countTo(scoreEl, now - n, now);
+      var plus = $('plus');
+      if (plus) { plus.textContent = '+' + n; if (!reduced()) restart(plus, 'go'); }
+    }
+  }
+
+  function nextStage() {
+    /* حماية: تجاهل الضغطة إذا ما فيه محاكمة، أو المرحلة ما انجابت، أو فيه انتقال شغّال */
+    if (!trial || !trial.answered || trial.busy) return;
+    if (trial.idx >= trial.c.stages.length - 1) { finishTrial(); return; }
+    var tr = trial;
+    tr.busy = true;
+    function go() {
+      tr.idx++; tr.answered = false; tr.openEv = null; tr.busy = false;
+      renderers.trial(true);
+      var sn = $('stageName'); if (sn) sn.focus({ preventScroll: true });
+    }
+    if (reduced()) { go(); window.scrollTo(0, 0); return; }
+    var stage = $('stage');
+    if (stage) stage.classList.add('turn-out');
+    setTimeout(function () {
+      if (!alive(tr) || current !== 'trial') return;   /* خرج اللاعب أثناء قلب الصفحة */
+      go();
+      var ns = $('stage');
+      if (ns) restart(ns, 'turn-in');
+      $('scr-trial').scrollIntoView({ block: 'start' });
+    }, C.MOTION.pageTurn);
+  }
+
+  /* =================== [6] النتيجة =================== */
+  var lastResult = null;
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  function finishTrial() {
+    if (!trial || !Lg.isCompleteTrial(trial.picks, trial.c.stages.length)) return;   /* ما ترسم نتيجة بمرحلة ناقصة */
+    var points = trial.picks.map(function (p) { return p.points; });
+    var res = Lg.computeResult(points, C.SCORING);
+    var before = currentTitle();
+    var rec = Lg.recordResult(state.completed, trial.c.id, trial.side, res.percent, today());
+    save();
+    var after = currentTitle();
+    lastResult = { c: trial.c, side: trial.side, res: res, picks: trial.picks.slice(), rec: rec, newTitle: after.index > before.index ? after : null };
+    trial = null;
+    show('result');
+  }
+
+  renderers.result = function (animate) {
+    var scr = $('scr-result');
+    scr.textContent = '';
+    if (!lastResult) return;
+    var r = lastResult, c = r.c, res = r.res, v = c.verdict;
+    if (!Lg.isCompleteTrial(r.picks, c.stages.length)) { lastResult = null; show('browse', { replace: true }); return; }
+    var other = r.side === 'A' ? 'B' : 'A';
+    var head = h('div', { class: 'result-head' + (animate && !reduced() ? ' anim' : '') }, [
+      h('p', { class: 'muted', style: 'margin:0', text: t('resultTitle') }),
+      h('h2', { class: 'big', id: 'result-title', tabindex: '-1', 'data-focus': true, text: L(C.BANDS[res.band]) + ' — ' + res.percent + '%' }),
+      h('div', { class: 'gold-line', 'aria-hidden': 'true' })
+    ]);
+    scr.appendChild(head);
+    scr.appendChild(h('p', { style: 'text-align:center' }, [put(h('span'), c.title)]));
+
+    /* البطاقة 1: الأداء */
+    var stageList = h('ul', { class: 'stage-list' }, c.stages.map(function (st, i) {
+      var p = r.picks[i];
+      return h('li', null, [h('span', { text: L(C.STAGES[st.type]) }), h('span', { class: 'r-' + p.points, text: L(C.RATINGS[p.points]) + ' · ' + p.points + '/3' })]);
+    }));
+    var pctNum = h('span', { text: animate && !reduced() ? '0' : String(res.percent) });
+    var pctEl = h('div', { class: 'pct' }, [pctNum, '%']);
+    var perf = h('section', { class: 'rcard', 'aria-labelledby': 'perf-h' }, [
+      h('h3', { id: 'perf-h', text: t('perfTitle') }),
+      pctEl,
+      h('p', { text: t('scoreLine', { total: res.total, max: res.max }) + ' · ' + L(C.BANDS[res.band]) }),
+      h('p', { class: 'won-line ' + (res.won ? 'r-3' : 'muted'), text: res.won ? t('wonLine') : t('notWonLine') }),
+      h('p', { class: 'muted', text: r.rec.isBest ? (r.rec.prevBest !== null ? t('newBest') : '') : t('keptBest', { best: r.rec.prevBest }) }),
+      stageList
+    ]);
+    /* البطاقة 2: وش صار فعلًا */
+    var outcome = Lg.realOutcome(v.winner, r.side);
+    var winnerLine = v.winner === 'mixed' ? h('p', { class: 'won-line', text: t('realMixed') })
+      : h('p', { class: 'won-line' }, [t('realWinner', { name: '' }), put(h('span'), c.parties[v.winner].name)]);
+    /* الرقم داخل bdi باتجاه LTR عشان «3-2» ما ينقلب «2-3» في العربي */
+    var voteLine = v.vote ? h('p', null, [t('vote', { vote: '' }), h('bdi', { dir: 'ltr', text: v.vote }), v.voteStatus === 'likely' ? ' ' + t('voteLikely') : null]) : null;
+    var real = h('section', { class: 'rcard', 'aria-labelledby': 'real-h' }, [
+      h('h3', { id: 'real-h', text: t('realTitle') }),
+      winnerLine,
+      h('p', { loc: v.summary }),
+      voteLine,
+      h('h4', { text: t('whyRuled') }),
+      h('p', { loc: v.reasoning }),
+      h('h4', { text: t('aftermath') }),
+      h('p', { loc: v.aftermath }),
+      h('h4', { text: t('sources') }),
+      sourceList(c)
+    ]);
+    scr.appendChild(h('div', { class: 'result-cards' }, [perf, real]));
+
+    /* رسالة الربط */
+    var clientName = L(c.parties[r.side].name);
+    if (outcome === 'lost') scr.appendChild(h('div', { class: 'bridge', role: 'note', text: res.won ? t('bridgeStrong', { name: clientName }) : t('bridgeWeak', { name: clientName }) }));
+    else if (outcome === 'mixed') scr.appendChild(h('div', { class: 'bridge', role: 'note', text: t('bridgeMixed', { name: clientName }) }));
+
+    if (r.newTitle) scr.appendChild(h('div', { class: 'new-title', role: 'status' }, [h('span', { text: t('newTitle') }), h('strong', { text: L(r.newTitle.title) })]));
+
+    scr.appendChild(h('div', { class: 'btn-row' }, [
+      h('button', { class: 'btn btn-primary', type: 'button', text: t('anotherCase'), onclick: function () { show('browse'); } }),
+      h('button', { class: 'btn btn-ghost', type: 'button', text: t('replay'), onclick: function () { startTrial(c, r.side); } }),
+      h('button', { class: 'btn btn-ghost', type: 'button', text: t('otherSide'), onclick: function () { startTrial(c, other); } })
+    ]));
+    if (animate && !reduced()) {
+      restart($('scr-result'), 'shake');
+      setTimeout(function () { countTo(pctNum, 0, res.percent); }, 300);
+    }
+  };
+
+  /* =================== [7] الملف الشخصي =================== */
+  var confirmOpen = false;
+  renderers.profile = function (fresh) {
+    if (fresh) confirmOpen = false;
+    var scr = $('scr-profile');
+    scr.textContent = '';
+    var wins = winsNow();
+    var ti = currentTitle();
+    var pct = ti.nextAt === null ? 100 : Math.round((wins - ti.from) / (ti.nextAt - ti.from) * 100);
+    var bar = h('div', { class: 'bar', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(pct) }, [h('i', { style: 'width:' + pct + '%' })]);
+    var whyCard = null;
+    C.WHY.forEach(function (w) { if (w.key === state.whyKey) whyCard = w; });
+    var doneIds = Object.keys(state.completed);
+    var doneList = doneIds.length ? h('ul', { class: 'done-list' }, doneIds.map(function (id) {
+      var e = state.completed[id], c = caseById(id);
+      var name = c ? L(c.title) : id;
+      var sideName = c ? L(c.parties[e.side].name) : e.side;
+      return h('li', null, [
+        h('span', { text: (e.best >= C.SCORING.winPercent ? '✓ ' : '') + name }),
+        h('span', { class: 'muted', text: t('bestFor', { best: e.best, side: sideName }) + (e.date ? ' · ' + e.date : '') })
+      ]);
+    })) : h('p', { class: 'muted', text: t('noFinished') });
+
+    [
+      h('h2', { class: 'h2', id: 'profile-title', tabindex: '-1', 'data-focus': true, text: t('profileTitle') }),
+      h('p', { class: 'player-name', style: 'font-size:1.25rem;font-weight:600;margin:.5rem 0 0', text: state.name }),
+      h('div', { class: 'title-frame' }, [h('span', { class: 'muted', text: t('yourTitle') }), h('strong', { text: L(ti.title) })]),
+      h('p', { style: 'margin:0', text: t('winsCount', { wins: count(wins, 'casesWon') }) }),
+      bar,
+      h('p', { class: 'muted', style: 'margin-top:0', text: ti.next ? t('toNextTitle', { count: count(ti.toNext, 'cases'), title: L(ti.next) }) : t('topTitle') }),
+      h('div', { class: 'panel' }, [
+        h('h3', { text: t('yourWhy') }),
+        whyCard ? h('p', null, [h('strong', { text: L(whyCard.label) }), ' — ' + L(whyCard.desc)]) : null,
+        state.why ? h('p', { class: 'player-text', text: state.why }) : null,
+        !whyCard && !state.why ? h('p', { class: 'muted', text: t('noWhy') }) : null
+      ]),
+      h('div', { class: 'panel' }, [h('h3', { text: t('finishedCases') }), doneList]),
+      h('div', { class: 'btn-row' }, [
+        h('button', { class: 'btn btn-primary', type: 'button', text: t('backToCasesBtn'), onclick: function () { show('browse'); } }),
+        h('button', { class: 'btn btn-ghost', type: 'button', text: t('changeName'), onclick: function () { show('welcome'); } }),
+        h('button', { class: 'btn btn-danger', type: 'button', id: 'clearBtn', 'aria-expanded': String(confirmOpen), text: t('clearData'),
+          onclick: function () { confirmOpen = true; renderers.profile(false); $('clearYes').focus(); } })
+      ]),
+      confirmOpen ? h('div', { class: 'confirm-box', role: 'alertdialog', 'aria-labelledby': 'clearQ' }, [
+        h('p', { id: 'clearQ', text: t('clearConfirm') }),
+        h('div', { class: 'btn-row' }, [
+          h('button', { class: 'btn btn-danger', type: 'button', id: 'clearYes', text: t('clearYes'), onclick: eraseAll }),
+          h('button', { class: 'btn btn-ghost', type: 'button', text: t('cancel'), onclick: function () { confirmOpen = false; renderers.profile(false); $('clearBtn').focus(); } })
+        ])
+      ]) : null,
+      h('p', { class: 'muted', style: 'font-size:.875rem', text: t('storageNote') })
+    ].forEach(function (n) { if (n) scr.appendChild(n); });
+  };
+
+  function eraseAll() {
+    try { if (store) { store.removeItem(C.STORAGE_KEY); store.removeItem(C.THEME_KEY); } } catch (e) {}
+    var lang = state.lang;
+    state = Lg.defaultState();
+    state.lang = lang;
+    root.removeAttribute('data-theme'); syncThemeBtn();
+    filters = { region: [], tag: [], decade: [] };
+    trial = null; lastResult = null; selectedCase = null;
+    nameInput.value = ''; whyText.value = '';
+    activeNotices = activeNotices.filter(function (k) { return k === 'noticeNoStorage'; });
+    activeNotices.push('cleared');
+    applyStatic();
+    show('welcome');
+  }
+
+  /* ---------- خلفية بعمق (parallax) ---------- */
+  if (!reduced()) {
+    var l1 = document.querySelector('.l1'), l2 = document.querySelector('.l2'), l3 = document.querySelector('.l3');
+    var px = 0, py = 0, pending = false;
+    var paint = function () {
+      pending = false;
+      var sy = window.scrollY || 0;
+      l1.style.transform = 'translate3d(' + (px * -18).toFixed(1) + 'px,' + (py * -14 - sy * 0.08).toFixed(1) + 'px,0)';
+      l2.style.transform = 'translate3d(' + (px * -10).toFixed(1) + 'px,' + (py * -8 - sy * 0.04).toFixed(1) + 'px,0)';
+      l3.style.transform = 'translate3d(' + (px * -5).toFixed(1) + 'px,' + (-((sy * 0.15) % 46)).toFixed(1) + 'px,0)';
+    };
+    var schedule = function () { if (!pending) { pending = true; requestAnimationFrame(paint); } };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('pointermove', function (e) {
+      if (!mqFine.matches) return;
+      px = e.clientX / window.innerWidth * 2 - 1;
+      py = e.clientY / window.innerHeight * 2 - 1;
+      schedule();
+    }, { passive: true });
+  }
+
+  /* ---------- البداية ---------- */
+  syncThemeBtn();
+  applyStatic();
+  /* اللاعب الراجع يبدأ من القضايا مباشرة */
+  show(state.name ? (state.whyKey || state.why ? 'browse' : 'why') : 'welcome', { focus: false });
+})();
+</script>
+</body>
+</html>

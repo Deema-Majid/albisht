@@ -1,0 +1,15 @@
+# أسرار ومفاتيح (اللعبة ما تحتاج أي مفاتيح حاليًا)
+.env
+.env.*
+!.env.example
+
+# ملفات النظام والمحررات
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# حزم ومخرجات (المشروع بدون حزم، احتياطًا)
+node_modules/
+*.log
