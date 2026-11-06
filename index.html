@@ -90,7 +90,7 @@
   @supports not (background: color-mix(in srgb, red 50%, blue)) { .appbar { background: var(--bg); } }
   .appbar .brand { font-family: var(--font-head); color: var(--gold); font-size: 1.35rem; font-weight: 700; }
   .appbar .start, .appbar .end { display: flex; align-items: center; gap: .5rem; }
-  .icon-btn[hidden] { display: none; }
+  .icon-btn[hidden], .btn[hidden] { display: none; }
   html[dir="rtl"] .back-btn svg { transform: scaleX(-1); }   /* السهم يؤشر لبداية السطر في اللغتين */
   .icon-btn {
     min-width: var(--tap); min-height: var(--tap);
@@ -230,7 +230,8 @@
   .avatar-pick { text-align: start; margin: 0 0 1rem; padding: 0; border: 0; min-width: 0; }
   .avatar-pick legend { font-weight: 600; padding: 0; margin-block-end: .5rem; }
   .avatar-pick legend small { color: var(--text-muted); font-weight: 400; }
-  .av-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: .5rem; }
+  /* أربعة في كل صف (4 + 4 + 2)، والمساحة الباقية على جنب فاضية */
+  .av-grid { display: grid; grid-template-columns: repeat(4, minmax(52px, 64px)); justify-content: start; gap: .6rem; }
   .av-grid input { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .av-grid label { display: grid; place-items: center; aspect-ratio: 1; min-width: var(--tap); border-radius: 50%; overflow: hidden; border: 1px solid var(--gold-line); background: var(--surface); color: var(--gold); cursor: pointer; transition: border-color 150ms ease, transform 150ms ease, background-color 150ms ease; }
   .av-grid label svg, .av-grid label img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -241,6 +242,32 @@
   .av-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
   .av-note { display: flex; gap: .4rem; align-items: flex-start; color: var(--text-muted); font-size: .875rem; margin: .5rem 0 0; }
   .av-note svg { flex: none; width: 16px; height: 16px; margin-top: .25rem; color: var(--gold); }
+  /* ================= التوقيع ================= */
+  .identity { text-align: start; }
+  @media (min-width: 720px) {
+    .welcome form { max-width: 660px; }
+    .identity { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+  }
+  .sign-pick { text-align: start; margin: 0 0 1rem; padding: 0; border: 0; min-width: 0; }
+  .sign-pick legend { font-weight: 600; padding: 0; margin-block-end: .5rem; }
+  .sign-pick legend small { color: var(--text-muted); font-weight: 400; }
+  /* الورقة بألوان ثابتة (ورق قديم وحبر غامق) عشان التوقيع يبان في الثيمين */
+  .paper { position: relative; border-radius: 10px; border: 1px solid #B8955A; overflow: hidden;
+    background: radial-gradient(ellipse at 30% 20%, #FBF3DF 0%, #F1E2BE 70%, #E6D2A4 100%);
+    box-shadow: inset 0 0 18px rgb(120 80 30 / .25), 0 4px 14px var(--shadow); }
+  .paper::after { content: ""; position: absolute; inset-inline: 8%; bottom: 24%; border-bottom: 1px dashed #A8824A; pointer-events: none; }
+  .sign-pad canvas { display: block; width: 100%; aspect-ratio: 32 / 15; touch-action: none; cursor: crosshair; position: relative; z-index: 1; }
+  .sign-pad canvas:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .sign-ph { position: absolute; inset: 0; display: grid; place-items: center; color: #8E6E44; font-size: .9375rem; pointer-events: none; transition: opacity 200ms ease; }
+  .sign-pad.has-ink .sign-ph { opacity: 0; }
+  .signed { margin: 1.25rem auto 0; max-width: 360px; text-align: center; }
+  .signed .paper { padding: .4rem 1rem; }
+  .signed .paper::after { bottom: 18%; }
+  .signed img { display: block; width: 100%; height: auto; max-height: 120px; object-fit: contain; position: relative; z-index: 1; }
+  .signed .who { margin: 0 0 .4rem; color: var(--text-muted); font-size: .9375rem; }
+  .signed .who strong { color: var(--text); }
+  .signed.stamp .paper { animation: signIn 700ms var(--ease-out) 300ms both; }
+  @keyframes signIn { from { opacity: 0; transform: translateY(10px) rotate(-2deg) scale(.96); } to { opacity: 1; transform: none; } }
   .profile-head { display: flex; align-items: center; gap: .9rem; margin-top: .5rem; }
   .result-head .avatar { --av: 64px; margin-block-end: .5rem; }
   .cropper { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: rgb(0 0 0 / .72); }
@@ -908,7 +935,7 @@
         <input id="nameInput" type="text" autocomplete="nickname" maxlength="40" aria-describedby="nameError">
       </div>
       <p class="form-error" id="nameError" aria-live="polite"></p>
-      <div id="welcomeAvatar"></div>
+      <div class="identity"><div id="welcomeAvatar"></div><div id="welcomeSign"></div></div>
       <button class="btn btn-primary btn-block" type="submit" data-i18n="enterCourt"></button>
     </form>
     <p class="privacy">
@@ -985,6 +1012,9 @@ window.CONFIG = {
   STORAGE_KEY: 'albisht.v1',
   THEME_KEY: 'albisht-theme',
   AVATAR_KEY: 'albisht-avatar',
+  SIGN_KEY: 'albisht-signature',
+  /* التوقيع: لوحة بدقة w×h، والناتج PNG شفاف مقصوص على حدود الحبر */
+  SIGN: { w: 640, h: 300, ink: '#2B0A10', width: 3.4, maxStoredChars: 150000 },
   /* الأفاتارات المرسومة (رسوماتها في <symbol> أعلى الصفحة)، والصورة الشخصية تتصغّر لمربع size بكسل */
   AVATARS: ['av-m1', 'av-m2', 'av-f1', 'av-f2', 'av-med-scales', 'av-med-gavel', 'av-med-quill', 'av-med-book', 'av-med-columns', 'av-med-dallah'],
   AVATAR_NAMES: { ar: ['محامٍ بالبشت والشماغ', 'محامٍ بالبشت والغترة', 'محامية بالطرحة', 'محامية بالنظارة', 'وسام الميزان', 'وسام المطرقة', 'وسام الريشة', 'وسام الكتاب', 'وسام المحكمة', 'وسام الدلّة'],
@@ -1217,6 +1247,14 @@ window.CONFIG = {
     cropSave:       { ar: 'اعتماد الصورة', en: 'Use this photo' },
     photoBad:       { ar: 'ما قدرنا نفتح هذي الصورة. الصيغ المدعومة: JPG وPNG وWebP.', en: 'We could not open this image. Supported formats: JPG, PNG and WebP.' },
     photoTooBig:    { ar: 'الصورة كبيرة مرة (أكثر من {mb} ميغابايت).', en: 'This image is too large (over {mb} MB).' },
+    signLegend:     { ar: 'توقيعك', en: 'Your signature' },
+    signHere:       { ar: 'مكان التوقيع: بالإصبع أو بالماوس', en: 'Sign here with your finger or mouse' },
+    signPad:        { ar: 'لوحة التوقيع', en: 'Signature pad' },
+    signClear:      { ar: 'مسح التوقيع', en: 'Clear signature' },
+    signPrivacy:    { ar: 'توقيعك يبقى في جهازك، ويطلع على مرافعاتك.', en: 'Your signature stays on your device and appears on your pleadings.' },
+    signedBy:       { ar: 'المرافعة موقّعة من:', en: 'Pleading signed by:' },
+    signImg:        { ar: 'توقيع {name}', en: 'Signature of {name}' },
+    signNotSaved:   { ar: 'التوقيع ظاهر الحين، بس ما قدرنا نحفظه في المتصفح، فبيختفي عند إغلاق الصفحة.', en: 'Your signature is showing now, but it could not be saved in this browser, so it will disappear when you close the page.' },
     photoNotSaved:  { ar: 'الصورة ظاهرة الحين، بس ما قدرنا نحفظها في المتصفح، فبتختفي عند إغلاق الصفحة.', en: 'Your photo is showing now, but it could not be saved in this browser, so it will disappear when you close the page.' },
     storageNote:    { ar: 'بياناتك محفوظة في هذا المتصفح فقط.', en: 'Your data is stored in this browser only.' },
     noticeNoStorage:{ ar: 'التخزين في هذا المتصفح غير متاح، فتقدّمك ما راح ينحفظ بعد إغلاق الصفحة.', en: 'Storage is unavailable in this browser, so your progress will not be kept after you close the page.' },
@@ -1306,6 +1344,13 @@ window.CONFIG = {
     var pre = 'data:image/jpeg;base64,';
     /* "/9j/" هي بداية أي JPEG حقيقي بعد التحويل لـ base64 (البايتات FF D8 FF) */
     return v.indexOf(pre + '/9j/') === 0 && v.length > pre.length + 100 && /^[A-Za-z0-9+/]+={0,2}$/.test(v.slice(pre.length));
+  }
+
+  /* التوقيع المحفوظ: PNG فقط بصيغة data URL ("iVBORw0KGgo" = بداية أي PNG بعد base64) */
+  function isSignData(v, maxChars) {
+    if (typeof v !== 'string' || v.length > maxChars) return false;
+    var pre = 'data:image/png;base64,';
+    return v.indexOf(pre + 'iVBORw0KGgo') === 0 && v.length > pre.length + 60 && /^[A-Za-z0-9+/]+={0,2}$/.test(v.slice(pre.length));
   }
 
   /* points: مصفوفة نقاط المراحل (0 إلى 3) */
@@ -1478,7 +1523,7 @@ window.CONFIG = {
   root.Logic = {
     ID_RE: ID_RE, STAGE_ORDER: STAGE_ORDER,
     clampText: clampText, defaultState: defaultState, sanitizeState: sanitizeState,
-    storageAvailable: storageAvailable, loadState: loadState, serialize: serialize, isPhotoData: isPhotoData,
+    storageAvailable: storageAvailable, loadState: loadState, serialize: serialize, isPhotoData: isPhotoData, isSignData: isSignData,
     computeResult: computeResult, countWins: countWins, recordResult: recordResult, titleFor: titleFor,
     resolveTitles: resolveTitles, pluralCategory: pluralCategory, countPhrase: countPhrase, isCompleteTrial: isCompleteTrial,
     decadeOf: decadeOf, buildFacets: buildFacets, filterCases: filterCases, shuffle: shuffle,
@@ -1543,6 +1588,8 @@ window.CONFIG = {
   else if (loaded.status === 'corrupt') { activeNotices.push('noticeCorrupt'); save(); }
   /* الصورة الشخصية محفوظة بمفتاح مستقل عشان حجمها ما يأثر على حفظ التقدّم */
   var photoData = null;
+  var signData = null;
+  try { if (store) { var sg = store.getItem(C.SIGN_KEY); if (Lg.isSignData(sg, C.SIGN.maxStoredChars)) signData = sg; } } catch (e) {}
   try { if (store) { var ph = store.getItem(C.AVATAR_KEY); if (Lg.isPhotoData(ph, C.PHOTO.maxStoredChars)) photoData = ph; } } catch (e) {}
   if (state.avatar === 'photo' ? !photoData : (state.avatar && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
 
@@ -1761,6 +1808,9 @@ window.CONFIG = {
     var slot = $('welcomeAvatar');
     slot.textContent = '';
     slot.appendChild(avatarPicker());
+    var ss = $('welcomeSign');
+    ss.textContent = '';
+    ss.appendChild(signaturePad());
   };
   document.querySelectorAll('input[name="addr"]').forEach(function (r) {
     r.addEventListener('change', function () { state.gender = r.value; applyStatic(); syncNameLabel(); });
@@ -1836,7 +1886,7 @@ window.CONFIG = {
     var file = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
     file.addEventListener('change', function () { var f = file.files && file.files[0]; file.value = ''; if (f) openPhoto(f, err); });
     var actions = h('div', { class: 'av-actions' }, [
-      h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('avatarUpload'), onclick: function () { err.textContent = ''; file.click(); } }),
+      h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('avatarUpload'), onclick: function () { err.textContent = ''; cropOpener = this; file.click(); } }),
       state.avatar ? h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('avatarNone'), onclick: function () { setAvatar(''); } }) : null,
       file
     ]);
@@ -1863,10 +1913,11 @@ window.CONFIG = {
   }
 
   /* نافذة ضبط الصورة: سحب للتحريك وشريط للتقريب، والناتج مربع صغير JPEG */
+  var cropOpener = null;   /* زر «صورة من جهازك» اللي فتح النافذة، عشان نرجّع له التركيز */
   function openCropper(img) {
     var iw = img.naturalWidth, ih = img.naturalHeight;
     var zoom = 1, cx = iw / 2, cy = ih / 2;
-    var opener = document.activeElement;
+    var opener = (cropOpener && cropOpener.isConnected) ? cropOpener : document.activeElement;
     var view = h('div', { class: 'crop-view', tabindex: '0', role: 'img', 'aria-label': t('cropHint') });
     var cv = document.createElement('canvas');
     var VIEW_PX = 480;                       /* دقة المعاينة (تنعرض أصغر) */
@@ -1957,6 +2008,102 @@ window.CONFIG = {
     document.body.appendChild(overlay);
     redraw();
     saveBtn.focus();
+  }
+
+  /* =================== التوقيع =================== */
+  /* لوحة يوقّع فيها اللاعب بالإصبع أو بالماوس؛ التوقيع ينحفظ في جهازه فقط ويطلع على صفحة النتيجة */
+  function signaturePad() {
+    var W = C.SIGN.w, H = C.SIGN.h;
+    var cv = h('canvas', { width: String(W), height: String(H), tabindex: '0', role: 'img', 'aria-label': t('signPad') });
+    var ctx = cv.getContext('2d');
+    var pad = h('div', { class: 'paper sign-pad' + (signData ? ' has-ink' : '') }, [cv, h('span', { class: 'sign-ph', 'aria-hidden': 'true', text: t('signHere') })]);
+    var clearBtn = h('button', { class: 'btn btn-ghost btn-small', type: 'button', text: t('signClear'), hidden: !signData, onclick: function () {
+      ctx.clearRect(0, 0, W, H); inked = false; pad.classList.remove('has-ink'); clearBtn.hidden = true;
+      storeSign(null); cv.focus();
+    } });
+    var inked = false;
+    if (signData) {
+      /* نرسم التوقيع المحفوظ في نص اللوحة */
+      var im = new Image();
+      im.onload = function () {
+        var k = Math.min((W * .84) / im.width, (H * .7) / im.height, 1.6);
+        var w = im.width * k, hh = im.height * k;
+        ctx.drawImage(im, (W - w) / 2, (H - hh) / 2 - H * .04, w, hh);
+        inked = true;
+      };
+      im.src = signData;
+    }
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = C.SIGN.ink; ctx.fillStyle = C.SIGN.ink;
+    var last = null, mid = null, lastW = C.SIGN.width;
+    function pt(e) {
+      var r = cv.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height, t: e.timeStamp };
+    }
+    cv.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      try { cv.setPointerCapture(e.pointerId); } catch (x) {}
+      last = pt(e); mid = last; lastW = C.SIGN.width;
+      ctx.beginPath(); ctx.arc(last.x, last.y, lastW / 2, 0, Math.PI * 2); ctx.fill();
+      if (!inked) { inked = true; pad.classList.add('has-ink'); }
+    });
+    cv.addEventListener('pointermove', function (e) {
+      if (!last) return;
+      var p = pt(e);
+      var dist = Math.hypot(p.x - last.x, p.y - last.y);
+      if (dist < 1.2) return;
+      /* الخط يرقّ مع السرعة مثل الحبر الحقيقي */
+      var speed = dist / Math.max(1, p.t - last.t);
+      var wNow = Math.max(C.SIGN.width * .45, Math.min(C.SIGN.width * 1.3, C.SIGN.width * 1.5 - speed * 1.4));
+      lastW = lastW * .6 + wNow * .4;
+      var m = { x: (last.x + p.x) / 2, y: (last.y + p.y) / 2 };
+      ctx.lineWidth = lastW;
+      ctx.beginPath(); ctx.moveTo(mid.x, mid.y); ctx.quadraticCurveTo(last.x, last.y, m.x, m.y); ctx.stroke();
+      last = p; mid = m;
+    });
+    function end() {
+      if (!last) return;
+      last = null; mid = null;
+      clearBtn.hidden = false;
+      storeSign(exportSign(cv));
+    }
+    cv.addEventListener('pointerup', end);
+    cv.addEventListener('pointercancel', end);
+    return h('fieldset', { class: 'sign-pick' }, [
+      h('legend', null, [h('span', { text: t('signLegend') }), ' ', h('small', { text: t('optional') })]),
+      pad,
+      h('div', { class: 'av-actions' }, [clearBtn]),
+      h('p', { class: 'av-note' }, [icon('lock'), h('span', { text: t('signPrivacy') })])
+    ]);
+  }
+  /* يقص التوقيع على حدود الحبر ويرجعه PNG شفاف (أو null إذا اللوحة فاضية) */
+  function exportSign(cv) {
+    var W = cv.width, H = cv.height, d = cv.getContext('2d').getImageData(0, 0, W, H).data;
+    var x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (var y = 0; y < H; y++) for (var x = 0; x < W; x++) {
+      if (d[(y * W + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    }
+    if (x1 < 0) return null;
+    var pad = 8; x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad); x1 = Math.min(W - 1, x1 + pad); y1 = Math.min(H - 1, y1 + pad);
+    var out = document.createElement('canvas');
+    out.width = x1 - x0 + 1; out.height = y1 - y0 + 1;
+    out.getContext('2d').drawImage(cv, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
+    var url = '';
+    try { url = out.toDataURL('image/png'); } catch (e) {}
+    return Lg.isSignData(url, C.SIGN.maxStoredChars) ? url : null;
+  }
+  function storeSign(url) {
+    signData = url;
+    var ok = false;
+    try { if (store) { if (url) store.setItem(C.SIGN_KEY, url); else store.removeItem(C.SIGN_KEY); ok = true; } } catch (e) {}
+    if (!ok && url) addNotice('signNotSaved');
+  }
+  /* التوقيع المعروض تحت المرافعة في صفحة النتيجة */
+  function signedBlock(animate) {
+    if (!signData) return null;
+    return h('div', { class: 'signed' + (animate ? ' stamp' : '') }, [
+      h('p', { class: 'who' }, [t('signedBy') + ' ', h('strong', { text: state.name })]),
+      h('div', { class: 'paper' }, [h('img', { src: signData, alt: t('signImg', { name: state.name }), onerror: function () { storeSign(null); this.parentNode.parentNode.remove(); } })])
+    ]);
   }
 
   /* =================== [2] لماذا يختارك أحد؟ =================== */
@@ -2434,6 +2581,8 @@ window.CONFIG = {
     else if (outcome === 'mixed') scr.appendChild(h('div', { class: 'bridge', role: 'note', text: t('bridgeMixed', { name: clientName }) }));
 
     if (r.newTitle) scr.appendChild(h('div', { class: 'new-title', role: 'status' }, [h('span', { text: t('newTitle') }), h('strong', { text: L(r.newTitle.title) })]));
+    var sb = signedBlock(animate && !reduced());
+    if (sb) scr.appendChild(sb);
 
     scr.appendChild(h('div', { class: 'btn-row' }, [
       h('button', { class: 'btn btn-primary', type: 'button', text: t('anotherCase'), onclick: function () { show('browse'); } }),
@@ -2484,6 +2633,7 @@ window.CONFIG = {
       ]),
       h('div', { class: 'panel' }, [h('h3', { text: t('finishedCases') }), doneList]),
       h('div', { class: 'panel' }, [avatarPicker()]),
+      h('div', { class: 'panel' }, [signaturePad()]),
       h('div', { class: 'btn-row' }, [
         h('button', { class: 'btn btn-primary', type: 'button', text: t('backToCasesBtn'), onclick: function () { show('browse'); } }),
         h('button', { class: 'btn btn-ghost', type: 'button', text: t('changeName'), onclick: function () { show('welcome'); } }),
@@ -2502,8 +2652,8 @@ window.CONFIG = {
   };
 
   function eraseAll() {
-    try { if (store) { store.removeItem(C.STORAGE_KEY); store.removeItem(C.THEME_KEY); store.removeItem(C.AVATAR_KEY); } } catch (e) {}
-    photoData = null;
+    try { if (store) { store.removeItem(C.STORAGE_KEY); store.removeItem(C.THEME_KEY); store.removeItem(C.AVATAR_KEY); store.removeItem(C.SIGN_KEY); } } catch (e) {}
+    photoData = null; signData = null;
     var lang = state.lang;
     state = Lg.defaultState();
     state.lang = lang;

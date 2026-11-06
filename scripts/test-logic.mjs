@@ -172,6 +172,14 @@ ok(!Lg.isPhotoData('https://example.com/a.jpg', MAXP) && !Lg.isPhotoData(null, M
 ok(!Lg.isPhotoData('data:image/jpeg;base64,' + 'A'.repeat(MAXP), MAXP), 'الصورة: أكبر من الحد ما تنقبل');
 ok(!Lg.isPhotoData('data:image/jpeg;base64,AAAA"><script>' + 'A'.repeat(400), MAXP), 'الصورة: رموز غريبة داخل البيانات ما تنقبل');
 
+// التوقيع
+const MAXS = C.SIGN.maxStoredChars;
+ok(Lg.isSignData('data:image/png;base64,iVBORw0KGgo' + 'A'.repeat(200), MAXS), 'التوقيع: PNG بصيغة data URL ينقبل');
+ok(!Lg.isSignData('data:image/png;base64,' + 'A'.repeat(200), MAXS), 'التوقيع: بيانات مو PNG حقيقي ما تنقبل');
+ok(!Lg.isSignData('data:image/svg+xml;base64,iVBORw0KGgo' + 'A'.repeat(200), MAXS) && !Lg.isSignData(null, MAXS), 'التوقيع: SVG أو null ما ينقبل');
+ok(!Lg.isSignData('data:image/png;base64,iVBORw0KGgo' + 'A'.repeat(MAXS), MAXS), 'التوقيع: أكبر من الحد ما ينقبل');
+ok(!Lg.isSignData('data:image/png;base64,iVBORw0KGgo"><img onerror=x>' + 'A'.repeat(200), MAXS), 'التوقيع: رموز غريبة ما تنقبل');
+
 // ---------------------------------------------------------------
 console.log('\n[7] الفلاتر');
 const mk = (id, region, tags, year) => ({ id, region, tags, year });
