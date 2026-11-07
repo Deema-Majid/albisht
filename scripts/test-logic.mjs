@@ -162,6 +162,12 @@ const avOf = (v) => Lg.loadState(fakeStore({ [KEY]: JSON.stringify({ version: 1,
 ok(avOf('av-f1') === 'av-f1' && avOf('photo') === 'photo', 'الأفاتار: رمز رسمة أو photo ينقبل');
 ok(avOf('<img onerror=x>') === '' && avOf(42) === '' && avOf('javascript:alert(1)') === '', 'الأفاتار: أي قيمة غريبة ترجع فاضية');
 ok(C.AVATARS.length === 10 && C.AVATARS.every((id) => /^av-/.test(id)), 'فيه 10 أفاتارات');
+ok(avOf('seal') === 'seal' && avOf('av-med-royal') === 'av-med-royal', 'الأفاتار: الختم الشخصي والوسام الملكي ينقبلون');
+const waxOf = (v) => Lg.loadState(fakeStore({ [KEY]: JSON.stringify({ version: 1, sealWax: v }) }), KEY, LIM, WK).state.sealWax;
+ok(waxOf(3) === 3 && waxOf(-1) === -1 && Lg.defaultState().sealWax === -1, 'لون الختم: رقم صحيح ينقبل، والافتراضي تلقائي (-1)');
+ok(waxOf(2.5) === -1 && waxOf('3') === -1 && waxOf(-7) === -1 && waxOf(99) === -1 && waxOf(null) === -1, 'لون الختم: أي قيمة غريبة ترجع تلقائي');
+ok(C.SEAL.wax.length === 7 && C.SEAL.wax.every((w) => w.ar && w.en && /^#[0-9A-F]{6}$/i.test(w.c[0]) && /^#[0-9A-F]{6}$/i.test(w.c[1])), 'ألوان الشمع: 7 ألوان لكل واحد اسم عربي وإنجليزي');
+ok(C.SEAL.maxFs <= 3.6 && C.SEAL.rim > 16.2 && C.SEAL.rim < 24.5, 'الختم: حجم اسم الحافة ما يتعدى المقاس المختبَر (3.6)');
 ok(C.AVATAR_NAMES.ar.length === C.AVATARS.length && C.AVATAR_NAMES.en.length === C.AVATARS.length, 'كل أفاتار له اسم بالعربي والإنجليزي');
 const goodJpeg = 'data:image/jpeg;base64,/9j/' + 'A'.repeat(400);
 const MAXP = C.PHOTO.maxStoredChars;

@@ -238,6 +238,27 @@
   .av-grid label:hover { border-color: var(--gold); transform: translateY(-2px); }
   .av-grid input:checked + label { border: 2px solid var(--gold); background: var(--surface-2); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--gold); animation: pop 320ms var(--ease-out); }
   .av-grid input:focus-visible + label { outline: 3px solid var(--gold); outline-offset: 5px; }
+  /* الختم الشخصي والوسام المقفل */
+  .av-grid label.seal-tile { position: relative; overflow: visible; background: transparent; border-color: transparent; }
+  .av-grid label.seal-tile svg { filter: drop-shadow(0 3px 4px rgb(0 0 0 / .45)); }
+  .new-tag { position: absolute; top: -6px; inset-inline-start: -6px; background: #B3122E; color: #fff; font-size: .65rem; font-weight: 700; line-height: 1; padding: .25rem .4rem; border-radius: 999px; box-shadow: 0 2px 6px var(--shadow); pointer-events: none; }
+  .seal-svg.stamp { animation: sealStamp 650ms cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes sealStamp { 0% { transform: scale(1.7) rotate(-14deg); opacity: 0; } 60% { transform: scale(.94) rotate(2deg); opacity: 1; } 100% { transform: none; } }
+  .av-locked { position: relative; aspect-ratio: 1; min-width: var(--tap); padding: 0; border-radius: 50%; border: 1px solid var(--gold-line); background: var(--surface); cursor: pointer; overflow: hidden; }
+  .av-locked > svg { display: block; width: 100%; height: 100%; filter: grayscale(1) brightness(.5) contrast(.9); }
+  .av-locked .lock-badge { position: absolute; inset: 0; display: grid; place-items: center; }
+  .av-locked .lock-badge svg { width: 26px; height: 26px; padding: 5px; border-radius: 50%; color: #3A0F18; background: linear-gradient(145deg, #F6E1A3, #9A7430); box-shadow: 0 2px 8px rgb(0 0 0 / .5); }
+  .av-locked:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; }
+  .wax-row { margin-top: .75rem; }
+  .wax-legend { margin: 0 0 .4rem; font-weight: 600; font-size: .9375rem; }
+  .wax { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .wax .sw { width: var(--tap); height: var(--tap); padding: 0; border-radius: 50%; border: 2px solid transparent; cursor: pointer; font: inherit; box-shadow: inset 0 -4px 8px rgb(0 0 0 / .35), 0 2px 6px var(--shadow); }
+  .wax .sw[aria-checked="true"] { border-color: var(--gold); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--gold); }
+  .wax .sw:focus-visible { outline: 3px solid var(--gold); outline-offset: 5px; }
+  .wax .sw.auto { background: conic-gradient(#B3122E, #8E1B3A, #A3341F, #6E1F4F, #B3122E); color: #FFF1C4; font-size: .65rem; font-weight: 700; }
+  .royal-open { display: flex; align-items: center; gap: .75rem; margin: 1rem auto 0; max-width: 520px; padding: .75rem 1rem; border: 1px solid var(--gold); border-radius: var(--radius); background: var(--surface-2); }
+  .royal-open svg { flex: none; width: 56px; height: 56px; }
+  @media (prefers-reduced-motion: reduce) { .seal-svg.stamp { animation: none; } }
   .avatar-pick .form-error:empty { min-height: 0; margin: 0; }
   .av-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
   .av-note { display: flex; gap: .4rem; align-items: flex-start; color: var(--text-muted); font-size: .875rem; margin: .5rem 0 0; }
@@ -567,6 +588,26 @@
         <path d="M2 13 H8 Q5 17 2 13 Z M16 13 H22 Q19 17 16 13 Z"/>
         <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13"/>
       </g>
+    </symbol>
+    <symbol id="av-med-royal" viewBox="0 0 64 64">
+      <defs>
+        <linearGradient id="roy-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".45" stop-color="#E2BC5C"/><stop offset="1" stop-color="#6E4D16"/></linearGradient>
+        <radialGradient id="roy-g2" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#2A2A3A"/><stop offset="1" stop-color="#0B0B12"/></radialGradient>
+        <linearGradient id="roy-g3" x1="0" y1="14" x2="0" y2="52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF4CC"/><stop offset=".5" stop-color="#E8C46A"/><stop offset="1" stop-color="#94701F"/></linearGradient>
+        <g id="roy-e">
+          <path d="M26 17.5l2.2 3 3.8-4 3.8 4 2.2-3 1 6.5H25z"/>
+          <path d="M32 26c-6.5 0-10.5 3-12.5 9.5L17.5 49h29l-2-13.5C42.5 29 38.5 26 32 26zm0 3.2 3.4 17.8h-6.8z" fill-rule="evenodd"/>
+        </g>
+      </defs>
+      <circle cx="32" cy="32" r="32" fill="url(#roy-g1)"/>
+      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+      <circle cx="32" cy="32" r="25.6" fill="url(#roy-g1)" transform="rotate(180 32 32)"/>
+      <circle cx="32" cy="32" r="23" fill="url(#roy-g2)" stroke="#F1D58C" stroke-width=".8"/>
+      <use href="#roy-e" transform="translate(.7 1.1)" fill="#000" opacity=".6"/>
+      <use href="#roy-e" fill="url(#roy-g3)" stroke="#5A3F14" stroke-width=".6" stroke-linejoin="round"/>
+      <path d="M29.6 47h4.8" stroke="#5A3F14" stroke-width=".8"/>
     </symbol>
     <symbol id="lock" viewBox="0 0 24 24">
       <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1017,6 +1058,19 @@ window.CONFIG = {
   SIGN: { w: 640, h: 300, ink: '#2B0A10', width: 3.4, maxStoredChars: 150000 },
   /* الأفاتارات المرسومة (رسوماتها في <symbol> أعلى الصفحة)، والصورة الشخصية تتصغّر لمربع size بكسل */
   AVATARS: ['av-m1', 'av-m2', 'av-f1', 'av-f2', 'av-med-scales', 'av-med-gavel', 'av-med-quill', 'av-med-book', 'av-med-columns', 'av-med-dallah'],
+  /* الختم الشخصي: يتولّد من اسم اللاعب. rim = شريط الاسم بين الدائرة الذهبية (16.2) والشفافة (24.5)،
+     وmaxFs مقاس بالبكسل لكل الحروف (اختبار rim-check). wax = ألوان الشمع، وأول 4 للاختيار التلقائي من الاسم */
+  SEAL: {
+    rim: 20.35, maxFs: 3.6, letterBox: 17, autoFrom: 4,
+    wax: [
+      { c: ['#B3122E', '#5A0716'], ar: 'خمري ملكي', en: 'Royal wine' }, { c: ['#8E1B3A', '#3F0718'], ar: 'عنّابي', en: 'Burgundy' },
+      { c: ['#A3341F', '#4E1408'], ar: 'نحاسي', en: 'Copper' }, { c: ['#6E1F4F', '#2E0A22'], ar: 'بنفسجي', en: 'Violet' },
+      { c: ['#1E6B4C', '#0A2C1F'], ar: 'زمرّدي', en: 'Emerald' }, { c: ['#23407A', '#0B1733'], ar: 'كحلي', en: 'Navy' },
+      { c: ['#34343A', '#0C0C10'], ar: 'أسود فاخر', en: 'Luxury black' }
+    ]
+  },
+  /* وسام نادر ينفتح بأعلى لقب (أسطورة المرافعة) */
+  ROYAL: 'av-med-royal',
   AVATAR_NAMES: { ar: ['محامٍ بالبشت والشماغ', 'محامٍ بالبشت والغترة', 'محامية بالطرحة', 'محامية بالنظارة', 'وسام الميزان', 'وسام المطرقة', 'وسام الريشة', 'وسام الكتاب', 'وسام المحكمة', 'وسام الدلّة'],
                   en: ['Lawyer in bisht and shemagh', 'Lawyer in bisht and ghutra', 'Lawyer in headscarf', 'Lawyer with glasses', 'Scales medal', 'Gavel medal', 'Quill medal', 'Book medal', 'Courthouse medal', 'Dallah medal'] },
   PHOTO: { size: 192, quality: 0.82, maxInputMB: 25, maxStoredChars: 200000, zoomMax: 3 },
@@ -1247,6 +1301,15 @@ window.CONFIG = {
     cropSave:       { ar: 'اعتماد الصورة', en: 'Use this photo' },
     photoBad:       { ar: 'ما قدرنا نفتح هذي الصورة. الصيغ المدعومة: JPG وPNG وWebP.', en: 'We could not open this image. Supported formats: JPG, PNG and WebP.' },
     photoTooBig:    { ar: 'الصورة كبيرة مرة (أكثر من {mb} ميغابايت).', en: 'This image is too large (over {mb} MB).' },
+    sealName:       { ar: 'ختمك الشخصي', en: 'Your personal seal' },
+    sealNew:        { ar: 'جديد', en: 'New' },
+    waxLegend:      { ar: 'لون الختم', en: 'Seal colour' },
+    waxAuto:        { ar: 'تلقائي', en: 'Auto' },
+    waxAutoName:    { ar: 'تلقائي (من اسمك)', en: 'Auto (from your name)' },
+    royalName:      { ar: 'وسام البشت الملكي', en: 'Royal Bisht medal' },
+    royalLocked:    { ar: 'مقفل: وسام البشت الملكي، ينفتح بلقب «{title}»', en: 'Locked: Royal Bisht medal, unlocks at the title "{title}"' },
+    royalHint:      { ar: '🔒 هذا الوسام ينفتح لما يوصل لقبك إلى «{title}». الباقي: {count}.', en: '🔒 This medal unlocks when you reach the title "{title}". To go: {count}.' },
+    royalOpened:    { ar: '🎉 انفتح وسام «البشت الملكي»، وصار متاح في «صورتك في اللعبة».', en: '🎉 The Royal Bisht medal is unlocked. It is now available under "Your avatar".' },
     signLegend:     { ar: 'توقيعك', en: 'Your signature' },
     signHere:       { ar: 'مكان التوقيع: بالإصبع أو بالماوس', en: 'Sign here with your finger or mouse' },
     signPad:        { ar: 'لوحة التوقيع', en: 'Signature pad' },
@@ -1271,7 +1334,7 @@ window.CONFIG = {
 (function (root) {
   'use strict';
   var ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-  var AVATAR_RE = /^(?:av-[a-z0-9]+(?:-[a-z0-9]+)*|photo)$/;
+  var AVATAR_RE = /^(?:av-[a-z0-9]+(?:-[a-z0-9]+)*|photo|seal)$/;
   var STAGE_ORDER = ['basis', 'opening', 'evidence', 'rebuttal', 'closing'];
 
   /* نص آمن: يشيل رموز التحكم ويقص لعدد الحروف (يحسب الإيموجي حرف واحد) */
@@ -1282,7 +1345,7 @@ window.CONFIG = {
   }
 
   function defaultState() {
-    return { version: 1, name: '', why: '', whyKey: '', gender: '', avatar: '', lang: 'ar', completed: {} };
+    return { version: 1, name: '', why: '', whyKey: '', gender: '', avatar: '', sealWax: -1, lang: 'ar', completed: {} };
   }
 
   /* يرجع حالة نظيفة، أو null إذا البيانات ما تنفع */
@@ -1295,6 +1358,8 @@ window.CONFIG = {
     s.gender = (o.gender === 'm' || o.gender === 'f') ? o.gender : '';
     /* الأفاتار: رمز رسمة (av-...) أو photo (الصورة نفسها محفوظة بمفتاح مستقل) */
     s.avatar = (typeof o.avatar === 'string' && AVATAR_RE.test(o.avatar)) ? o.avatar : '';
+    /* لون الختم: رقم من قائمة الألوان، أو -1 = تلقائي من الاسم */
+    s.sealWax = (typeof o.sealWax === 'number' && o.sealWax % 1 === 0 && o.sealWax >= -1 && o.sealWax < 16) ? o.sealWax : -1;
     s.lang = o.lang === 'en' ? 'en' : 'ar';
     var c = o.completed;
     if (c && typeof c === 'object' && !Array.isArray(c)) {
@@ -1591,7 +1656,8 @@ window.CONFIG = {
   var signData = null;
   try { if (store) { var sg = store.getItem(C.SIGN_KEY); if (Lg.isSignData(sg, C.SIGN.maxStoredChars)) signData = sg; } } catch (e) {}
   try { if (store) { var ph = store.getItem(C.AVATAR_KEY); if (Lg.isPhotoData(ph, C.PHOTO.maxStoredChars)) photoData = ph; } } catch (e) {}
-  if (state.avatar === 'photo' ? !photoData : (state.avatar && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
+  if (state.avatar === 'photo' ? !photoData : (state.avatar && state.avatar !== 'seal' && state.avatar !== C.ROYAL && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
+  if (state.sealWax >= C.SEAL.wax.length) state.sealWax = -1;
 
   /* ---------- اللغة والنصوص ---------- */
   function g() { return (state.gender === 'm' || state.gender === 'f') ? state.gender : 'n'; }
@@ -1812,6 +1878,10 @@ window.CONFIG = {
     ss.textContent = '';
     ss.appendChild(signaturePad());
   };
+  nameInput.addEventListener('input', function () {
+    var lab = document.querySelector('#welcomeAvatar label.seal-tile');
+    if (lab) { var old = lab.querySelector('svg.seal-svg'); if (old) lab.replaceChild(sealSvg(sealNameNow(), state.sealWax), old); }
+  });
   document.querySelectorAll('input[name="addr"]').forEach(function (r) {
     r.addEventListener('change', function () { state.gender = r.value; applyStatic(); syncNameLabel(); });
   });
@@ -1829,6 +1899,8 @@ window.CONFIG = {
   function avatarEl(size) {
     var kid = null;
     if (state.avatar === 'photo' && photoData) kid = h('img', { src: photoData, alt: '', onerror: photoBroken });
+    else if (state.avatar === 'seal') kid = sealSvg(sealNameNow(), state.sealWax);
+    else if (state.avatar === C.ROYAL && royalUnlocked()) kid = icon(C.ROYAL);
     else if (C.AVATARS.indexOf(state.avatar) >= 0) kid = icon(state.avatar);
     if (!kid) return null;
     return h('span', { class: 'avatar', 'aria-hidden': 'true', style: size ? '--av:' + size + 'px' : null }, [kid]);
@@ -1867,6 +1939,119 @@ window.CONFIG = {
     if (f) f.focus({ preventScroll: true });
   }
 
+  /* =================== الختم الشخصي =================== */
+  /* الاسم اللي ينرسم في الختم: اللي يكتبه اللاعب الحين في شاشة البداية، وإلا المحفوظ */
+  function sealNameNow() {
+    var typed = (current === 'welcome' && nameInput) ? Lg.clampText(nameInput.value, C.LIMITS.name) : '';
+    return typed || state.name || t('appName');
+  }
+  function sealHash(str) { var x = 2166136261; for (var i = 0; i < str.length; i++) { x ^= str.charCodeAt(i); x = Math.imul(x, 16777619); } return x >>> 0; }
+  function sealRng(seed) { return function () { seed = (seed + 0x6D2B79F5) | 0; var q = Math.imul(seed ^ (seed >>> 15), 1 | seed); q = (q + Math.imul(q ^ (q >>> 7), 61 | q)) ^ q; return ((q ^ (q >>> 14)) >>> 0) / 4294967296; }; }
+  var sealSeq = 0;
+  function sv(tag, attrs, kids) {
+    var n = document.createElementNS(NS, tag);
+    Object.keys(attrs || {}).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    (kids || []).forEach(function (c) { n.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return n;
+  }
+  /* يرسم ختم شمع من الاسم: نفس الاسم ونفس اللون = نفس الختم دايمًا */
+  function sealSvg(name, waxIdx) {
+    var S = C.SEAL, r = sealRng(sealHash(name)), uid = 'seal' + (++sealSeq), gold = 'url(#' + uid + 'g)';
+    var auto = Math.floor(r() * S.autoFrom);
+    var wax = S.wax[(waxIdx >= 0 && waxIdx < S.wax.length) ? waxIdx : auto].c;
+    var svg = sv('svg', { viewBox: '0 0 64 64', class: 'seal-svg', 'aria-hidden': 'true' });
+    svg.appendChild(sv('defs', {}, [
+      sv('radialGradient', { id: uid + 'w', cx: '.38', cy: '.32', r: '.8' }, [sv('stop', { offset: '0', 'stop-color': wax[0] }), sv('stop', { offset: '1', 'stop-color': wax[1] })]),
+      sv('linearGradient', { id: uid + 'g', x1: '0', y1: '0', x2: '0', y2: '1' }, [sv('stop', { offset: '0', 'stop-color': '#FFF1C4' }), sv('stop', { offset: '.55', 'stop-color': '#E0BE6E' }), sv('stop', { offset: '1', 'stop-color': '#9A7430' })]),
+      /* قوس فوق وقوس تحت، الاثنين من اليسار لليمين عشان النص يطلع معدول */
+      sv('path', { id: uid + 'top', d: 'M' + (32 - S.rim) + ' 32 A' + S.rim + ' ' + S.rim + ' 0 0 1 ' + (32 + S.rim) + ' 32', fill: 'none' }),
+      sv('path', { id: uid + 'bot', d: 'M' + (32 - S.rim) + ' 32 A' + S.rim + ' ' + S.rim + ' 0 0 0 ' + (32 + S.rim) + ' 32', fill: 'none' })
+    ]));
+    /* حافة الشمع المتعرّجة */
+    var N = 22, pts = [], i;
+    for (i = 0; i < N; i++) { var a = i / N * Math.PI * 2, rad = 29 + r() * 2.8; pts.push([32 + Math.cos(a) * rad, 32 + Math.sin(a) * rad]); }
+    var d = 'M' + ((pts[N - 1][0] + pts[0][0]) / 2).toFixed(2) + ' ' + ((pts[N - 1][1] + pts[0][1]) / 2).toFixed(2);
+    for (i = 0; i < N; i++) {
+      var p0 = pts[i], p1 = pts[(i + 1) % N];
+      d += ' Q' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) + ' ' + ((p0[0] + p1[0]) / 2).toFixed(2) + ' ' + ((p0[1] + p1[1]) / 2).toFixed(2);
+    }
+    svg.appendChild(sv('path', { d: d + 'Z', fill: 'url(#' + uid + 'w)' }));
+    svg.appendChild(sv('circle', { cx: 32, cy: 32, r: 24.5, fill: wax[1], opacity: '.55' }));
+    svg.appendChild(sv('circle', { cx: 32, cy: 32, r: 24.5, fill: 'none', stroke: 'rgb(255 255 255 / .18)', 'stroke-width': '.8', transform: 'translate(-.5 -.6)' }));
+    svg.appendChild(sv('circle', { cx: 32, cy: 32, r: 16.2, fill: 'none', stroke: gold, 'stroke-width': '.9' }));
+    /* الاسم يتكرر حول الحافة: نسخ موزّعة على القوسين، وكلها معدولة */
+    var chars = Array.from(name).length, n = chars <= 4 ? 3 : chars <= 8 ? 2 : 1;
+    var fs = Math.min(S.maxFs, 80 / (n * Math.max(1, chars)));
+    for (var c = 0; c < n; c++) {
+      ['top', 'bot'].forEach(function (pid) {
+        /* direction ltr: بدونه كروم يلم النص العربي في نقطة وحدة. central: النص يتوسّط الشريط */
+        svg.appendChild(sv('text', { 'font-size': fs.toFixed(2), 'font-family': 'Amiri, serif', 'font-weight': '700', fill: gold, direction: 'ltr', 'dominant-baseline': 'central', class: 'rim' },
+          [sv('textPath', { href: '#' + uid + pid, startOffset: ((c + 0.5) / n * 100).toFixed(1) + '%', 'text-anchor': 'middle' }, [name])]));
+      });
+    }
+    for (var k = 0; k <= n; k++) {
+      var th = Math.PI * k / n, x = (32 - S.rim * Math.cos(th)).toFixed(2), yy = S.rim * Math.sin(th);
+      svg.appendChild(sv('circle', { cx: x, cy: (32 - yy).toFixed(2), r: '.9', fill: gold }));
+      if (k > 0 && k < n) svg.appendChild(sv('circle', { cx: x, cy: (32 + yy).toFixed(2), r: '.9', fill: gold }));
+    }
+    /* نقشة حول الحرف: مثلثات أو نقاط، عددها ودورانها من الاسم */
+    var cnt = 6 + Math.floor(r() * 5), rot = r() * 360, tri = r() < .5;
+    var g = sv('g', { fill: gold, transform: 'rotate(' + rot.toFixed(1) + ' 32 32)' });
+    for (i = 0; i < cnt; i++) {
+      var ang = i / cnt * 360;
+      g.appendChild(tri ? sv('path', { d: 'M32 17.3 l1.5 2.6 h-3 z', transform: 'rotate(' + ang + ' 32 32)' }) : sv('circle', { cx: 32, cy: 18.5, r: '.9', transform: 'rotate(' + ang + ' 32 32)' }));
+    }
+    svg.appendChild(g);
+    /* أول حرف: ينقاس بعد الرسم ويتوسّط داخل الدائرة (حروف مثل ع خ س ص تنزل تحت السطر) */
+    var ch = Array.from(name)[0];
+    svg.appendChild(sv('g', { class: 'letter' }, [
+      sv('text', { x: .6, y: .8, 'text-anchor': 'middle', 'font-size': '20', 'font-family': 'Amiri, serif', 'font-weight': '700', fill: '#12030A', opacity: '.55' }, [ch]),
+      sv('text', { x: 0, y: 0, 'text-anchor': 'middle', 'font-size': '20', 'font-family': 'Amiri, serif', 'font-weight': '700', fill: gold }, [ch])
+    ]));
+    fitSealLetter(svg);
+    return svg;
+  }
+  function fitSealLetter(svg, tries) {
+    var lg = svg.querySelector('g.letter');
+    if (!lg) return;
+    if (!svg.isConnected) { if ((tries || 0) < 120) requestAnimationFrame(function () { fitSealLetter(svg, (tries || 0) + 1); }); return; }
+    var b; try { b = lg.lastChild.getBBox(); } catch (e) { return; }
+    if (!b.width || !b.height) return;
+    var k = Math.min(C.SEAL.letterBox / b.width, C.SEAL.letterBox / b.height, 1.15);
+    lg.setAttribute('transform', 'translate(32 32) scale(' + k.toFixed(3) + ') translate(' + (-(b.x + b.width / 2)).toFixed(2) + ' ' + (-(b.y + b.height / 2)).toFixed(2) + ')');
+  }
+  /* بعد ما يتحمّل خط أميري نعيد قياس الحروف (المقاس الأول كان بخط بديل) */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () {
+    document.querySelectorAll('svg.seal-svg').forEach(function (sg) { fitSealLetter(sg); });
+  });
+  function stampSeal(node) {
+    if (!node || reduced()) return;
+    node.classList.remove('stamp'); void node.getBoundingClientRect(); node.classList.add('stamp');
+  }
+  /* أزرار لون الشمع (تطلع لما يكون الختم هو المختار) */
+  function waxPicker() {
+    var wrap = h('div', { class: 'wax', role: 'radiogroup', 'aria-label': t('waxLegend') });
+    var items = [{ i: -1, label: t('waxAutoName') }].concat(C.SEAL.wax.map(function (w, i) { return { i: i, label: w[state.lang] || w.ar }; }));
+    items.forEach(function (o) {
+      var b = h('button', { type: 'button', role: 'radio', class: 'sw' + (o.i < 0 ? ' auto' : ''), 'aria-checked': String(state.sealWax === o.i), 'aria-label': o.label, title: o.label,
+        style: o.i >= 0 ? 'background:radial-gradient(circle at 35% 30%, ' + C.SEAL.wax[o.i].c[0] + ', ' + C.SEAL.wax[o.i].c[1] + ')' : null,
+        text: o.i < 0 ? t('waxAuto') : null,
+        onclick: function () {
+          state.sealWax = o.i; save(); syncProfileBtn();
+          if (current && current !== 'trial') renderers[current](false);
+          var scr = current && $('scr-' + current);
+          var again = scr && scr.querySelector('.wax .sw[aria-checked="true"]');
+          if (again) again.focus({ preventScroll: true });
+          stampSeal(scr && scr.querySelector('.av-grid label.seal-tile svg'));
+        } });
+      wrap.appendChild(b);
+    });
+    return h('div', { class: 'wax-row' }, [h('p', { class: 'wax-legend', text: t('waxLegend') }), wrap]);
+  }
+  /* =================== الوسام الملكي =================== */
+  function topTitle() { var tt = C.TITLES[C.TITLES.length - 1]; return L(tt[g()] || tt.n); }
+  function royalUnlocked() { return CASES.length > 0 && winsNow() >= CASES.length; }
+
   /* أداة اختيار الأفاتار: تنبني في شاشة البداية وفي الملف الشخصي */
   var pickerSeq = 0;
   function avatarPicker() {
@@ -1875,13 +2060,28 @@ window.CONFIG = {
     var grid = h('div', { class: 'av-grid' });
     var opts = C.AVATARS.map(function (id, i) { return { value: id, label: names[i] || id, node: icon(id) }; });
     if (photoData) opts.unshift({ value: 'photo', label: t('avatarPhoto'), node: h('img', { src: photoData, alt: '', onerror: photoBroken }) });
+    opts.push({ value: 'seal', label: t('sealName'), node: sealSvg(sealNameNow(), state.sealWax), cls: 'seal-tile', tag: t('sealNew') });
+    var royalOpen = royalUnlocked();
+    if (royalOpen) opts.push({ value: C.ROYAL, label: t('royalName'), node: icon(C.ROYAL) });
     opts.forEach(function (o, i) {
       var inp = h('input', { type: 'radio', name: name, id: name + '-' + i, value: o.value });
       inp.checked = state.avatar === o.value;
-      inp.addEventListener('change', function () { if (inp.checked) setAvatar(o.value); });
+      inp.addEventListener('change', function () {
+        if (!inp.checked) return;
+        setAvatar(o.value);
+        if (o.value === 'seal') { var scr = current && $('scr-' + current); stampSeal(scr && scr.querySelector('.av-grid label.seal-tile svg')); }
+      });
       grid.appendChild(inp);
-      grid.appendChild(h('label', { for: name + '-' + i, title: o.label, 'aria-label': o.label }, [o.node]));
+      grid.appendChild(h('label', { for: name + '-' + i, title: o.label, 'aria-label': o.label, class: o.cls || null }, [o.node, o.tag ? h('span', { class: 'new-tag', 'aria-hidden': 'true', text: o.tag }) : null]));
     });
+    /* الوسام المقفل: زر (مو خيار) يوضّح متى ينفتح */
+    if (!royalOpen) {
+      var top = topTitle();
+      grid.appendChild(h('button', { class: 'av-locked', type: 'button', title: t('royalLocked', { title: top }), 'aria-label': t('royalLocked', { title: top }), onclick: function () {
+        err.textContent = t('royalHint', { title: top, count: count(Math.max(0, CASES.length - winsNow()), 'cases') });
+        if (!reduced() && this.animate) this.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }], { duration: 260 });
+      } }, [icon(C.ROYAL), h('span', { class: 'lock-badge', 'aria-hidden': 'true' }, [icon('lock')])]));
+    }
     var err = h('p', { class: 'form-error', 'aria-live': 'polite' });
     var file = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
     file.addEventListener('change', function () { var f = file.files && file.files[0]; file.value = ''; if (f) openPhoto(f, err); });
@@ -1892,7 +2092,7 @@ window.CONFIG = {
     ]);
     return h('fieldset', { class: 'avatar-pick' }, [
       h('legend', null, [h('span', { text: t('avatarLegend') }), ' ', h('small', { text: t('optional') })]),
-      grid, actions, err,
+      grid, state.avatar === 'seal' ? waxPicker() : null, actions, err,
       h('p', { class: 'av-note' }, [icon('lock'), h('span', { text: t('avatarPrivacy') })])
     ]);
   }
@@ -2581,6 +2781,7 @@ window.CONFIG = {
     else if (outcome === 'mixed') scr.appendChild(h('div', { class: 'bridge', role: 'note', text: t('bridgeMixed', { name: clientName }) }));
 
     if (r.newTitle) scr.appendChild(h('div', { class: 'new-title', role: 'status' }, [h('span', { text: t('newTitle') }), h('strong', { text: L(r.newTitle.title) })]));
+    if (r.newTitle && r.newTitle.next === null && royalUnlocked()) scr.appendChild(h('div', { class: 'royal-open', role: 'status' }, [icon(C.ROYAL), h('span', { text: t('royalOpened') })]));
     var sb = signedBlock(animate && !reduced());
     if (sb) scr.appendChild(sb);
 
