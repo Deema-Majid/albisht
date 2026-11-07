@@ -162,7 +162,9 @@ const avOf = (v) => Lg.loadState(fakeStore({ [KEY]: JSON.stringify({ version: 1,
 ok(avOf('av-f1') === 'av-f1' && avOf('photo') === 'photo', 'الأفاتار: رمز رسمة أو photo ينقبل');
 ok(avOf('<img onerror=x>') === '' && avOf(42) === '' && avOf('javascript:alert(1)') === '', 'الأفاتار: أي قيمة غريبة ترجع فاضية');
 ok(C.AVATARS.length === 10 && C.AVATARS.every((id) => /^av-/.test(id)), 'فيه 10 أفاتارات');
-ok(avOf('seal') === 'seal' && avOf('av-med-royal') === 'av-med-royal', 'الأفاتار: الختم الشخصي والوسام الملكي ينقبلون');
+ok(avOf('seal') === 'seal' && avOf('av-rank-3') === 'av-rank-3', 'الأفاتار: الختم الشخصي وأوسمة الألقاب ينقبلون');
+ok(C.RANKS.length === 5 && C.RANKS.every((r, i) => r.id === 'av-rank-' + (i + 1) && r.title === i + 1 && C.TITLES[r.title] && r.ar && r.en), 'أوسمة الألقاب: 5 أوسمة، كل واحد مربوط بلقب من الثاني للأخير وله اسم بالعربي والإنجليزي');
+ok(C.RANKS.at(-1).title === C.TITLES.length - 1 && C.TITLES.at(-1).wins === 'all', 'آخر وسام (البشت الملكي) مربوط بأعلى لقب (كل القضايا)');
 const waxOf = (v) => Lg.loadState(fakeStore({ [KEY]: JSON.stringify({ version: 1, sealWax: v }) }), KEY, LIM, WK).state.sealWax;
 ok(waxOf(3) === 3 && waxOf(-1) === -1 && Lg.defaultState().sealWax === -1, 'لون الختم: رقم صحيح ينقبل، والافتراضي تلقائي (-1)');
 ok(waxOf(2.5) === -1 && waxOf('3') === -1 && waxOf(-7) === -1 && waxOf(99) === -1 && waxOf(null) === -1, 'لون الختم: أي قيمة غريبة ترجع تلقائي');

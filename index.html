@@ -125,7 +125,8 @@
   }
 
   /* ================= الشاشات ================= */
-  .app { padding: 1rem; max-width: 1180px; margin: 0 auto; }
+  /* clip: حركة دخول الشاشة ثلاثية الأبعاد توسّع حافتها السفلية لحظيًا، وكروم الجوال كان يوسّع الصفحة كلها على أعرض شي شافه */
+  .app { padding: 1rem; max-width: 1180px; margin: 0 auto; overflow-x: clip; }
   .screen {
     background: var(--bg); border: 1px solid var(--gold-line); border-radius: 18px;
     padding: 1.25rem; position: relative; box-shadow: 0 18px 40px var(--shadow);
@@ -258,6 +259,9 @@
   .wax .sw.auto { background: conic-gradient(#B3122E, #8E1B3A, #A3341F, #6E1F4F, #B3122E); color: #FFF1C4; font-size: .65rem; font-weight: 700; }
   .royal-open { display: flex; align-items: center; gap: .75rem; margin: 1rem auto 0; max-width: 520px; padding: .75rem 1rem; border: 1px solid var(--gold); border-radius: var(--radius); background: var(--surface-2); }
   .royal-open svg { flex: none; width: 56px; height: 56px; }
+  .next-medal { display: flex; align-items: center; gap: .6rem; margin: .25rem 0 1rem; color: var(--text-muted); }
+  .next-medal svg { flex: none; width: 40px; height: 40px; }
+  .next-medal svg.locked-mini { filter: grayscale(1) brightness(.6); }
   @media (prefers-reduced-motion: reduce) { .seal-svg.stamp { animation: none; } }
   .avatar-pick .form-error:empty { min-height: 0; margin: 0; }
   .av-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
@@ -589,26 +593,149 @@
         <path d="M4 7 L2 13 M4 7 L8 13 M20 7 L16 13 M20 7 L22 13"/>
       </g>
     </symbol>
-    <symbol id="av-med-royal" viewBox="0 0 64 64">
-      <defs>
-        <linearGradient id="roy-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".45" stop-color="#E2BC5C"/><stop offset="1" stop-color="#6E4D16"/></linearGradient>
-        <radialGradient id="roy-g2" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#2A2A3A"/><stop offset="1" stop-color="#0B0B12"/></radialGradient>
-        <linearGradient id="roy-g3" x1="0" y1="14" x2="0" y2="52" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF4CC"/><stop offset=".5" stop-color="#E8C46A"/><stop offset="1" stop-color="#94701F"/></linearGradient>
-        <g id="roy-e">
-          <path d="M26 17.5l2.2 3 3.8-4 3.8 4 2.2-3 1 6.5H25z"/>
-          <path d="M32 26c-6.5 0-10.5 3-12.5 9.5L17.5 49h29l-2-13.5C42.5 29 38.5 26 32 26zm0 3.2 3.4 17.8h-6.8z" fill-rule="evenodd"/>
-        </g>
-      </defs>
-      <circle cx="32" cy="32" r="32" fill="url(#roy-g1)"/>
-      <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
-      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
-      <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
-      <circle cx="32" cy="32" r="25.6" fill="url(#roy-g1)" transform="rotate(180 32 32)"/>
-      <circle cx="32" cy="32" r="23" fill="url(#roy-g2)" stroke="#F1D58C" stroke-width=".8"/>
-      <use href="#roy-e" transform="translate(.7 1.1)" fill="#000" opacity=".6"/>
-      <use href="#roy-e" fill="url(#roy-g3)" stroke="#5A3F14" stroke-width=".6" stroke-linejoin="round"/>
-      <path d="M29.6 47h4.8" stroke="#5A3F14" stroke-width=".8"/>
-    </symbol>
+  <symbol id="av-rank-1" viewBox="0 0 64 64">
+    <defs>
+      <linearGradient id="rk1-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E3A46B"/><stop offset=".5" stop-color="#8A4F22"/><stop offset="1" stop-color="#5A2E10"/></linearGradient>
+      <radialGradient id="rk1-g2" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#5E1A26"/><stop offset="1" stop-color="#2A0A10"/></radialGradient>
+      <linearGradient id="rk1-g3" x1="0" y1="15" x2="0" y2="49" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FCE7C8"/><stop offset=".55" stop-color="#E8B27C"/><stop offset="1" stop-color="#9A5A28"/></linearGradient>
+      <radialGradient id="rk1-g4" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#E05462"/><stop offset="1" stop-color="#7A1520"/></radialGradient>
+      <g id="rk1-e">
+        <path d="M19.5 20h25v26h-25z"/>
+        <rect x="16" y="15.5" width="32" height="6.5" rx="3.2"/>
+        <rect x="16" y="42" width="32" height="6.5" rx="3.2"/>
+      </g>
+    </defs>
+    <circle cx="32" cy="32" r="32" fill="url(#rk1-g1)"/>
+    <circle cx="32" cy="32" r="31.5" fill="none" stroke="#3A1C08" stroke-width="1"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#5A2E10" stroke-width="3.6" opacity=".55"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#F8D2AA" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+    <circle cx="32" cy="32" r="25.6" fill="url(#rk1-g1)" transform="rotate(180 32 32)"/>
+    <circle cx="32" cy="32" r="23" fill="url(#rk1-g2)" stroke="#E8B07E" stroke-width=".8"/>
+    <use href="#rk1-e" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+    <use href="#rk1-e" fill="url(#rk1-g3)" stroke="#4A2410" stroke-width=".7" stroke-linejoin="round"/>
+    <path d="M17.5 17.4h29M17.5 43.9h29" stroke="#FFF3DE" stroke-width=".8" stroke-linecap="round" opacity=".6"/>
+    <path d="M23 26.5h18M23 30.5h18M23 34.5h11" stroke="#8A4F22" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M35.3 44.5 32.6 52l2.3-1 1.3 2 1.6-6.5zM40.7 44.5 43.4 52l-2.3-1-1.3 2-1.6-6.5z" fill="#7A1520" stroke="#3E0810" stroke-width=".5" stroke-linejoin="round"/>
+    <circle cx="38" cy="42.5" r="5" fill="url(#rk1-g4)" stroke="#3E0810" stroke-width=".6"/>
+    <circle cx="38" cy="42.5" r="3" fill="none" stroke="#F4A9AF" stroke-width=".6" opacity=".55"/>
+  </symbol>
+  <symbol id="av-rank-2" viewBox="0 0 64 64">
+    <defs>
+      <linearGradient id="rk2-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F4F6F8"/><stop offset=".5" stop-color="#B9C0C8"/><stop offset="1" stop-color="#6B737C"/></linearGradient>
+      <radialGradient id="rk2-g2" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#2E2648"/><stop offset="1" stop-color="#140A1C"/></radialGradient>
+      <linearGradient id="rk2-g3" x1="0" y1="11" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#C9CFD6"/><stop offset="1" stop-color="#6B737C"/></linearGradient>
+      <radialGradient id="rk2-g4" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#FFF3B0"/><stop offset=".6" stop-color="#F2A93B"/><stop offset="1" stop-color="#B4561A"/></radialGradient>
+      <radialGradient id="rk2-g5" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#F7B54A" stop-opacity=".55"/><stop offset="1" stop-color="#F7B54A" stop-opacity="0"/></radialGradient>
+      <g id="rk2-e">
+        <path d="M29.4 13.8a2.6 2.6 0 1 1 5.2 0a2.6 2.6 0 1 1-5.2 0zm1.4 0a1.2 1.2 0 1 0 2.4 0a1.2 1.2 0 1 0-2.4 0z" fill-rule="evenodd"/>
+        <rect x="31" y="16" width="2" height="2.5"/>
+        <path d="M25.5 23Q26 17.8 32 17.8T38.5 23z"/>
+        <rect x="23.5" y="22.5" width="17" height="3" rx="1"/>
+        <path d="M25 25.5h14l2 4v11l-2 4H25l-2-4v-11z"/>
+        <rect x="23.5" y="44" width="17" height="3" rx="1"/>
+        <path d="M27 47h10l-1.5 3h-7z"/>
+      </g>
+    </defs>
+    <circle cx="32" cy="32" r="32" fill="url(#rk2-g1)"/>
+    <circle cx="32" cy="32" r="31.5" fill="none" stroke="#3E444B" stroke-width="1"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#6B737C" stroke-width="3.6" opacity=".55"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+    <circle cx="32" cy="32" r="25.6" fill="url(#rk2-g1)" transform="rotate(180 32 32)"/>
+    <circle cx="32" cy="32" r="23" fill="url(#rk2-g2)" stroke="#E6EAEE" stroke-width=".8"/>
+    <circle cx="32" cy="35" r="15" fill="url(#rk2-g5)"/>
+    <use href="#rk2-e" transform="translate(.7 1.1)" fill="#05030A" opacity=".6"/>
+    <use href="#rk2-e" fill="url(#rk2-g3)" stroke="#3E444B" stroke-width=".7" stroke-linejoin="round"/>
+    <g fill="url(#rk2-g4)" stroke="#3E444B" stroke-width=".6">
+      <path d="M29.5 42V31q2.5-4 5 0v11z"/>
+      <path d="M25.6 41v-9.5q1.1-2.3 2.2 0V41zM36.2 41v-9.5q1.1-2.3 2.2 0V41z"/>
+    </g>
+    <path d="M32 40.5q-2.2-3 0-6.8 2.2 3.8 0 6.8z" fill="#FFFBE6"/>
+    <path d="M24 36.3h16" stroke="#6B737C" stroke-width=".9"/>
+    <path d="M26.7 29.6l1 1M37.3 29.6l-1 1" stroke="#FFFFFF" stroke-width=".6" opacity=".7"/>
+  </symbol>
+  <symbol id="av-rank-3" viewBox="0 0 64 64">
+    <defs>
+      <linearGradient id="rk3-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+      <radialGradient id="rk3-g2" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#7A2432"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+      <linearGradient id="rk3-g3" x1="0" y1="11" x2="0" y2="51" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+      <g id="rk3-e">
+        <path d="M30.6 24q-.9 12-2.6 24h7.2q-1.6-12-1.8-24z"/>
+        <path d="M22 50.5q10-5.5 20 0z"/>
+        <path d="M32 22.5Q22 16 13.5 24.5 23 20.5 32 24.8zM32 22.5Q42 16 50.5 24.5 41 20.5 32 24.8z"/>
+        <path d="M32 23.5Q21 23.5 17 34 24 26 32 25.5zM32 23.5Q43 23.5 47 34 40 26 32 25.5z"/>
+        <path d="M32 22.5Q26 13 20 14.5q6.5 2 11 9zM32 22.5Q38 13 44 14.5q-6.5 2-11 9z"/>
+        <path d="M31 22.5q-.6-6.8 1.4-11.2 1.6 5.4.6 11.2z"/>
+        <circle cx="29.6" cy="26.6" r="1.7"/><circle cx="34.4" cy="26.6" r="1.7"/><circle cx="32" cy="28" r="1.7"/>
+      </g>
+    </defs>
+    <circle cx="32" cy="32" r="32" fill="url(#rk3-g1)"/>
+    <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+    <circle cx="32" cy="32" r="25.6" fill="url(#rk3-g1)" transform="rotate(180 32 32)"/>
+    <circle cx="32" cy="32" r="23" fill="url(#rk3-g2)" stroke="#F1D58C" stroke-width=".8"/>
+    <use href="#rk3-e" transform="translate(.7 1.1)" fill="#12030A" opacity=".6"/>
+    <use href="#rk3-e" fill="url(#rk3-g3)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    <path d="M30.4 31.5l3.4-.8M30 35.5l3.9-.8M29.6 39.5l4.5-.8M29.1 43.5l5.3-.8" stroke="#7A5A24" stroke-width=".8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="av-rank-4" viewBox="0 0 64 64">
+    <defs>
+      <linearGradient id="rk4-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E1A3"/><stop offset=".5" stop-color="#C9A961"/><stop offset="1" stop-color="#7A5A24"/></linearGradient>
+      <radialGradient id="rk4-g2" cx=".4" cy=".3" r=".85"><stop offset="0" stop-color="#1F5C46"/><stop offset=".55" stop-color="#1A372C"/><stop offset="1" stop-color="#3A0F18"/></radialGradient>
+      <linearGradient id="rk4-g3" x1="0" y1="14" x2="0" y2="51" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".55" stop-color="#E0BE6E"/><stop offset="1" stop-color="#9A7430"/></linearGradient>
+      <linearGradient id="rk4-g4" x1="0" y1="23" x2="0" y2="41" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#D9B465"/><stop offset="1" stop-color="#8A6828"/></linearGradient>
+      <g id="rk4-e">
+        <path d="M37.6 14.6Q41 14.8 42.6 17.4Q45.6 17.8 44.9 21.8l-.7-.9-.4.5-.5-.5-1.2.4C42.6 23.2 44.4 26.5 44 31 43.6 35.5 42 39 40.5 42H33l-1.2 7.4Q29 50.4 26.2 49.2L28.4 42C25.2 35 25.2 27 29.5 22.5 31.5 20 32.8 19 33.6 16.5Q35 14.6 37.6 14.6z"/>
+        <rect x="24.5" y="41" width="21" height="2.6" rx="1.3"/>
+      </g>
+    </defs>
+    <circle cx="32" cy="32" r="32" fill="url(#rk4-g1)"/>
+    <circle cx="32" cy="32" r="31.5" fill="none" stroke="#5A3F14" stroke-width="1"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#7A5A24" stroke-width="3.6" opacity=".5"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF0C2" stroke-width="2" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+    <circle cx="32" cy="32" r="25.6" fill="url(#rk4-g1)" transform="rotate(180 32 32)"/>
+    <circle cx="32" cy="32" r="23" fill="#1E6B4C" stroke="#F1D58C" stroke-width=".7"/>
+    <circle cx="32" cy="32" r="21.2" fill="url(#rk4-g2)" stroke="#F1D58C" stroke-width=".7"/>
+    <use href="#rk4-e" transform="translate(.7 1.1)" fill="#04120C" opacity=".6"/>
+    <use href="#rk4-e" fill="url(#rk4-g3)" stroke="#5A3F14" stroke-width=".7" stroke-linejoin="round"/>
+    <path d="M30.5 23.2C35.5 23 39.6 27 39.4 32.5 39.2 36 35 39 29.8 40.9 27.4 37 26.3 32 27.2 28 27.8 25.5 29 24 30.5 23.2z" fill="url(#rk4-g4)" stroke="#5A3F14" stroke-width=".6" stroke-linejoin="round"/>
+    <path d="M28.8 28.4q3.2 1.5 7.8 0M28.4 32.4q3.6 1.7 10-.3M31.6 36.2l-1.8 4.6M34.6 35.8l-3.6 4.4M30.1 44.6l-.9 4.6" stroke="#5A3F14" stroke-width=".6" stroke-linecap="round" fill="none"/>
+    <path d="M42.5 17.5q.5 1.6-.2 3.1M42.2 20.9l-1.6-.9" stroke="#5A3F14" stroke-width=".55" stroke-linecap="round" fill="none"/>
+    <path d="M38.7 19.5q1.9 2.3.6 5.6-2-2.5-.6-5.6z" fill="#2A1A08"/>
+    <circle cx="39.4" cy="18.3" r="1.2" fill="#12030A"/>
+    <circle cx="39.8" cy="17.9" r=".38" fill="#FFF6DC"/>
+    <path d="M34.6 41.2q-.6 1.6.4 2.8M36.8 41.2v2.6M38.6 41.2q.6 1.6-.4 2.8M40.4 41.2q.5 1.4-.2 2.6" stroke="#2A1A08" stroke-width=".8" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="av-rank-5" viewBox="0 0 64 64">
+    <defs>
+      <linearGradient id="rk5-g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF6D0"/><stop offset=".38" stop-color="#F0CF73"/><stop offset=".7" stop-color="#B88A2E"/><stop offset="1" stop-color="#5E3F0E"/></linearGradient>
+      <radialGradient id="rk5-g2" cx=".4" cy=".35" r=".85"><stop offset="0" stop-color="#2A2A3A"/><stop offset="1" stop-color="#0B0B12"/></radialGradient>
+      <linearGradient id="rk5-g3" x1="0" y1="10" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFF6D2"/><stop offset=".5" stop-color="#EDC965"/><stop offset="1" stop-color="#A27A22"/></linearGradient>
+      <linearGradient id="rk5-g4" x1="0" y1="18" x2="0" y2="50" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5A5672"/><stop offset=".5" stop-color="#34324A"/><stop offset="1" stop-color="#1A1924"/></linearGradient>
+      <linearGradient id="rk5-g5" x1="0" y1="19" x2="0" y2="49" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D6D2C6"/></linearGradient>
+      <path id="rk5-c" d="M24 20.5Q32 17.5 40 20.5l7 3q2.5 1.5 2.5 5.5l-1 15-2.5 5H18l-2.5-5-1-15q0-4 2.5-5.5z"/>
+      <g id="rk5-z">
+        <path d="M24 20.5Q32 16.8 40 20.5l-.6 2.7Q32 20 24.6 23.2z"/>
+        <path d="M24.4 22l4.2-1.6 1 28.6h-3.8zM39.6 22l-4.2-1.6-1 28.6h3.8z"/>
+        <path d="M29.9 10.9h4.2v4.2h-4.2z"/><path d="M32 10.03 34.97 13 32 15.97 29.03 13z"/>
+      </g>
+    </defs>
+    <circle cx="32" cy="32" r="32" fill="url(#rk5-g1)"/>
+    <circle cx="32" cy="32" r="31.5" fill="none" stroke="#4A3008" stroke-width="1"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#6E4D16" stroke-width="3.6" opacity=".55"/>
+    <circle cx="32" cy="32" r="28.6" fill="none" stroke="#FFF8DC" stroke-width="2.1" stroke-linecap="round" stroke-dasharray="0 4.4925"/>
+    <circle cx="32" cy="32" r="25.6" fill="url(#rk5-g1)" transform="rotate(180 32 32)"/>
+    <circle cx="32" cy="32" r="24.3" fill="none" stroke="#FFF6D6" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="0 3.181"/>
+    <circle cx="32" cy="32" r="23" fill="url(#rk5-g2)" stroke="#F1D58C" stroke-width=".8"/>
+    <use href="#rk5-c" transform="translate(.7 1.1)" fill="#000" opacity=".7"/>
+    <use href="#rk5-c" fill="url(#rk5-g4)" stroke="#E8C46A" stroke-width="1.1" stroke-linejoin="round"/>
+    <path d="M20.6 27q-1.6 9-.6 20M43.4 27q1.6 9 .6 20" stroke="#0B0B12" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M28.6 20.2Q32 21.6 35.4 20.2l-1 28.8h-4.8z" fill="url(#rk5-g5)"/>
+    <path d="M32 22.5v8" stroke="#A8A396" stroke-width=".6"/>
+    <use href="#rk5-z" transform="translate(.6 .9)" fill="#000" opacity=".6"/>
+    <use href="#rk5-z" fill="url(#rk5-g3)" stroke="#5A3F14" stroke-width=".6" stroke-linejoin="round"/>
+    <path d="M26.7 24l.8 23.6M37.3 24l-.8 23.6" stroke="#8A6420" stroke-width=".7" stroke-dasharray="1.2 1.3"/>
+  </symbol>
     <symbol id="lock" viewBox="0 0 24 24">
       <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11 V8 a4 4 0 0 1 8 0 V11"/>
@@ -1069,8 +1196,14 @@ window.CONFIG = {
       { c: ['#34343A', '#0C0C10'], ar: 'أسود فاخر', en: 'Luxury black' }
     ]
   },
-  /* وسام نادر ينفتح بأعلى لقب (أسطورة المرافعة) */
-  ROYAL: 'av-med-royal',
+  /* وسام لكل لقب: title = رقم اللقب في TITLES، والوسام ينفتح لما يوصله اللاعب. الإطار يغلى مع اللقب (برونزي ← فضي ← ذهبي ← زمرّدي ← ملكي) */
+  RANKS: [
+    { id: 'av-rank-1', title: 1, ar: 'وسام الرَّق المختوم', en: 'Sealed Scroll medal' },
+    { id: 'av-rank-2', title: 2, ar: 'وسام الفانوس', en: 'Lantern medal' },
+    { id: 'av-rank-3', title: 3, ar: 'وسام النخلة', en: 'Palm medal' },
+    { id: 'av-rank-4', title: 4, ar: 'وسام الصقر', en: 'Falcon medal' },
+    { id: 'av-rank-5', title: 5, ar: 'وسام البشت الملكي', en: 'Royal Bisht medal' }
+  ],
   AVATAR_NAMES: { ar: ['محامٍ بالبشت والشماغ', 'محامٍ بالبشت والغترة', 'محامية بالطرحة', 'محامية بالنظارة', 'وسام الميزان', 'وسام المطرقة', 'وسام الريشة', 'وسام الكتاب', 'وسام المحكمة', 'وسام الدلّة'],
                   en: ['Lawyer in bisht and shemagh', 'Lawyer in bisht and ghutra', 'Lawyer in headscarf', 'Lawyer with glasses', 'Scales medal', 'Gavel medal', 'Quill medal', 'Book medal', 'Courthouse medal', 'Dallah medal'] },
   PHOTO: { size: 192, quality: 0.82, maxInputMB: 25, maxStoredChars: 200000, zoomMax: 3 },
@@ -1306,10 +1439,11 @@ window.CONFIG = {
     waxLegend:      { ar: 'لون الختم', en: 'Seal colour' },
     waxAuto:        { ar: 'تلقائي', en: 'Auto' },
     waxAutoName:    { ar: 'تلقائي (من اسمك)', en: 'Auto (from your name)' },
-    royalName:      { ar: 'وسام البشت الملكي', en: 'Royal Bisht medal' },
-    royalLocked:    { ar: 'مقفل: وسام البشت الملكي، ينفتح بلقب «{title}»', en: 'Locked: Royal Bisht medal, unlocks at the title "{title}"' },
-    royalHint:      { ar: '🔒 هذا الوسام ينفتح لما يوصل لقبك إلى «{title}». الباقي: {count}.', en: '🔒 This medal unlocks when you reach the title "{title}". To go: {count}.' },
-    royalOpened:    { ar: '🎉 انفتح وسام «البشت الملكي»، وصار متاح في «صورتك في اللعبة».', en: '🎉 The Royal Bisht medal is unlocked. It is now available under "Your avatar".' },
+    rankLocked:     { ar: 'مقفل: {name}، ينفتح بلقب «{title}»', en: 'Locked: {name}, unlocks at the title "{title}"' },
+    rankHint:       { ar: '🔒 {name} ينفتح لما يوصل لقبك إلى «{title}». الباقي: {count}.', en: '🔒 The {name} unlocks when you reach the title "{title}". To go: {count}.' },
+    rankOpened:     { ar: '🎉 انفتح {name}، وصار متاح في «صورتك في اللعبة».', en: '🎉 The {name} is unlocked. It is now available under "Your avatar".' },
+    rankNext:       { ar: 'الوسام الجاي: {name}، الباقي {count}.', en: 'Next medal: {name}, {count} to go.' },
+    rankAll:        { ar: 'فتحت كل الأوسمة! 👑', en: 'All medals unlocked! 👑' },
     signLegend:     { ar: 'توقيعك', en: 'Your signature' },
     signHere:       { ar: 'مكان التوقيع: بالإصبع أو بالماوس', en: 'Sign here with your finger or mouse' },
     signPad:        { ar: 'لوحة التوقيع', en: 'Signature pad' },
@@ -1656,7 +1790,7 @@ window.CONFIG = {
   var signData = null;
   try { if (store) { var sg = store.getItem(C.SIGN_KEY); if (Lg.isSignData(sg, C.SIGN.maxStoredChars)) signData = sg; } } catch (e) {}
   try { if (store) { var ph = store.getItem(C.AVATAR_KEY); if (Lg.isPhotoData(ph, C.PHOTO.maxStoredChars)) photoData = ph; } } catch (e) {}
-  if (state.avatar === 'photo' ? !photoData : (state.avatar && state.avatar !== 'seal' && state.avatar !== C.ROYAL && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
+  if (state.avatar === 'photo' ? !photoData : (state.avatar && state.avatar !== 'seal' && !rankById(state.avatar) && C.AVATARS.indexOf(state.avatar) < 0)) state.avatar = '';
   if (state.sealWax >= C.SEAL.wax.length) state.sealWax = -1;
 
   /* ---------- اللغة والنصوص ---------- */
@@ -1900,7 +2034,7 @@ window.CONFIG = {
     var kid = null;
     if (state.avatar === 'photo' && photoData) kid = h('img', { src: photoData, alt: '', onerror: photoBroken });
     else if (state.avatar === 'seal') kid = sealSvg(sealNameNow(), state.sealWax);
-    else if (state.avatar === C.ROYAL && royalUnlocked()) kid = icon(C.ROYAL);
+    else if (rankById(state.avatar) && rankOpen(rankById(state.avatar))) kid = icon(state.avatar);
     else if (C.AVATARS.indexOf(state.avatar) >= 0) kid = icon(state.avatar);
     if (!kid) return null;
     return h('span', { class: 'avatar', 'aria-hidden': 'true', style: size ? '--av:' + size + 'px' : null }, [kid]);
@@ -2048,9 +2182,14 @@ window.CONFIG = {
     });
     return h('div', { class: 'wax-row' }, [h('p', { class: 'wax-legend', text: t('waxLegend') }), wrap]);
   }
-  /* =================== الوسام الملكي =================== */
-  function topTitle() { var tt = C.TITLES[C.TITLES.length - 1]; return L(tt[g()] || tt.n); }
-  function royalUnlocked() { return CASES.length > 0 && winsNow() >= CASES.length; }
+  /* =================== أوسمة الألقاب =================== */
+  function rankById(id) { for (var i = 0; i < C.RANKS.length; i++) if (C.RANKS[i].id === id) return C.RANKS[i]; return null; }
+  function rankName(rk) { return rk[state.lang] || rk.ar; }
+  function rankTitle(rk) { var tt = C.TITLES[rk.title]; return L(tt[g()] || tt.n); }
+  /* كم قضية مكسوبة يحتاج الوسام: نفس حد اللقب، و'all' = كل القضايا المعروضة */
+  function rankNeed(rk) { var w = C.TITLES[rk.title].wins; return w === 'all' ? CASES.length : Math.min(w, CASES.length); }
+  function rankOpen(rk) { return CASES.length > 0 && winsNow() >= rankNeed(rk); }
+  function nextRank() { for (var i = 0; i < C.RANKS.length; i++) if (!rankOpen(C.RANKS[i])) return C.RANKS[i]; return null; }
 
   /* أداة اختيار الأفاتار: تنبني في شاشة البداية وفي الملف الشخصي */
   var pickerSeq = 0;
@@ -2061,9 +2200,17 @@ window.CONFIG = {
     var opts = C.AVATARS.map(function (id, i) { return { value: id, label: names[i] || id, node: icon(id) }; });
     if (photoData) opts.unshift({ value: 'photo', label: t('avatarPhoto'), node: h('img', { src: photoData, alt: '', onerror: photoBroken }) });
     opts.push({ value: 'seal', label: t('sealName'), node: sealSvg(sealNameNow(), state.sealWax), cls: 'seal-tile', tag: t('sealNew') });
-    var royalOpen = royalUnlocked();
-    if (royalOpen) opts.push({ value: C.ROYAL, label: t('royalName'), node: icon(C.ROYAL) });
+    C.RANKS.forEach(function (rk) { opts.push({ value: rk.id, label: rankName(rk), node: icon(rk.id), rank: rk, locked: !rankOpen(rk) }); });
     opts.forEach(function (o, i) {
+      if (o.locked) {
+        /* الوسام المقفل: زر (مو خيار) يوضّح متى ينفتح */
+        var rk = o.rank, lab = t('rankLocked', { name: o.label, title: rankTitle(rk) });
+        grid.appendChild(h('button', { class: 'av-locked', type: 'button', title: lab, 'aria-label': lab, onclick: function () {
+          err.textContent = t('rankHint', { name: o.label, title: rankTitle(rk), count: count(Math.max(0, rankNeed(rk) - winsNow()), 'cases') });
+          if (!reduced() && this.animate) this.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }], { duration: 260 });
+        } }, [icon(o.value), h('span', { class: 'lock-badge', 'aria-hidden': 'true' }, [icon('lock')])]));
+        return;
+      }
       var inp = h('input', { type: 'radio', name: name, id: name + '-' + i, value: o.value });
       inp.checked = state.avatar === o.value;
       inp.addEventListener('change', function () {
@@ -2074,14 +2221,6 @@ window.CONFIG = {
       grid.appendChild(inp);
       grid.appendChild(h('label', { for: name + '-' + i, title: o.label, 'aria-label': o.label, class: o.cls || null }, [o.node, o.tag ? h('span', { class: 'new-tag', 'aria-hidden': 'true', text: o.tag }) : null]));
     });
-    /* الوسام المقفل: زر (مو خيار) يوضّح متى ينفتح */
-    if (!royalOpen) {
-      var top = topTitle();
-      grid.appendChild(h('button', { class: 'av-locked', type: 'button', title: t('royalLocked', { title: top }), 'aria-label': t('royalLocked', { title: top }), onclick: function () {
-        err.textContent = t('royalHint', { title: top, count: count(Math.max(0, CASES.length - winsNow()), 'cases') });
-        if (!reduced() && this.animate) this.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }], { duration: 260 });
-      } }, [icon(C.ROYAL), h('span', { class: 'lock-badge', 'aria-hidden': 'true' }, [icon('lock')])]));
-    }
     var err = h('p', { class: 'form-error', 'aria-live': 'polite' });
     var file = h('input', { type: 'file', accept: 'image/jpeg,image/png,image/webp', hidden: true });
     file.addEventListener('change', function () { var f = file.files && file.files[0]; file.value = ''; if (f) openPhoto(f, err); });
@@ -2715,11 +2854,11 @@ window.CONFIG = {
     if (!trial || !Lg.isCompleteTrial(trial.picks, trial.c.stages.length)) return;   /* ما ترسم نتيجة بمرحلة ناقصة */
     var points = trial.picks.map(function (p) { return p.points; });
     var res = Lg.computeResult(points, C.SCORING);
-    var before = currentTitle();
+    var before = currentTitle(), winsBefore = winsNow();
     var rec = Lg.recordResult(state.completed, trial.c.id, trial.side, res.percent, today());
     save();
     var after = currentTitle();
-    lastResult = { c: trial.c, side: trial.side, res: res, picks: trial.picks.slice(), rec: rec, newTitle: after.index > before.index ? after : null };
+    lastResult = { c: trial.c, side: trial.side, res: res, picks: trial.picks.slice(), rec: rec, newTitle: after.index > before.index ? after : null, winsBefore: winsBefore, winsAfter: winsNow() };
     trial = null;
     show('result');
   }
@@ -2781,7 +2920,11 @@ window.CONFIG = {
     else if (outcome === 'mixed') scr.appendChild(h('div', { class: 'bridge', role: 'note', text: t('bridgeMixed', { name: clientName }) }));
 
     if (r.newTitle) scr.appendChild(h('div', { class: 'new-title', role: 'status' }, [h('span', { text: t('newTitle') }), h('strong', { text: L(r.newTitle.title) })]));
-    if (r.newTitle && r.newTitle.next === null && royalUnlocked()) scr.appendChild(h('div', { class: 'royal-open', role: 'status' }, [icon(C.ROYAL), h('span', { text: t('royalOpened') })]));
+    if (r.newTitle) C.RANKS.forEach(function (rk) {
+      /* الأوسمة اللي انفتحت بهالقضية: حدّها بين المكسوب قبل وبعد */
+      var need = rankNeed(rk);
+      if (r.winsBefore < need && r.winsAfter >= need) scr.appendChild(h('div', { class: 'royal-open', role: 'status' }, [icon(rk.id), h('span', { text: t('rankOpened', { name: rankName(rk) }) })]));
+    });
     var sb = signedBlock(animate && !reduced());
     if (sb) scr.appendChild(sb);
 
@@ -2826,6 +2969,12 @@ window.CONFIG = {
       h('p', { style: 'margin:0', text: t('winsCount', { wins: count(wins, 'casesWon') }) }),
       bar,
       h('p', { class: 'muted', style: 'margin-top:0', text: ti.next ? t('toNextTitle', { count: count(ti.toNext, 'cases'), title: L(ti.next) }) : t('topTitle') }),
+      (function () {
+        var nr = nextRank();
+        return h('p', { class: 'next-medal' }, nr
+          ? [icon(nr.id, 'locked-mini'), h('span', { text: t('rankNext', { name: rankName(nr), count: count(Math.max(0, rankNeed(nr) - wins), 'cases') }) })]
+          : [h('span', { text: t('rankAll') })]);
+      })(),
       h('div', { class: 'panel' }, [
         h('h3', { text: t('yourWhy') }),
         whyCard ? h('p', null, [h('strong', { text: L(whyCard.label) }), ' — ' + L(whyCard.desc)]) : null,
