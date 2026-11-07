@@ -12,8 +12,11 @@
 - كل قضية تنلعب من الطرفين، والنقاط تقيس جودة الحجة، مو اتجاه الحكم.
 - خمس مراحل: الأساس القانوني، المرافعة الافتتاحية، تقديم الأدلة، الرد على الخصم، المرافعة الختامية.
 - لقب يكبر مع القضايا المكسوبة (أداء 70% وفوق): متدرّب ← محامٍ ← محامٍ أول ← مستشار ← كبير المستشارين ← أسطورة المرافعة.
+- **وسام مع كل لقب:** الرَّق المختوم (برونزي) ← الفانوس (فضي) ← النخلة (ذهبي) ← الصقر (زمرّدي) ← البشت الملكي. الوسام يبقى مقفل لين توصل لقبه.
+- **صورتك في اللعبة:** 4 وجوه سعودية، و6 أوسمة، وصورة من جهازك (تقدر تحرّكها وتقرّبها)، أو **ختمك الشخصي**: ختم شمع يتولّد من اسمك وتختار لونه.
+- **توقيعك:** توقّع بإصبعك أو بالماوس، ويطلع توقيعك تحت كل مرافعة في صفحة النتيجة.
 - عربي أولًا، وزر يحوّل الواجهة للإنجليزي. وفيه زر «قلب الألوان» (خمري أو ذهبي).
-- بدون تسجيل وبدون خادم: التقدّم يُحفظ في متصفحك فقط، وما يُرسل لأي مكان.
+- بدون تسجيل وبدون خادم: التقدّم والصورة والتوقيع تُحفظ في متصفحك فقط، وما تُرسل لأي مكان.
 
 **ليش «البشت»؟** البشت في السعودية رمز الوجاهة، وهو زي المرافعة في المحاكم. واللعبة تستخدمه رمزًا لهيبة الحجة، للمحامين والمحاميات على حد سواء.
 
@@ -24,6 +27,11 @@
   <img src="screenshots/browse-ar.png" width="200" alt="تصفح القضايا">
   <img src="screenshots/trial-ar.png" width="200" alt="المحاكمة وتعليق القاضي">
   <img src="screenshots/gold-ar.png" width="200" alt="النتيجة بالثيم الذهبي">
+</p>
+<p align="center">
+  <img src="screenshots/identity-ar.png" width="200" alt="اختيار الصورة والختم والأوسمة والتوقيع">
+  <img src="screenshots/profile-ar.png" width="200" alt="الملف الشخصي والوسام الجاي">
+  <img src="screenshots/signed-ar.png" width="200" alt="المرافعة موقّعة باسم اللاعب">
 </p>
 
 ### كيف تشغّلها؟
@@ -82,8 +90,11 @@ LICENSE                    جميع الحقوق محفوظة
 - Every case can be played from both sides. Points measure the quality of the argument, not which side won.
 - Five stages: legal basis, opening statement, evidence, rebuttal, closing argument.
 - Your title grows with the cases you win (70% or higher): Trainee → Lawyer → Senior Lawyer → Counsel → Chief Counsel → Legend of Advocacy.
+- **A medal for every title:** Sealed Scroll (bronze) → Lantern (silver) → Palm (gold) → Falcon (emerald) → Royal Bisht. Each medal stays locked until you reach its title.
+- **Your avatar:** 4 Saudi faces, 6 medals, a photo from your device (drag and zoom to fit), or **your personal seal**: a wax seal generated from your name, in the colour you choose.
+- **Your signature:** sign with your finger or mouse, and it appears under every pleading on the result screen.
 - Arabic first, with a button that switches the interface to English. A "Flip colors" button switches between the wine and gold themes.
-- No sign-up and no server. Progress is stored only in your browser and is never sent anywhere.
+- No sign-up and no server. Progress, photo and signature are stored only in your browser and are never sent anywhere.
 
 **Why "Al-Bisht"?** The bisht is a traditional Saudi cloak that stands for dignity and honor, and it is worn when arguing in Saudi courts. The game uses it as a symbol of a well-argued case, for every player.
 
@@ -94,6 +105,11 @@ LICENSE                    جميع الحقوق محفوظة
   <img src="screenshots/browse-ar.png" width="200" alt="Browsing cases">
   <img src="screenshots/trial-ar.png" width="200" alt="A trial with the judge's comment">
   <img src="screenshots/gold-ar.png" width="200" alt="Result screen in the gold theme">
+</p>
+<p align="center">
+  <img src="screenshots/identity-ar.png" width="200" alt="Choosing an avatar, seal, medals and signature">
+  <img src="screenshots/profile-ar.png" width="200" alt="Profile with the next medal">
+  <img src="screenshots/signed-ar.png" width="200" alt="A pleading signed by the player">
 </p>
 
 ### How to run it
