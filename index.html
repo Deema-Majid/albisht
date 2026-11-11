@@ -180,6 +180,9 @@
   .welcome.swing .pan-r { animation: panR 2.4s ease-in-out 2; }
   .welcome h1 { font-size: clamp(2.25rem, 7vw, 3rem); color: var(--gold); transform-origin: 50% 100%; animation: titleIn 900ms var(--ease-out) 150ms both; }
   .tagline { color: var(--text-muted); margin: .25rem 0 1.25rem; animation: fadeUp 600ms ease-out 550ms both; }
+  .intro { max-width: 460px; margin: 0 auto 1.5rem; padding: .85rem 1rem; text-align: start; border: 1px dashed var(--gold-line); border-radius: var(--radius); background: var(--surface); font-size: .96875rem; line-height: 1.85; animation: fadeUp 600ms ease-out 700ms both; }
+  .intro p { margin: 0; }
+  .intro .intro-title { font-family: var(--font-head); color: var(--gold); font-size: 1.2rem; font-weight: 700; margin-block-end: .25rem; }
   .welcome .ornament::before, .welcome .ornament::after { animation: draw 700ms var(--ease-out) 350ms both; }
   .welcome .ornament span { animation: spinIn 700ms var(--ease-out) 300ms both; }
   .welcome form { max-width: 460px; margin: 0 auto; }
@@ -1090,6 +1093,10 @@
     <div class="ornament" aria-hidden="true"><span></span></div>
     <h1 id="w-title" tabindex="-1" data-focus data-i18n="appName"></h1>
     <p class="tagline" data-i18n="tagline"></p>
+    <div class="intro">
+      <p class="intro-title" data-i18n="introTitle"></p>
+      <p data-i18n="intro"></p>
+    </div>
     <form id="enterForm" novalidate>
       <fieldset class="address">
         <legend><span data-i18n="addressLegend"></span> <small data-i18n="optional"></small></legend>
@@ -1307,6 +1314,14 @@ window.CONFIG = {
     appName:        { ar: 'البشت', en: 'Al-Bisht' },
     docTitle:       { ar: 'البشت — لعبة المحاكم التعليمية', en: 'Al-Bisht — The Courtroom Learning Game' },
     tagline:        { ar: 'قضايا حقيقية غيّرت القانون، والمرافعة عليك', en: 'Argue real cases that changed the law' },
+    /* شرح الفكرة في شاشة البداية: يتغيّر مع «أستاذ/أستاذة»، والمحايد قبل الاختيار */
+    introTitle:     { ar: 'كيف تنلعب؟', en: 'How it works' },
+    intro:          { ar: 'قضية حقيقية، وموكّل ينتظر محاميه، وخمس جلسات في المحكمة. في كل جلسة أربع حجج، والمطلوب اختيار أقواها، والقاضي يقيّم كل اختيار ويشرح السبب. وفي النهاية ينكشف وش حكمت المحكمة فعلًا، ومع كل قضية مكسوبة يكبر اللقب وينفتح وسام جديد.',
+                      en: 'Pick a real case, take on a client, and argue for them across five hearings. In each hearing, choose the strongest of four arguments; the judge rates your choice and explains why. At the end you find out what the real court decided, and every case you win raises your title and unlocks a new medal.' },
+    intro_m:        { ar: 'تختار قضية حقيقية وتمسك موكّلك، وتترافع عنه في خمس جلسات. في كل جلسة أربع حجج، وعليك تختار أقواها، والقاضي يقيّم اختيارك ويشرح ليش. وفي النهاية تشوف وش حكمت المحكمة فعلًا، ومع كل قضية تكسبها يكبر لقبك وتفتح وسام جديد.',
+                      en: 'Pick a real case, take on a client, and argue for them across five hearings. In each hearing, choose the strongest of four arguments; the judge rates your choice and explains why. At the end you find out what the real court decided, and every case you win raises your title and unlocks a new medal.' },
+    intro_f:        { ar: 'تختارين قضية حقيقية وتمسكين موكّلك، وتترافعين عنه في خمس جلسات. في كل جلسة أربع حجج، وعليك تختارين أقواها، والقاضي يقيّم اختيارك ويشرح ليش. وفي النهاية تشوفين وش حكمت المحكمة فعلًا، ومع كل قضية تكسبينها يكبر لقبك وتفتحين وسام جديد.',
+                      en: 'Pick a real case, take on a client, and argue for them across five hearings. In each hearing, choose the strongest of four arguments; the judge rates your choice and explains why. At the end you find out what the real court decided, and every case you win raises your title and unlocks a new medal.' },
     disclaimer:     { ar: 'لعبة تعليمية، وليست استشارة قانونية.', en: 'An educational game, not legal advice.' },
     footer:         { ar: '© 2026 ديما بنت ماجد المعارك — مبرمجة سعودية. جميع الحقوق محفوظة.', en: '© 2026 Deema Majid AlMaarik — Saudi programmer. All rights reserved.' },
     themeBtn:       { ar: 'قلب الألوان', en: 'Flip colors' },
