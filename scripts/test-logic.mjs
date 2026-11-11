@@ -260,6 +260,34 @@ for (const [k, v] of Object.entries(C.UI)) {
 ok(offenders.length === 0, `ما فيه أفعال مخاطبة مذكرة في نصوص تظهر للأستاذة. المخالف: ${offenders.join(' | ') || 'لا شيء'}`);
 ok(C.UI.enterCourt_f && C.UI.enterCourt_f.ar === 'ادخلي قاعة المحكمة', 'زر الدخول له صيغة مؤنثة');
 
+// كل جمهور يشوف صيغته: الأستاذ X_m وإلا X، والأستاذة X_f وإلا X، والمحايد X
+// الكلمات المؤنثة/المذكرة نتعلمها من الفروق بين الصيغ نفسها، ونضيف لها أشهر الصيغ
+const FEMW = new Set(['اختاري', 'ادخلي', 'جرّبي', 'ارجعي', 'اكتبي', 'اضغطي', 'افتحي', 'غيّري', 'تقدرين', 'تبين', 'تختارين', 'تشوفين', 'تكسبين', 'تفتحين', 'تترافعين', 'متأكدة', 'اخترتي', 'كسبتي', 'وصلتي', 'فتحتي']);
+const MASW = new Set(['اختر', 'ادخل', 'جرّب', 'ارجع', 'اكتب', 'اضغط', 'افتح', 'غيّر', 'تقدر', 'تبي', 'تشوف', 'تترافع', 'متأكد', 'أحسنت', 'اخترت', 'كسبت', 'فتحت', 'تختار', 'وتختار', 'تكسب', 'تكسبها', 'تفتح', 'وتفتح', 'تمسك', 'وتمسك', 'وتترافع']);
+const tok = (s) => s.replace(/[«»،.؟!:()"'\-—{}0-9%/👑🎉🔒]/g, ' ').split(/\s+/).filter(Boolean);
+const gBases = [...new Set(Object.keys(C.UI).map((k) => k.replace(/_(m|f)$/, '')))];
+for (const b of gBases) {
+  const f = C.UI[b + '_f'], m = C.UI[b + '_m'] || C.UI[b];
+  if (!f || !m) continue;
+  const fw = new Set(tok(f.ar)), mw = new Set(tok(m.ar));
+  fw.forEach((w) => { if (!mw.has(w)) FEMW.add(w); });
+  mw.forEach((w) => { if (!fw.has(w)) MASW.add(w); });
+}
+// استثناءات مو موجّهة للاعب: أسماء أزرار المخاطبة، وأسماء المثال، و«المحكمة وصلت» (فعل للمحكمة مو للاعب)
+const NOT_ADDRESS = new Set(['أستاذ', 'أستاذة', 'سارة', 'فهد']);
+const ALLOW = { bridgeStrong: ['وصلت'] };
+[...NOT_ADDRESS].forEach((w) => { FEMW.delete(w); MASW.delete(w); });
+const wrongG = [];
+for (const b of gBases) {
+  const base = C.UI[b]; if (!base) continue;
+  const forM = (C.UI[b + '_m'] || base).ar, forF = (C.UI[b + '_f'] || base).ar, okW = ALLOW[b] || [];
+  tok(forM).filter((w) => FEMW.has(w) && !okW.includes(w)).forEach((w) => wrongG.push(`أستاذ ← ${b}: ${w}`));
+  tok(forF).filter((w) => MASW.has(w) && !okW.includes(w)).forEach((w) => wrongG.push(`أستاذة ← ${b}: ${w}`));
+  if (C.UI[b + '_f'] || C.UI[b + '_m']) tok(base.ar).filter((w) => (FEMW.has(w) || MASW.has(w)) && !okW.includes(w)).forEach((w) => wrongG.push(`محايد ← ${b}: ${w}`));
+}
+ok(wrongG.length === 0, `كل لاعب يشوف صيغته: ما فيه مؤنث للأستاذ ولا مذكر للأستاذة ولا تذكير/تأنيث للمحايد. المخالف: ${wrongG.join(' | ') || 'لا شيء'}`);
+ok(C.UI.topTitle_f.ar.includes('وصلتي') && C.UI.rankAll_f.ar.includes('فتحتي') && !/وصلت|فتحت/.test(C.UI.topTitle.ar + C.UI.rankAll.ar), '«وصلت لأعلى لقب» و«فتحت كل الأوسمة»: لها صيغة للأستاذة، والمحايد بدون فعل مخاطبة');
+
 // ---------------------------------------------------------------
 console.log('\n[8د] حماية النتيجة من مرحلة ناقصة (البندان 1 و2)');
 const pk = (n) => ({ points: n });
