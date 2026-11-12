@@ -101,15 +101,15 @@ LICENSE                    جميع الحقوق محفوظة
 > An educational game, not legal advice.
 
 <p align="center">
-  <img src="screenshots/welcome-ar.png" width="200" alt="Welcome screen">
-  <img src="screenshots/browse-ar.png" width="200" alt="Browsing cases">
-  <img src="screenshots/trial-ar.png" width="200" alt="A trial with the judge's comment">
-  <img src="screenshots/gold-ar.png" width="200" alt="Result screen in the gold theme">
+  <img src="screenshots/welcome-en.png" width="200" alt="Welcome screen">
+  <img src="screenshots/browse-en.png" width="200" alt="Browsing cases">
+  <img src="screenshots/trial-en.png" width="200" alt="A trial with the judge's comment">
+  <img src="screenshots/gold-en.png" width="200" alt="Result screen in the gold theme">
 </p>
 <p align="center">
-  <img src="screenshots/identity-ar.png" width="200" alt="Choosing an avatar, seal, medals and signature">
-  <img src="screenshots/profile-ar.png" width="200" alt="Profile with the next medal">
-  <img src="screenshots/signed-ar.png" width="200" alt="A pleading signed by the player">
+  <img src="screenshots/identity-en.png" width="200" alt="Choosing an avatar, seal, medals and signature">
+  <img src="screenshots/profile-en.png" width="200" alt="Profile with the next medal">
+  <img src="screenshots/signed-en.png" width="200" alt="A pleading signed by the player">
 </p>
 
 ### How to run it
